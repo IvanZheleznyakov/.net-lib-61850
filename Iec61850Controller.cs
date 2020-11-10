@@ -13,8 +13,8 @@ namespace IEDExplorer
         long m_ctlNum = 0;
         System.Threading.Timer delayTimer;
 
-        public delegate void NewReportDelegate(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
-        public event NewReportDelegate NewReport;
+        public delegate void newReportReceivedEventhandler(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
+        public event newReportReceivedEventhandler NewReportReceived;
 
         public Iec61850Controller(Iec61850State iecs, Iec61850Model model)
         {
@@ -24,7 +24,7 @@ namespace IEDExplorer
 
         public void FireNewReport(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)
         {
-            NewReport?.Invoke(rptdVarQualityLog, rptdVarTimestampLog, rptdVarPathLog, rptdVarDescriptionLog, rptdVarValueLog);
+            NewReportReceived?.Invoke(rptdVarQualityLog, rptdVarTimestampLog, rptdVarPathLog, rptdVarDescriptionLog, rptdVarValueLog);
         }
 
         public void DeleteNVL(NodeVL nvl)
@@ -120,7 +120,7 @@ namespace IEDExplorer
                     cPar.interlockCheck = true;
                     cPar.synchroCheck = true;
                     cPar.orCat = OrCat.STATION_CONTROL;
-                    cPar.orIdent = "IEDEXPLORER";
+                    cPar.orIdent = "mtra";
                     cPar.CommandFlowFlag = CommandCtrlModel.Unknown;
                     b = data;
                     List<string> path = new List<string>();

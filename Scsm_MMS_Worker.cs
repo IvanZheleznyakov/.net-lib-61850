@@ -50,16 +50,17 @@ namespace IEDExplorer
         public Scsm_MMS_Worker()
         {
             _env = Env.getEnv();
+            iecs = new Iec61850State();
         }
 
-        public int Start(string hostName, int port)
+        public bool Start(string hostName, int port)
         {
             isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
             return Start();
         }
 
-        int Start()
+        private bool Start()
         {
             //// Run Thread
             if (!_run && _workerThread == null)
@@ -70,8 +71,10 @@ namespace IEDExplorer
                 _workerThread.Start(this);
             }
             else
-                MessageBox.Show("Cannot start, communication already running!", "Info");
-            return 0;
+            {
+                throw new Exception("Соединение уже установлено!");
+            }
+            return true;
         }
 
         public void Stop()
@@ -114,14 +117,10 @@ namespace IEDExplorer
         {
             Scsm_MMS_Worker self = (Scsm_MMS_Worker)obj;
 
-            iecs = new Iec61850State
-            {
-                hostname = self.isoParameters.hostname,    // due to tcps inheritance
-                port = self.isoParameters.port,            // due to tcps inheritance
-                cp = self.isoParameters,
-                logger = Logger.getLogger()
-            };
-            //_env.winMgr.BindToCapture(iecs);
+            iecs.hostname = self.isoParameters.hostname;
+            iecs.port = self.isoParameters.port;           // due to tcps inheritance
+            iecs.cp = self.isoParameters;                  // due to tcps inheritance
+            iecs.logger = Logger.getLogger();
 
             _waitHandles[0] = iecs.connectDone;
             _waitHandles[1] = iecs.receiveDone;
@@ -135,7 +134,6 @@ namespace IEDExplorer
             CommAddress ad = new CommAddress();
             DateTime IdentifyTimeoutBase = new DateTime();
             TimeSpan IdentifyTimeout = new TimeSpan(0, 0, 5);   // 5 sec
-            iecs.logger.LogInfo("WORKERTHREAD PROC ON THREAD " + Thread.CurrentThread.ManagedThreadId.ToString());
 
             while (self._run)
             {
