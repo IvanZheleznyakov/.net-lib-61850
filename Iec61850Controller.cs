@@ -156,7 +156,7 @@ namespace IEDExplorer
             await Task.Delay(millis);
         }
 
-        public async void PrepareSendCommand(NodeBase data, CommandParams cPar, ActionRequested how)
+        public async void SendCommand(NodeBase data, CommandParams cPar, ActionRequested how)
         {
             if (cPar.SBOrun)
             {
@@ -185,9 +185,9 @@ namespace IEDExplorer
                                     op = d3;
                                 else
                                     sel = d3;
-                                SendCommand(sel, cPar, how);
+                                SendCommandToIed(sel, cPar, how);
                                 await PutTaskDelay(cPar.SBOtimeout);
-                                SendCommand(op, cPar, how);
+                                SendCommandToIed(op, cPar, how);
                             }
                             else
                                 Logger.getLogger().LogWarning("Cannot send SBO command sequence, ctlVal not found in " + d2.IecAddress);
@@ -202,10 +202,10 @@ namespace IEDExplorer
                     Logger.getLogger().LogWarning("Cannot send SBO command sequence, null parent of " + data.IecAddress);
             }
             else
-                SendCommand(data, cPar, how);
+                SendCommandToIed(data, cPar, how);
         }
 
-        public void SendCommand(NodeBase data, CommandParams cPar, ActionRequested how)
+        public void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how)
         {
             if (data != null)
             {

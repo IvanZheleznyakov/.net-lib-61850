@@ -71,7 +71,8 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Iedexplorer.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -177,6 +178,7 @@
     <Compile Include="Goose_ASN1_Model\TimeOfDay.cs" />
     <Compile Include="Goose_ASN1_Model\UtcTime.cs" />
     <Compile Include="Iec61850Controller.cs" />
+    <Compile Include="LibraryManager.cs" />
     <Compile Include="MMS_ASN1_Model\Conclude_ResponsePDU.cs" />
     <Compile Include="MyTreeView.cs">
       <SubType>Component</SubType>
@@ -873,7 +875,6 @@
     <EmbeddedResource Include="Embed\PcapDotNet.Core.dll" />
     <EmbeddedResource Include="Embed\PcapDotNet.Core.Extensions.dll" />
     <EmbeddedResource Include="Embed\PcapDotNet.Packets.dll" />
-    <Content Include="Iedexplorer.ico" />
     <Content Include="README.txt" />
     <None Include="app.config" />
     <Content Include="TreeViewAdv\Resources\check.bmp" />

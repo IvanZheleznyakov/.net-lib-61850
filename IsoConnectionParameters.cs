@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.Specialized;
+using org.bn.metadata;
 
 namespace IEDExplorer
 {
@@ -29,16 +30,21 @@ namespace IEDExplorer
         public ushort localSSelector;
         public IsoCotp.TSelector localTSelector;
 
-        public IsoConnectionParameters(IsoAcse.AcseAuthenticationParameter acseAuthPar)
+        public IsoConnectionParameters(string host, int port)
         {
-            init(acseAuthPar);
+            Init(null, host, port);
         }
 
-        void init(IsoAcse.AcseAuthenticationParameter acseAuthPar)
+        public IsoConnectionParameters(IsoAcse.AcseAuthenticationParameter acseAuthPar)
+        {
+            Init(acseAuthPar);
+        }
+
+        void Init(IsoAcse.AcseAuthenticationParameter acseAuthPar, string host = "localhost", int port = 102)
         {
             // Defaults
-            hostname = "localhost";
-            port = 102;
+            hostname = host;
+            this.port = port;
 
             IsoCotp.TSelector selector1 = new IsoCotp.TSelector(2, 0);
             IsoCotp.TSelector selector2 = new IsoCotp.TSelector(2, 1);
@@ -51,7 +57,7 @@ namespace IEDExplorer
 
         public IsoConnectionParameters(StringDictionary stringDictionary)
         {
-            init(null);
+            Init(null);
             int remoteTSelectorVal = remoteTSelector.value;
             int remoteTSelectorSize = remoteTSelector.value;
             foreach (string key in stringDictionary.Keys)

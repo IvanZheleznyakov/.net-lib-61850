@@ -52,9 +52,9 @@ namespace IEDExplorer
             _env = Env.getEnv();
         }
 
-        public int Start(IsoConnectionParameters par)
+        public int Start(string hostName, int port)
         {
-            isoParameters = par;
+            isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
             return Start();
         }
