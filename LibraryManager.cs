@@ -128,7 +128,7 @@ namespace IEDExplorer
         /// Получение списка файлов и директорий.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public void GetFileList(NodeBase node)
+        public void GetFileDirectory(NodeBase node)
         {
             worker.iecs.Controller.GetFileList(node);
         }

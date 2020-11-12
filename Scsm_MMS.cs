@@ -738,9 +738,12 @@ namespace IEDExplorer
             List<AccessResult> list;
             int phase = phsRptID;
             int datanum = 0;
-            int datacnt = 0;
+            int dataReferenceCount = 0;
+            int dataValuesCount = 0;
             int reasoncnt = 0;
             int[] listmap = null;
+
+            Report report = new Report();
 
             iecs.logger.LogDebug("Report != null");
             if (Report.VariableAccessSpecification != null && Report.VariableAccessSpecification.VariableListName != null &&
@@ -765,6 +768,7 @@ namespace IEDExplorer
                                     {
                                         rptName = list[i].Success.Visible_string;
                                         iecs.logger.LogDebug("Report Name = " + rptName);
+                                        report.RptId = rptName;
                                         continue;
                                     }
                                 }
@@ -784,6 +788,7 @@ namespace IEDExplorer
                                     // Is this phase active, e.g. is this bit set in OptFlds??
                                     if ((rptOpts[0] & OptFldsSeqNum) != 0)
                                     {
+                                        report.SeqNum = list[i].Success.Unsigned;
                                         // No evaluation of Sequence Number
                                         continue;
                                     }
@@ -793,6 +798,29 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[0] & OptFldsTimeOfEntry) != 0)
                                     {
+                                        ulong millis;
+                                        ulong days = 0;
+                                        DateTime origin;
+
+                                        millis = (ulong)(list[i].Success.Binary_time.Value[0] << 24) +
+                                                 (ulong)(list[i].Success.Binary_time.Value[1] << 16) +
+                                                 (ulong)(list[i].Success.Binary_time.Value[2] << 8) +
+                                                 (ulong)(list[i].Success.Binary_time.Value[3]);
+                                        if (list[i].Success.Binary_time.Value.Length == 6)
+                                        {
+                                            days = (ulong)(list[i].Success.Binary_time.Value[4] << 8) +
+                                                   (ulong)(list[i].Success.Binary_time.Value[5]);
+                                            origin = new DateTime(1984, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                                            //          millis *= 1000;
+                                        }
+                                        else
+                                        {
+                                            origin = DateTime.UtcNow.Date;
+                                        }
+
+                                        double dMillis = (double)(millis + days * 24 * 3600 * 1000);
+                                        report.TimeOfEntry = origin.AddMilliseconds(dMillis);
+
                                         // No evaluation of Time Of Entry
                                         continue;
                                     }
@@ -804,6 +832,7 @@ namespace IEDExplorer
                                         if (list[i].Success.isVisible_stringSelected())
                                         {
                                             datName = list[i].Success.Visible_string;
+                                            report.DataSetName = datName;
                                             iecs.logger.LogDebug("Report Data Set Name = " + datName);
                                             continue;
                                         }
@@ -813,6 +842,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[0] & OptFldsOvfl) != 0)
                                     {
+                                        report.BufferOverflow = list[i].Success.Boolean;
                                         // No evaluation of rptOptsOvfl
                                         continue;
                                     }
@@ -822,6 +852,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[0] & OptFldsEntryID) != 0)
                                     {
+                                        report.EntryID = list[i].Success.Octet_string;
                                         // No evaluation of OptFldsEntryID
                                         continue;
                                     }
@@ -831,6 +862,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[1] & OptFldsConfRev) != 0)
                                     {
+                                        report.ConfigurationRevision = list[i].Success.Unsigned;
                                         // No evaluation of OptFldsConfRev
                                         continue;
                                     }
@@ -877,6 +909,11 @@ namespace IEDExplorer
                                                 }
                                                 listidx++;
                                             }
+                                        }
+                                        report.DataSetSize = datanum;
+                                        if (datanum < 3)
+                                        {
+                                            int a = "test".Length;
                                         }
                                         iecs.logger.LogDebug("Report Inclusion Bitstring = " + datanum.ToString());
                                         continue;
@@ -928,20 +965,22 @@ namespace IEDExplorer
                                                 {
                                                     recursiveReadData(iecs, dataref, b, NodeState.Reported);
 
-                                                    //if (_env.winMgr.ReportsRunning) createReportRecord(iecs, varName, b);
-                                                    if (ReportsRunning)
-                                                    {
-                                                        createReportRecord(iecs, varName, b);
-                                                    }
+                                                    if (ReportsRunning) createReportRecord(iecs, varName, b);
                                                 }
                                             }
-                                            datacnt++;
+                                            dataReferenceCount++;
                                         }
                                         // Evaluation of OptFldsDataReference
-                                        if (datacnt == datanum)
-                                            break;
-                                        else
+                                        if (dataReferenceCount == datanum)
+                                        // break; // iedexplorer
+                                        {
+                                            phase++; // zheleznyakov
                                             continue;
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
                                     }
                                     else
                                         phase++;
@@ -956,44 +995,74 @@ namespace IEDExplorer
                                     {
                                         NodeBase[] nba = lvb.GetChildNodes();
 
-                                        if (datacnt < nba.Length)
+                                        if (dataValuesCount < nba.Length)
                                         {
-                                            if (!(nba[datacnt] is NodeFC))
+                                            if (!(nba[dataValuesCount] is NodeFC))
                                             {
                                                 Data dataref = list[i].Success;
                                                 if (list[i].Success != null)
                                                 {
-                                                    recursiveReadData(iecs, dataref, nba[listmap[datacnt]], NodeState.Reported);
-                                                    //if (_env.winMgr.ReportsRunning)
-                                                    //{
-                                                    //    varName = nba[listmap[datacnt]].CommAddress.Domain + "/" + nba[listmap[datacnt]].CommAddress.Variable;
-                                                    //    createReportRecord(iecs, varName, nba[listmap[datacnt]]);
-                                                    //}
+                                                    recursiveReadData(iecs, dataref, nba[listmap[dataValuesCount]], NodeState.Reported);
                                                     if (ReportsRunning)
                                                     {
-                                                        varName = nba[listmap[datacnt]].CommAddress.Domain + "/" + nba[listmap[datacnt]].CommAddress.Variable;
-                                                        createReportRecord(iecs, varName, nba[listmap[datacnt]]);
+                                                        varName = nba[listmap[dataValuesCount]].CommAddress.Domain + "/" + nba[listmap[dataValuesCount]].CommAddress.Variable;
+                                                        createReportRecord(iecs, varName, nba[listmap[dataValuesCount]]);
                                                     }
                                                 }
                                             }
-                                            datacnt++;
+                                            dataValuesCount++;
                                         }
-                                        else break;
+                                        else
+                                        {
+                                            dataValuesCount++;
+                                        }
                                         // End or continue?
-                                        if (datacnt == datanum)
-                                            phase++;  // phsReasonCodes
+                                        if (dataValuesCount == datanum)
+                                        {
+                                            phase++; // phsReasonCodes
+                                            continue;
+                                        }
                                         else
                                             continue;
                                     }
                                 }
                                 if (phase == phsReasonCodes)
                                 {
-                                    reasoncnt++;
-                                    // End or continue?
-                                    if (reasoncnt == datanum)
-                                        break;  // phsReasonCodes
+                                    if ((rptOpts[0] & OptFldsReasonCode) != 0)
+                                    {
+                                        byte[] bitStringValue = list[i].Success.Bit_string.Value;
+                                        int size = list[i].Success.Bit_string.getLengthInBits();
+                                        if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
+                                        {
+                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.DATA_CHANGE);
+                                        }
+                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
+                                        {
+                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.QUALITY_CHANGE);
+                                        }
+                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
+                                        {
+                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.DATA_UPDATE);
+                                        }
+                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
+                                        {
+                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.INTEGRITY);
+                                        }
+                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
+                                        {
+                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.GI);
+                                        }
+                                        reasoncnt++;
+                                        // End or continue?
+                                        if (reasoncnt == datanum)
+                                            break;  // phsReasonCodes
+                                        else
+                                            continue;
+                                    }
                                     else
-                                        continue;
+                                    {
+                                        break;
+                                    }
                                 }
                             }
                         }

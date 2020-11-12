@@ -188,7 +188,9 @@
     <Compile Include="NodeVLM.cs" />
     <Compile Include="EmbeddedAssembly.cs" />
     <Compile Include="RcbActivateParams.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="StringToDataConverter.cs" />
+    <Compile Include="TestDecoder.cs" />
     <Compile Include="TreeViewAdv\Properties\Resources1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
