@@ -27,14 +27,14 @@ namespace IEDExplorer
 
         public delegate void connectionClosedEventHandler();
         public event connectionClosedEventHandler ConnectionClosed;
-        public delegate void newReportReceivedEventhandler(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
+        public delegate void newReportReceivedEventhandler(Report report);
         public event newReportReceivedEventhandler NewReportReceived;
 
         public LibraryManager()
         {
             worker = new Scsm_MMS_Worker();
             worker.ConnectShutDownedEvent += Worker_ConnectShutDownedEvent;
-            worker.iecs.Controller.NewReportReceived += Controller_NewReportReceived;
+            worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
         }
 
         /// <summary>
@@ -162,9 +162,9 @@ namespace IEDExplorer
             ConnectionClosed?.Invoke();
         }
 
-        protected void Controller_NewReportReceived(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog)
+        private void Mms_NewReportReceived(Report report)
         {
-            NewReportReceived?.Invoke(null, null, null, null, null);
+            NewReportReceived?.Invoke(report);
         }
     }
 }

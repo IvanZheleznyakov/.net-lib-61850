@@ -393,6 +393,9 @@ namespace IEDExplorer
         public delegate void FileReceive(Iec61850State iecs);
         public event FileReceive FileReceivedEvent;
 
+        public delegate void newReportReceivedEventhandler(Report report);
+        public event newReportReceivedEventhandler NewReportReceived;
+
         public int ReceiveData(Iec61850State iecs)
         {
             if (iecs == null)
@@ -788,6 +791,7 @@ namespace IEDExplorer
                                     // Is this phase active, e.g. is this bit set in OptFlds??
                                     if ((rptOpts[0] & OptFldsSeqNum) != 0)
                                     {
+                                        report.HasSequenceNumber = true;
                                         report.SeqNum = list[i].Success.Unsigned;
                                         // No evaluation of Sequence Number
                                         continue;
@@ -798,6 +802,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[0] & OptFldsTimeOfEntry) != 0)
                                     {
+                                        report.HasTimeOfEntry = true;
                                         ulong millis;
                                         ulong days = 0;
                                         DateTime origin;
@@ -831,17 +836,20 @@ namespace IEDExplorer
                                     if ((rptOpts[0] & OptFldsDataSet) != 0)
                                         if (list[i].Success.isVisible_stringSelected())
                                         {
+                                            report.HasDataSetName = true;
                                             datName = list[i].Success.Visible_string;
                                             report.DataSetName = datName;
                                             iecs.logger.LogDebug("Report Data Set Name = " + datName);
                                             continue;
                                         }
                                 }
+
                                 if (phase == phsBufOvfl)
                                 { // Is this phase active, e.g. is this bit set in OptFlds??
                                     phase++;
                                     if ((rptOpts[0] & OptFldsOvfl) != 0)
                                     {
+                                        report.HasBufferOverFlow = true;
                                         report.BufferOverflow = list[i].Success.Boolean;
                                         // No evaluation of rptOptsOvfl
                                         continue;
@@ -862,6 +870,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[1] & OptFldsConfRev) != 0)
                                     {
+                                        report.HasConfigurationRevision = true;
                                         report.ConfigurationRevision = list[i].Success.Unsigned;
                                         // No evaluation of OptFldsConfRev
                                         continue;
@@ -881,6 +890,7 @@ namespace IEDExplorer
                                     phase++;
                                     if ((rptOpts[1] & OptFldsMoreSegments) != 0)
                                     {
+
                                         // No evaluation of OptFldsMoreSegments
                                         continue;
                                     }
@@ -911,6 +921,14 @@ namespace IEDExplorer
                                             }
                                         }
                                         report.DataSetSize = datanum;
+                                        report.DataReferences = new string[datanum];
+                                        report.DataIndices = new int[datanum];
+                                        report.DataValues = new MmsValue[datanum];
+                                        report.ReasonForInclusion = new Report.ReasonForInclusionEnum[datanum];
+                                        for (int k = 0; k != datanum; ++k)
+                                        {
+                                            report.DataIndices[k] = listmap[k];
+                                        }
                                         if (datanum < 3)
                                         {
                                             int a = "test".Length;
@@ -955,6 +973,7 @@ namespace IEDExplorer
                                         if (list[i].Success.isVisible_stringSelected())
                                         {
                                             varName = list[i].Success.Visible_string;
+                                            report.DataReferences[dataReferenceCount] = varName;
                                             iecs.logger.LogDebug("Report Variable Name = " + varName);
                                             NodeBase b = iecs.DataModel.ied.FindNodeByAddress(varName);
                                             Data dataref = list[i + datanum].Success;
@@ -991,6 +1010,7 @@ namespace IEDExplorer
                                     // Report WITHOUT references:
                                     // Need to investigate report members
                                     NodeBase lvb = iecs.DataModel.lists.FindNodeByAddress(datName, true);
+                                    report.DataValues[dataValuesCount] = new MmsValue(list[i].Success);
                                     if (lvb != null)
                                     {
                                         NodeBase[] nba = lvb.GetChildNodes();
@@ -1034,23 +1054,23 @@ namespace IEDExplorer
                                         int size = list[i].Success.Bit_string.getLengthInBits();
                                         if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
                                         {
-                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.DATA_CHANGE);
+                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.DATA_CHANGE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
                                         {
-                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.QUALITY_CHANGE);
+                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.QUALITY_CHANGE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
                                         {
-                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.DATA_UPDATE);
+                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.DATA_UPDATE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
                                         {
-                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.INTEGRITY);
+                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.INTEGRITY;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
                                         {
-                                            report.ReasonForInclusion.Add(IEDExplorer.Report.ReasonForInclusionEnum.GI);
+                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.GI;
                                         }
                                         reasoncnt++;
                                         // End or continue?

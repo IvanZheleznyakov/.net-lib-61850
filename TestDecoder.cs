@@ -27,5 +27,56 @@ namespace IEDExplorer
             else
                 return false;
         }
+
+        public static DateTime DecodeMmsBinaryTime(byte[] binTimeBuf)
+        {
+            ulong millis;
+            ulong days = 0;
+            DateTime origin;
+
+            millis = (ulong)(binTimeBuf[0] << 24) +
+                     (ulong)(binTimeBuf[1] << 16) +
+                     (ulong)(binTimeBuf[2] << 8) +
+                     (ulong)(binTimeBuf[3]);
+            if (binTimeBuf.Length == 6)
+            {
+                days = (ulong)(binTimeBuf[4] << 8) +
+                       (ulong)(binTimeBuf[5]);
+                origin = new DateTime(1984, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            }
+            else
+            {
+                origin = DateTime.UtcNow.Date;
+            }
+
+            double dMillis = (double)(millis + days * 24 * 3600 * 1000);
+            origin = origin.AddMilliseconds(dMillis);
+
+            return origin.ToLocalTime();
+        }
+
+        public static float DecodeMmsFloat(byte[] floatBuf)
+        {
+            byte[] tmp = new byte[4];
+            tmp[0] = floatBuf[4];
+            tmp[1] = floatBuf[3];
+            tmp[2] = floatBuf[2];
+            tmp[3] = floatBuf[1];
+            return BitConverter.ToSingle(tmp, 0);
+        }
+
+        public static double DecodeMmsDouble(byte[] doubleBuf)
+        {
+            byte[] tmp = new byte[8];
+            tmp[0] = doubleBuf[8];
+            tmp[1] = doubleBuf[7];
+            tmp[2] = doubleBuf[6];
+            tmp[3] = doubleBuf[5];
+            tmp[4] = doubleBuf[4];
+            tmp[5] = doubleBuf[3];
+            tmp[6] = doubleBuf[2];
+            tmp[7] = doubleBuf[1];
+            return BitConverter.ToDouble(tmp, 0);
+        }
     }
 }

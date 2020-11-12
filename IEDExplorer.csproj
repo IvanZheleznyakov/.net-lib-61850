@@ -179,6 +179,7 @@
     <Compile Include="Goose_ASN1_Model\UtcTime.cs" />
     <Compile Include="Iec61850Controller.cs" />
     <Compile Include="LibraryManager.cs" />
+    <Compile Include="MmsValue.cs" />
     <Compile Include="MMS_ASN1_Model\Conclude_ResponsePDU.cs" />
     <Compile Include="MyTreeView.cs">
       <SubType>Component</SubType>

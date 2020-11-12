@@ -20,14 +20,25 @@ namespace IEDExplorer
             UNKNOWN = 6,
         }
 
+        public bool HasDataSetName { get; set; } = false;
+        public bool HasReasonForInclusion { get; set; } = false;
+        public bool HasSequenceNumber { get; set; } = false;
+        public bool HasDataReference { get; set; } = false;
+        public bool HasConfigurationRevision { get; set; } = false;
+        public bool HasTimeOfEntry { get; set; } = false;
+        public bool HasBufferOverFlow { get; set; } = false;
+
         public string RptId { get; set; }
         public long SeqNum { get; set; }
-        public List<ReasonForInclusionEnum> ReasonForInclusion { get; set; } = new List<ReasonForInclusionEnum>();
         public string DataSetName { get; set; }
         public DateTime TimeOfEntry { get; set; }
         public bool BufferOverflow { get; set; }
         public byte[] EntryID { get; set; }
         public long ConfigurationRevision { get; set; }
         public int DataSetSize { get; set; }
+        public int[] DataIndices { get; set; }
+        public string[] DataReferences { get; set; }
+        public MmsValue[] DataValues { get; set; }
+        public ReasonForInclusionEnum[] ReasonForInclusion { get; set; }
     }
 }
