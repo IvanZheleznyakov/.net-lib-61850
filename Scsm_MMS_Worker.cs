@@ -268,7 +268,7 @@ namespace IEDExplorer
                                             case FileTransferState.FILE_READ:
                                                 // issue a read
                                                 iecs.Send(iecs.lastFileOperationData, ad, ActionRequested.ReadFile);
-                                          //      iecs.fstate = FileTransferState.FILE_NO_ACTION;
+                                                iecs.fstate = FileTransferState.FILE_NO_ACTION;
                                                 break;
                                             case FileTransferState.FILE_COMPLETE:
                                                 // issue a close

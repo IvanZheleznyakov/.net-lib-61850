@@ -156,24 +156,31 @@ namespace IEDExplorer
             return null;
         }
 
-        //public NodeBase FindRCBNodeByAddress(string domain, string iecAdress, bool isListFound = false)
-        //{
+        public NodeBase FindFileByName(string fullName)
+        {
+            if (fullName == null)
+            {
+                return null;
+            }
 
-        //}
+            string[] parts = fullName.Split(new char[] { '/' });
+            if (parts.Length == 1)
+            {
+                return null;
+            }
 
-        //public NodeBase FindRCBNodeByAddress(string completeIecAddress, bool isListFound = false)
-        //{
-        //    if (completeIecAddress == null)
-        //    {
-        //        return null;
-        //    }
-        //    string[] parts = completeIecAddress.Split(new char[] { '/' }, 2);
-        //    if (parts.Length == 2)
-        //    {
-        //        return null;
-        //    }
-        //    return null;
-        //}
+            NodeBase b = this;
+
+            for (int i = 1; i != parts.Length; ++i)
+            {
+                if ((b = b.FindChildNode(parts[i])) == null)
+                {
+                    return null;
+                }
+            }
+
+            return b;
+        }
 
         public Iec61850State iecs { get; set; }
 

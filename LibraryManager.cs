@@ -22,7 +22,7 @@ namespace IEDExplorer
         }
 
         protected Scsm_MMS_Worker worker;
-        protected LastExceptionInfo lastExceptionInfo;
+        protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
 
         public delegate void connectionClosedEventHandler();
         public event connectionClosedEventHandler ConnectionClosed;
@@ -173,7 +173,8 @@ namespace IEDExplorer
             }
             else
             {
-                node = worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
+                node = worker.iecs.DataModel.files.FindFileByName(name);
+      //          node = worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
             }
 
             worker.iecs.Controller.GetFileList(node, receivedHandler);
@@ -193,8 +194,9 @@ namespace IEDExplorer
             }
             try
             {
-                var nodeFile = (NodeFile)worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
-                worker.iecs.Controller.GetFile(nodeFile, receivedHandler);
+                var nodeFile = worker.iecs.DataModel.files.FindFileByName(name);
+                var nodeFile1 = (NodeFile)worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
+                worker.iecs.Controller.GetFile((NodeFile)nodeFile, receivedHandler);
             }
             catch (Exception ex)
             {

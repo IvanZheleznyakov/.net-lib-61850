@@ -77,7 +77,7 @@ namespace IEDExplorer
                 nfi.NameSet4Test(ad.Variable);
             }
             nfi.Reset();
-            iecs.Send(ndarr, ad, ActionRequested.OpenFile);
+            iecs.Send(ndarr, ad, ActionRequested.OpenFile, receivedHandler);
         }
 
         public void FileDelete(NodeFile nfi)
