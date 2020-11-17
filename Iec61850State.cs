@@ -121,9 +121,9 @@ namespace IEDExplorer
         {
         }
 
-        public void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action)
+        public void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, Scsm_MMS.responseReceivedHandler receiveHandler = null)
         {
-            WriteQueueElement el = new WriteQueueElement(Data, Address, Action);
+            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, receiveHandler);
             SendQueue.Enqueue(el);
             sendQueueWritten.Set();
         }

@@ -35,6 +35,8 @@ namespace IEDExplorer
         /// </summary>
         public NodeIed enums;
 
+        public Dictionary<string, NodeBase> addressNodesPairs;
+
         public Iec61850Model(Iec61850State iecs)
         {
             ied = new NodeIed("ied", this);
@@ -52,6 +54,8 @@ namespace IEDExplorer
             urcbs.iecs = iecs;
             brcbs.iecs = iecs;
             enums.iecs = iecs;
+
+            addressNodesPairs = new Dictionary<string, NodeBase>();
         }
 
         public void BuildIECModelFromMMSModel()
@@ -61,27 +65,45 @@ namespace IEDExplorer
             iec.VendorName = ied.VendorName;
             iec.ModelName = ied.ModelName;
 
+            string iecAddress = iec.IecAddress;
+
+            //  addressNodesPairs.Add(iecAddress, iec);
+
             foreach (NodeLD ld in ied.GetChildNodes())      // LD level
             {
                 NodeLD ild = new NodeLD(ld.Name);
                 ild.IsIecModel = true;
                 ild = (NodeLD)iec.AddChildNode(ild);
+                //  addressNodesPairs.Add(ild.IecAddress, ild);
+
                 foreach (NodeLN ln in ld.GetChildNodes())   // LN level
                 {
                     NodeLN iln = new NodeLN(ln.Name);
                     iln.IsIecModel = true;
+
                     iln = (NodeLN)ild.AddChildNode(iln);
+                    //iecAddress = iln.IecAddress;
+                    //if (addressNodesPairs.ContainsKey(iecAddress))
+                    //{
+                    //    addressNodesPairs.Add(iecAddress, iln);
+                    //}
                     foreach (NodeFC fc in ln.GetChildNodes())   // FC level - skipping
                     {
-                        if (fc.Name == "RP" || fc.Name == "BR") 
+                        if (fc.Name == "RP" || fc.Name == "BR")
                             continue;
                         // keep knowing FC for DA
                         foreach (NodeDO dO in fc.GetChildNodes())   // DO level
                         {
                             NodeDO ido = new NodeDO(dO.Name);
                             ido.IsIecModel = true;
+                            iecAddress = ido.IecAddress;
+
                             // AddChildNode returns original object if the same name found (new object is forgotten)
                             ido = (NodeDO)iln.AddChildNode(ido);
+                            //if (!addressNodesPairs.ContainsKey(iecAddress))
+                            //{
+                            //    addressNodesPairs.Add(iecAddress, ido);
+                            //}
                             // At this point, it can happen that we get DO more than once (same DO in several FC)
                             // For DOs, this is ok, FC is not relevant for DOs
                             // Next level is peculiar: can be DO (subDataObject) or a DA
@@ -107,7 +129,11 @@ namespace IEDExplorer
                     NodeBase ln = iec.FindNodeByAddress(ld.Name, urcb.Name.Remove(urcb.Name.IndexOf("$")));
                     if (ln != null)
                     {
-                        ln.LinkChildNodeByName(urcb);
+                        var tempNode = (NodeRCB)ln.LinkChildNodeByName(urcb);
+                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
+                        {
+                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
+                        }
                     }
                 }
             }
@@ -118,7 +144,11 @@ namespace IEDExplorer
                     NodeBase ln = iec.FindNodeByAddress(ld.Name, brcb.Name.Remove(brcb.Name.IndexOf("$")));
                     if (ln != null)
                     {
-                        ln.LinkChildNodeByName(brcb);
+                        var tempNode = (NodeRCB)ln.LinkChildNodeByName(brcb);
+                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
+                        {
+                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
+                        }
                     }
                 }
             }
@@ -130,7 +160,11 @@ namespace IEDExplorer
                     NodeBase ln = iec.FindNodeByAddress(ld.Name, vl.Name.Remove(vl.Name.IndexOf("$")));
                     if (ln != null)
                     {
-                        ln.LinkChildNodeByName(vl);
+                        var tempNode = ln.LinkChildNodeByName(vl);
+                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
+                        {
+                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
+                        }
                     }
                 }
             }
@@ -140,6 +174,10 @@ namespace IEDExplorer
         void recursiveLinkDA(NodeBase source, NodeBase target, NodeFC fc)
         {
             NodeBase linkedDa = target.LinkChildNodeByName(source);
+            if (!addressNodesPairs.ContainsKey(linkedDa.IecAddress))
+            {
+                addressNodesPairs.Add(linkedDa.IecAddress, linkedDa);
+            }
             // Set FC
             if (linkedDa is NodeData && !(linkedDa is NodeDO))
                 (linkedDa as NodeData).SCL_FCDesc = fc.Name;

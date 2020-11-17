@@ -42,6 +42,71 @@ namespace IEDExplorer
         bool isBufSet = false;
         bool isBufLock = false;
 
+        public new string IecAddress
+        {
+            get
+            {
+                if (_addressLock)
+                    return _address;
+
+                string address = "";
+                NodeBase tmpn = this;
+                List<string> parts = new List<string>();
+                bool iecModel = false;
+
+                do
+                {
+                    if (!(tmpn is NodeFC))
+                        parts.Add(tmpn.Name);
+                    tmpn = tmpn.Parent;
+                    if (tmpn != null) iecModel = tmpn.IsIecModel;
+                } while (tmpn != null && (!(tmpn is NodeIed) || iecModel));
+
+                for (int i = parts.Count - 1; i >= 0; i--)
+                {
+                    //if (i == parts.Count - 4)
+                    //    continue;
+                    address += parts[i];
+                    if (iecModel)
+                    {
+                        if (i == parts.Count - 2)
+                        {
+                            if (i != 0)
+                                address += "/";
+                        }
+                        else if (i != 0 && i != parts.Count - 1)
+                            if (parts[i - 1].Contains('/'))
+                                address += "->";
+                            else
+                                address += ".";
+                    }
+                    else
+                    {
+                        if (i == parts.Count - 1)
+                        {
+                            if (i != 0)
+                                address += "/";
+                        }
+                        else if (i != 0)
+                            address += ".";
+                    }
+                }
+                if (isBuffered)
+                {
+                    return address.Replace("$BR$", ".");
+                }
+                else
+                {
+                    return address.Replace("$RP$", ".");
+                }
+            }
+            set
+            {
+                _address = value;
+                _addressLock = true;
+            }
+        }
+
         NodeData _RptID;
         public string RptID
         {
@@ -452,7 +517,7 @@ namespace IEDExplorer
             {
                 if (_EntryID == null) _EntryID = (NodeData)FindChildNode("EntryID");
                 if (_EntryID != null)
-                    return (string)_EntryID.DataValue;
+                    return (string)_EntryID.StringValue;
                 else
                     return "";
             }
@@ -460,7 +525,7 @@ namespace IEDExplorer
             {
                 if (_EntryID == null) _EntryID = (NodeData)FindChildNode("EntryID");
                 if (_EntryID != null)
-                    _EntryID.DataValue = value;
+                    _EntryID.StringValue = value;
             }
         }
         public bool EntryID_present

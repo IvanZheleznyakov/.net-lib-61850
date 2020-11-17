@@ -39,8 +39,8 @@ namespace IEDExplorer
         private List<String> _fc = new List<string>();
         protected List<NodeBase> _childNodes;
         private int _actualChildNode;
-        private string _address;
-        private bool _addressLock = false;
+        protected string _address;
+        protected bool _addressLock = false;
         public event EventHandler StateChanged;
         private NodeState _nodeState;
         // Persistence for SCL server library objects
@@ -79,10 +79,10 @@ namespace IEDExplorer
         }
 
         public string Name { get; private set; }
-				public void NameSet4Test(string name)
-				{
-					this.Name = name;
-				}
+        public void NameSet4Test(string name)
+        {
+            this.Name = name;
+        }
         public string TypeId { get; set; }
 
         public bool IsIecModel { get; set; }
@@ -235,9 +235,10 @@ namespace IEDExplorer
             return Node;
         }
 
-        public NodeBase LinkChildNode (NodeBase Node)
+        public NodeBase LinkChildNode(NodeBase Node)
         {
-            foreach (NodeBase n in _childNodes) {
+            foreach (NodeBase n in _childNodes)
+            {
                 /*
                 if (Node._name == n._name)
                     return n;
@@ -433,7 +434,7 @@ namespace IEDExplorer
         internal Iec61850State GetIecs()
         {
             NodeBase b = GetIedNode();
-            if(b != null)
+            if (b != null)
                 return (b as NodeIed).iecs;
             return null;
         }

@@ -512,8 +512,8 @@ namespace IEDExplorer
                 contentLength += (4 + calledAEQualifierLength);
 
                 // Добавки Несговорова
-                contentLength += 5;
-                contentLength += 5;
+                //contentLength += 5;
+                //contentLength += 5;
             }
 
             int callingAEQualifierLength = 0;
@@ -529,8 +529,8 @@ namespace IEDExplorer
                 contentLength += (4 + callingAEQualifierLength);
 
                 // Добавки Несговорова
-                contentLength += 5;
-                contentLength += 5;
+                //contentLength += 5;
+                //contentLength += 5;
             }
 
             if (isoParameters.acseAuthParameter != null)
@@ -574,8 +574,8 @@ namespace IEDExplorer
             userInfoLength += IsoUtil.BerEncoder_determineLengthSize((uint)payloadLength);
 
             // Добавки Несговорова
-            userInfoLength += 2;
-            userInfoLength += 2;
+            //userInfoLength += 2;
+            //userInfoLength += 2;
 
             /* indirect reference */
             userInfoLength += 1;
@@ -637,13 +637,13 @@ namespace IEDExplorer
 
 
                 // Добавки Несговорова
-                bufPos = IsoUtil.BerEncoder_encodeTL(0xa4, (uint)calledAEQualifierLength + 2, buffer, bufPos);
-                bufPos = IsoUtil.BerEncoder_encodeTL(0x02, (uint)calledAEQualifierLength, buffer, bufPos);
-                bufPos = IsoUtil.BerEncoder_encodeUInt32(0, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeTL(0xa4, (uint)calledAEQualifierLength + 2, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeTL(0x02, (uint)calledAEQualifierLength, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeUInt32(0, buffer, bufPos);
 
-                bufPos = IsoUtil.BerEncoder_encodeTL(0xa5, (uint)calledAEQualifierLength + 2, buffer, bufPos);
-                bufPos = IsoUtil.BerEncoder_encodeTL(0x02, (uint)calledAEQualifierLength, buffer, bufPos);
-                bufPos = IsoUtil.BerEncoder_encodeUInt32(0, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeTL(0xa5, (uint)calledAEQualifierLength + 2, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeTL(0x02, (uint)calledAEQualifierLength, buffer, bufPos);
+                //bufPos = IsoUtil.BerEncoder_encodeUInt32(0, buffer, bufPos);
             }
 
             if (isoParameters.acseAuthParameter != null)
@@ -681,9 +681,9 @@ namespace IEDExplorer
             bufPos = IsoUtil.BerEncoder_encodeTL(0x28, (uint)assocDataLength, buffer, bufPos);
 
             // Добавка Несговорова
-            bufPos = IsoUtil.BerEncoder_encodeTL(0x06, 2, buffer, bufPos);
-            buffer[bufPos++] = 0x51;
-            buffer[bufPos++] = 0x01;
+            //bufPos = IsoUtil.BerEncoder_encodeTL(0x06, 2, buffer, bufPos);
+            //buffer[bufPos++] = 0x51;
+            //buffer[bufPos++] = 0x01;
 
             /* indirect-reference */
             bufPos = IsoUtil.BerEncoder_encodeTL(0x02, 1, buffer, bufPos);

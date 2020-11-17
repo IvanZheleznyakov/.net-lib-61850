@@ -167,7 +167,9 @@
   <ItemGroup>
     <Compile Include="ActionRequested.cs" />
     <Compile Include="BNExtension\XMLEncoder.cs" />
+    <Compile Include="DataAccessErrorEnum.cs" />
     <Compile Include="ExportListViewToCSV.cs" />
+    <Compile Include="FileDirectory.cs" />
     <Compile Include="Goose_ASN1_Model\Data.cs" />
     <Compile Include="Goose_ASN1_Model\DataSequence.cs" />
     <Compile Include="Goose_ASN1_Model\FloatingPoint.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Goose_ASN1_Model\UtcTime.cs" />
     <Compile Include="Iec61850Controller.cs" />
     <Compile Include="LibraryManager.cs" />
+    <Compile Include="MmsTypeEnum.cs" />
     <Compile Include="MmsValue.cs" />
     <Compile Include="MMS_ASN1_Model\Conclude_ResponsePDU.cs" />
     <Compile Include="MyTreeView.cs">
@@ -190,6 +193,7 @@
     <Compile Include="EmbeddedAssembly.cs" />
     <Compile Include="RcbActivateParams.cs" />
     <Compile Include="Report.cs" />
+    <Compile Include="Response.cs" />
     <Compile Include="StringToDataConverter.cs" />
     <Compile Include="TestDecoder.cs" />
     <Compile Include="TreeViewAdv\Properties\Resources1.Designer.cs">
@@ -853,6 +857,7 @@
     <Compile Include="Scsm_MMS_Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IsoTpkt.cs" />
+    <Compile Include="TypeOfResponseEnum.cs" />
     <Compile Include="WriteQueueElement.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -878,7 +883,6 @@
     <EmbeddedResource Include="Embed\PcapDotNet.Core.dll" />
     <EmbeddedResource Include="Embed\PcapDotNet.Core.Extensions.dll" />
     <EmbeddedResource Include="Embed\PcapDotNet.Packets.dll" />
-    <Content Include="README.txt" />
     <None Include="app.config" />
     <Content Include="TreeViewAdv\Resources\check.bmp" />
     <Content Include="TreeViewAdv\Resources\DVSplit.cur" />

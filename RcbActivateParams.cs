@@ -7,7 +7,7 @@ namespace IEDExplorer
 {
     public class RcbActivateParams
     {
-        public NodeRCB self;
+        internal NodeRCB self;
 
         public bool sendRptID = false;
         public bool sendRptEna = true;
@@ -21,6 +21,66 @@ namespace IEDExplorer
         public bool sendPurgeBuf = false;
         public bool sendResvTms = false;
         public bool sendEntryID = false;
+
+        public bool SetRptId(string rptId)
+        {
+            if (self.FindChildNode("RptID") != null)
+            {
+                self.RptID = rptId;
+                sendRptID = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SetRptEna(bool rptEna)
+        {
+            if (self.FindChildNode("RptEna") != null)
+            {
+                self.RptEna = rptEna;
+                sendRptEna = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SetResv(bool resv)
+        {
+            if (self.FindChildNode("Resv") != null)
+            {
+                self.Resv = resv;
+                sendResv = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SetDatSet(string datSet)
+        {
+            if (self.DatSet_present)
+            {
+                self.DatSet = datSet;
+                sendDatSet = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SetBufTm(uint bufTm)
+        {
+            if (self.BufTm_present)
+            {
+                self.BufTm = bufTm;
+                sendBufTm = true;
+                return true;
+            }
+
+            return false;
+        }
 
         public NodeData[] getWriteArray()
         {

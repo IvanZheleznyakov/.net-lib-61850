@@ -44,8 +44,8 @@ namespace IEDExplorer
         public delegate void ConnectShutDowned();
         public event ConnectShutDowned ConnectShutDownedEvent;
 
-        public delegate void InitEnd(Scsm_MMS_Worker worker);
-        public event InitEnd InitEndEvent;
+        public delegate void treeHasBeenCreatedEventHandler();
+        public event treeHasBeenCreatedEventHandler TreeHasBeenCreated;
 
         public Scsm_MMS_Worker()
         {
@@ -249,7 +249,7 @@ namespace IEDExplorer
                                     case Iec61850lStateEnum.IEC61850_MAKEGUI:
                                         iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
                                         iecs.DataModel.BuildIECModelFromMMSModel();
-                                        InitEndEvent?.Invoke(this);
+                                        TreeHasBeenCreated?.Invoke();
                                         //self._env.winMgr.MakeIedTree(iecs);
                                         //self._env.winMgr.MakeIecTree(iecs);
                                         //self._env.winMgr.mainWindow.Set_iecf(iecs);
@@ -268,7 +268,7 @@ namespace IEDExplorer
                                             case FileTransferState.FILE_READ:
                                                 // issue a read
                                                 iecs.Send(iecs.lastFileOperationData, ad, ActionRequested.ReadFile);
-                                                iecs.fstate = FileTransferState.FILE_NO_ACTION;
+                                          //      iecs.fstate = FileTransferState.FILE_NO_ACTION;
                                                 break;
                                             case FileTransferState.FILE_COMPLETE:
                                                 // issue a close
@@ -325,7 +325,7 @@ namespace IEDExplorer
                                     if (el.Data[0] is NodeVL)
                                         iecs.mms.SendReadVL(iecs, el);
                                     else
-                                        iecs.mms.SendRead(iecs, el);
+                                        iecs.mms.SendRead(iecs, el, el.Handler);
                                     break;
                                 case ActionRequested.DefineNVL:
                                     iecs.mms.SendDefineNVL(iecs, el);

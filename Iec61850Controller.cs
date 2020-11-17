@@ -34,7 +34,7 @@ namespace IEDExplorer
             iecs.Send(ndarr, nvl.CommAddress, ActionRequested.DeleteNVL);
         }
 
-        public void GetFileList(NodeBase nfi)
+        public void GetFileList(NodeBase nfi, Scsm_MMS.responseReceivedHandler receivedHandler = null)
         {
             CommAddress ad = new CommAddress();
             ad.Variable = "/";  // for the case of reading root
@@ -52,10 +52,10 @@ namespace IEDExplorer
                     ad.Variable = nd.StringValue;
                 }
             } */
-            iecs.Send(ndarr, ad, ActionRequested.GetDirectory);
+            iecs.Send(ndarr, ad, ActionRequested.GetDirectory, receivedHandler);
         }
 
-        public void GetFile(NodeFile nfi)
+        public void GetFile(NodeFile nfi, Scsm_MMS.responseReceivedHandler receivedHandler = null)
         {
             CommAddress ad = new CommAddress();
             NodeBase[] ndarr = new NodeBase[1];
@@ -372,11 +372,11 @@ namespace IEDExplorer
             }
         }
 
-        public void ReadData(NodeBase data)
+        public void ReadData(NodeBase data, Scsm_MMS.responseReceivedHandler receivehandler = null)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = data;
-            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read);
+            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, receivehandler);
         }
 
         public void ActivateNVL(NodeVL vl)

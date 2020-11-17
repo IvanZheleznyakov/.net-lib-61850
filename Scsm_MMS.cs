@@ -98,6 +98,12 @@ namespace IEDExplorer
         int InvokeID = 0;
         int MaxCalls = 10;
 
+        public delegate void responseReceivedHandler(Response response);
+
+        private responseReceivedHandler holdHandlerUntilFileIsRead = null;
+
+        private Dictionary<int, responseReceivedHandler> waitingMmsPdu;
+
         bool[] ServiceSupportOptions = new bool[96];
         enum ServiceSupportOptionsEnum
         {
@@ -186,22 +192,6 @@ namespace IEDExplorer
             attachToSemaphore = 82,
             conclude = 83,
             cancel = 84
-        }
-
-        enum DataAccessError
-        {
-            objectInvalidated = 0,
-            hardwareFault = 1,
-            temporarilyUnavailable = 2,
-            objectAccessDenied = 3,
-            objectUndefined = 4,
-            invalidAddress = 5,
-            typeUnsupported = 6,
-            typeInconsistent = 7,
-            objectAttributeInconsistent = 8,
-            objectAccessUnsupported = 9,
-            objectNonexistent = 10,
-            objectValueInvalid = 11
         }
 
         enum RejectPDU_rejectReason_confirmedRequestPDU
@@ -387,12 +377,6 @@ namespace IEDExplorer
 
         public bool ReportsRunning { get; set; } = false;
 
-        public delegate void FileDirectoryRecieve(Iec61850State iecs);
-        public event FileDirectoryRecieve FileDirectoryReceivedEvent;
-
-        public delegate void FileReceive(Iec61850State iecs);
-        public event FileReceive FileReceivedEvent;
-
         public delegate void newReportReceivedEventhandler(Report report);
         public event newReportReceivedEventhandler NewReportReceived;
 
@@ -483,7 +467,7 @@ namespace IEDExplorer
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.Read != null)
                 {
-                    ReceiveRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Read, operData);
+                    ReceiveRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Read, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.Write != null)
                 {
@@ -496,7 +480,7 @@ namespace IEDExplorer
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory != null)
                 {
-                    ReceiveFileDirectory(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory);
+                    ReceiveFileDirectory(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.FileOpen != null)
                 {
@@ -504,7 +488,7 @@ namespace IEDExplorer
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.FileRead != null)
                 {
-                    ReceiveFileRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileRead);
+                    ReceiveFileRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileRead, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.FileClose != null)
                 {
@@ -596,8 +580,9 @@ namespace IEDExplorer
             iecs.logger.LogError("RejectPDU received - requested operation " + operation + " rejected!! Reason code: " + reason);
         }
 
-        private void ReceiveFileDirectory(Iec61850State iecs, FileDirectory_Response dir)
+        private void ReceiveFileDirectory(Iec61850State iecs, FileDirectory_Response dir, int invokeId)
         {
+            List<FileDirectory> listOfFileDirectory = new List<FileDirectory>();
             iecs.logger.LogInfo("FileDirectory PDU received!!");
             if (dir.ListOfDirectoryEntry != null)
             {
@@ -605,9 +590,13 @@ namespace IEDExplorer
                 {
                     if (de.FileName != null)
                     {
+                        FileDirectory fileDirectory = new FileDirectory();
                         IEnumerator<string> en = de.FileName.Value.GetEnumerator();
                         en.MoveNext();
                         string name = en.Current;
+
+                        fileDirectory.Name = name;
+
                         bool absolutePath = false;
                         bool isdir = false;
                         NodeFile nf = null;
@@ -633,6 +622,9 @@ namespace IEDExplorer
                         {
                             nf.ReportedSize = de.FileAttributes.SizeOfFile.Value;
                             nf.ReportedTime = de.FileAttributes.LastModified;
+
+                            fileDirectory.Size = de.FileAttributes.SizeOfFile.Value;
+                            fileDirectory.TimeOfLastModification = de.FileAttributes.LastModified;
                         }
                         if (absolutePath)
                         {
@@ -642,6 +634,8 @@ namespace IEDExplorer
                         {
                             (iecs.lastFileOperationData[0]).AddChildNode(nfbase, true);
                         }
+
+                        listOfFileDirectory.Add(fileDirectory);
                     }
                     else
                         iecs.logger.LogInfo("Empty FileName in FileDirectory PDU!!");
@@ -649,11 +643,21 @@ namespace IEDExplorer
                 if (iecs.lastFileOperationData[0] is NodeFile)
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
                 iecs.fstate = FileTransferState.FILE_DIRECTORY;
+                if (waitingMmsPdu.ContainsKey(invokeId))
+                {
+                    Response response = new Response()
+                    {
+                        TypeOfResponse = TypeOfResponseEnum.FILE_DIRECTORY,
+                        TypeOfError = DataAccessErrorEnum.none,
+                        FileDirectories = listOfFileDirectory
+                    };
+
+                    waitingMmsPdu[invokeId]?.Invoke(response);
+                    waitingMmsPdu.Remove(invokeId);
+                }
             }
             else
                 iecs.logger.LogInfo("No file in FileDirectory PDU!!");
-
-            FileDirectoryReceivedEvent?.Invoke(iecs);
         }
 
         private void ReceiveFileOpen(Iec61850State iecs, FileOpen_Response fileopn)
@@ -668,19 +672,28 @@ namespace IEDExplorer
             }
         }
 
-        private void ReceiveFileRead(Iec61850State iecs, FileRead_Response filerd)
+        private void ReceiveFileRead(Iec61850State iecs, FileRead_Response filerd, int invokeId)
         {
             iecs.logger.LogInfo("FileRead PDU received!!");
             if (iecs.lastFileOperationData[0] is NodeFile)
             {
                 (iecs.lastFileOperationData[0] as NodeFile).AppendData(filerd.FileData);
                 if (filerd.MoreFollows)
+                {
                     iecs.fstate = FileTransferState.FILE_READ;
+                }
                 else
                 {
+                    Response response = new Response()
+                    {
+                        TypeOfResponse = TypeOfResponseEnum.FILE,
+                        TypeOfError = DataAccessErrorEnum.none,
+                        FileData = (iecs.lastFileOperationData[0] as NodeFile).Data
+                    };
+                    holdHandlerUntilFileIsRead?.Invoke(response);
+                    holdHandlerUntilFileIsRead = null;
                     iecs.fstate = FileTransferState.FILE_COMPLETE;
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
-                    FileReceivedEvent?.Invoke(iecs);
                 }
             }
         }
@@ -695,8 +708,7 @@ namespace IEDExplorer
         {
             NodeVL nvl = (lastOperationData[0] as NodeVL);
             nvl.Defined = true;
-            if (nvl.OnDefinedSuccess != null)
-                nvl.OnDefinedSuccess(nvl, null);
+            nvl.OnDefinedSuccess?.Invoke(nvl, null);
         }
 
         private void ReceiveDeleteNamedVariableList(Iec61850State iecs, DeleteNamedVariableList_Response dnvl, NodeBase[] lastOperationData)
@@ -725,7 +737,7 @@ namespace IEDExplorer
                 {
                     if (wrc.isFailureSelected())
                         Logger.getLogger().LogWarning("Write failed for " + lastOperationData[i++].IecAddress + ", failure: " + wrc.Failure.Value.ToString()
-                            + ", (" + Enum.GetName(typeof(DataAccessError), ((DataAccessError)wrc.Failure.Value)) + ")");
+                            + ", (" + Enum.GetName(typeof(DataAccessErrorEnum), ((DataAccessErrorEnum)wrc.Failure.Value)) + ")");
                     if (wrc.isSuccessSelected())
                         Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i++].IecAddress);
                 }
@@ -1253,7 +1265,7 @@ namespace IEDExplorer
             //return varName;
         }
 
-        private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData)
+        private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData, int receivedInvokeId)
         {
             iecs.logger.LogDebug("Read != null");
             if (Read.VariableAccessSpecification != null)
@@ -1336,11 +1348,34 @@ namespace IEDExplorer
                             if (ar.Success != null)
                             {
                                 iecs.logger.LogDebug("Reading Actual variable value: " + lastOperationData[i].IecAddress);
+                                if (waitingMmsPdu.ContainsKey(receivedInvokeId))
+                                {
+                                    Response response = new Response()
+                                    {
+                                        TypeOfResponse = TypeOfResponseEnum.MMS_VALUE,
+                                        TypeOfError = DataAccessErrorEnum.none,
+                                        MmsValue = new MmsValue(ar.Success)
+                                    };
+                                    waitingMmsPdu[receivedInvokeId]?.Invoke(response);
+                                    waitingMmsPdu.Remove(receivedInvokeId);
+                                }
                                 recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                             }
                         }
                         else
+                        {
+                            if (waitingMmsPdu.ContainsKey(receivedInvokeId))
+                            {
+                                Response response = new Response()
+                                {
+                                    TypeOfResponse = TypeOfResponseEnum.ERROR,
+                                    TypeOfError = (DataAccessErrorEnum)ar.Failure.Value
+                                };
+                                waitingMmsPdu[receivedInvokeId]?.Invoke(response);
+                                waitingMmsPdu.Remove(receivedInvokeId);
+                            }
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
+                        }
                         i++;
                     }
                     lastOperationData = null;
@@ -1855,6 +1890,7 @@ namespace IEDExplorer
 
         public int SendIdentify(Iec61850State iecs)
         {
+            waitingMmsPdu = new Dictionary<int, responseReceivedHandler>();
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2079,7 +2115,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendRead(Iec61850State iecs, WriteQueueElement el)
+        public int SendRead(Iec61850State iecs, WriteQueueElement el, responseReceivedHandler receiveHandler = null)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2116,6 +2152,11 @@ namespace IEDExplorer
             rreq.SpecificationWithResult = true;
 
             csrreq.selectRead(rreq);
+
+            if (receiveHandler != null)
+            {
+                waitingMmsPdu.Add(InvokeID, receiveHandler);
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 
@@ -2524,6 +2565,11 @@ namespace IEDExplorer
 
             csrreq.selectFileDirectory(filedreq);
 
+            if (el.Handler != null)
+            {
+                waitingMmsPdu.Add(InvokeID, el.Handler);
+            }
+
             crreq.InvokeID = new Unsigned32(InvokeID++);
 
             crreq.Service = csrreq;
@@ -2581,6 +2627,8 @@ namespace IEDExplorer
                 return -1;
             }
 
+            holdHandlerUntilFileIsRead = el.Handler;
+
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
             return 0;
         }
@@ -2618,6 +2666,8 @@ namespace IEDExplorer
                 iecs.logger.LogError("mms.SendFileRead: Encoding Error!");
                 return -1;
             }
+
+            
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
             return 0;
