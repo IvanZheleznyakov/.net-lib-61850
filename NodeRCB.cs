@@ -259,7 +259,7 @@ namespace IEDExplorer
         }
 
         NodeData _OptFlds;
-        public ReportOptions OptFlds
+        public ReportOptionsEnum OptFlds
         {
             get
             {
@@ -267,7 +267,7 @@ namespace IEDExplorer
                 if (_OptFlds != null)
                 {
                     byte[] val = (byte[])_OptFlds.DataValue;
-                    ReportOptions ro = ReportOptions.NONE;
+                    ReportOptionsEnum ro = ReportOptionsEnum.NONE;
                     return ro.fromBytes(val);
                 }
                 else
@@ -353,7 +353,7 @@ namespace IEDExplorer
         }
 
         NodeData _TrgOps;
-        public TriggerOptions TrgOps
+        public ReportTriggerOptionsEnum TrgOps
         {
             get
             {
@@ -361,7 +361,7 @@ namespace IEDExplorer
                 if (_TrgOps != null)
                 {
                     byte[] val = (byte[])_TrgOps.DataValue;
-                    TriggerOptions to = TriggerOptions.NONE;
+                    ReportTriggerOptionsEnum to = ReportTriggerOptionsEnum.NONE;
                     return to.fromBytes(val);
                 }
                 else
@@ -599,90 +599,60 @@ namespace IEDExplorer
         #endregion
     }
 
-    [Flags]
-    public enum TriggerOptions
-    {
-        NONE = 0,
-        /** send report when value of data changed */
-        DATA_CHANGED = 1,
-        /** send report when quality of data changed */
-        QUALITY_CHANGED = 2,
-        /** send report when data or quality is updated */
-        DATA_UPDATE = 4,
-        /** periodic transmission of all data set values */
-        INTEGRITY = 8,
-        /** general interrogation (on client request) */
-        GI = 16
-    }
-
-    [Flags]
-    public enum ReportOptions
-    {
-        NONE = 0,
-        SEQ_NUM = 1,
-        TIME_STAMP = 2,
-        REASON_FOR_INCLUSION = 4,
-        DATA_SET = 8,
-        DATA_REFERENCE = 16,
-        BUFFER_OVERFLOW = 32,
-        ENTRY_ID = 64,
-        CONF_REV = 128
-    }
-
     public static class OptionsEnumExtensions
     {
-        public static ReportOptions fromBytes(this ReportOptions res, byte[] value)
+        public static ReportOptionsEnum fromBytes(this ReportOptionsEnum res, byte[] value)
         {
-            res = ReportOptions.NONE;
+            res = ReportOptionsEnum.NONE;
             if (value == null || value.Length < 1) return res;
-            if ((value[0] & Scsm_MMS.OptFldsSeqNum) == Scsm_MMS.OptFldsSeqNum) res |= ReportOptions.SEQ_NUM;
-            if ((value[0] & Scsm_MMS.OptFldsTimeOfEntry) == Scsm_MMS.OptFldsTimeOfEntry) res |= ReportOptions.TIME_STAMP;
-            if ((value[0] & Scsm_MMS.OptFldsReasonCode) == Scsm_MMS.OptFldsReasonCode) res |= ReportOptions.REASON_FOR_INCLUSION;
-            if ((value[0] & Scsm_MMS.OptFldsDataSet) == Scsm_MMS.OptFldsDataSet) res |= ReportOptions.DATA_SET;
-            if ((value[0] & Scsm_MMS.OptFldsDataReference) == Scsm_MMS.OptFldsDataReference) res |= ReportOptions.DATA_REFERENCE;
-            if ((value[0] & Scsm_MMS.OptFldsOvfl) == Scsm_MMS.OptFldsOvfl) res |= ReportOptions.BUFFER_OVERFLOW;
-            if ((value[0] & Scsm_MMS.OptFldsEntryID) == Scsm_MMS.OptFldsEntryID) res |= ReportOptions.ENTRY_ID;
+            if ((value[0] & Scsm_MMS.OptFldsSeqNum) == Scsm_MMS.OptFldsSeqNum) res |= ReportOptionsEnum.SEQ_NUM;
+            if ((value[0] & Scsm_MMS.OptFldsTimeOfEntry) == Scsm_MMS.OptFldsTimeOfEntry) res |= ReportOptionsEnum.TIME_STAMP;
+            if ((value[0] & Scsm_MMS.OptFldsReasonCode) == Scsm_MMS.OptFldsReasonCode) res |= ReportOptionsEnum.REASON_FOR_INCLUSION;
+            if ((value[0] & Scsm_MMS.OptFldsDataSet) == Scsm_MMS.OptFldsDataSet) res |= ReportOptionsEnum.DATA_SET;
+            if ((value[0] & Scsm_MMS.OptFldsDataReference) == Scsm_MMS.OptFldsDataReference) res |= ReportOptionsEnum.DATA_REFERENCE;
+            if ((value[0] & Scsm_MMS.OptFldsOvfl) == Scsm_MMS.OptFldsOvfl) res |= ReportOptionsEnum.BUFFER_OVERFLOW;
+            if ((value[0] & Scsm_MMS.OptFldsEntryID) == Scsm_MMS.OptFldsEntryID) res |= ReportOptionsEnum.ENTRY_ID;
             if (value.Length < 2) return res;
-            if ((value[1] & Scsm_MMS.OptFldsConfRev) == Scsm_MMS.OptFldsConfRev) res |= ReportOptions.CONF_REV;
+            if ((value[1] & Scsm_MMS.OptFldsConfRev) == Scsm_MMS.OptFldsConfRev) res |= ReportOptionsEnum.CONF_REV;
             return res;
         }
 
-        public static byte[] toBytes(this ReportOptions inp)
+        public static byte[] toBytes(this ReportOptionsEnum inp)
         {
             byte[] res = new byte[2];
 
-            if ((inp & ReportOptions.SEQ_NUM) == ReportOptions.SEQ_NUM) res[0] |= Scsm_MMS.OptFldsSeqNum;
-            if ((inp & ReportOptions.TIME_STAMP) == ReportOptions.TIME_STAMP) res[0] |= Scsm_MMS.OptFldsTimeOfEntry;
-            if ((inp & ReportOptions.REASON_FOR_INCLUSION) == ReportOptions.REASON_FOR_INCLUSION) res[0] |= Scsm_MMS.OptFldsReasonCode;
-            if ((inp & ReportOptions.DATA_SET) == ReportOptions.DATA_SET) res[0] |= Scsm_MMS.OptFldsDataSet;
-            if ((inp & ReportOptions.DATA_REFERENCE) == ReportOptions.DATA_REFERENCE) res[0] |= Scsm_MMS.OptFldsDataReference;
-            if ((inp & ReportOptions.BUFFER_OVERFLOW) == ReportOptions.BUFFER_OVERFLOW) res[0] |= Scsm_MMS.OptFldsOvfl;
-            if ((inp & ReportOptions.ENTRY_ID) == ReportOptions.ENTRY_ID) res[0] |= Scsm_MMS.OptFldsEntryID;
-            if ((inp & ReportOptions.CONF_REV) == ReportOptions.CONF_REV) res[1] |= Scsm_MMS.OptFldsConfRev;
+            if ((inp & ReportOptionsEnum.SEQ_NUM) == ReportOptionsEnum.SEQ_NUM) res[0] |= Scsm_MMS.OptFldsSeqNum;
+            if ((inp & ReportOptionsEnum.TIME_STAMP) == ReportOptionsEnum.TIME_STAMP) res[0] |= Scsm_MMS.OptFldsTimeOfEntry;
+            if ((inp & ReportOptionsEnum.REASON_FOR_INCLUSION) == ReportOptionsEnum.REASON_FOR_INCLUSION) res[0] |= Scsm_MMS.OptFldsReasonCode;
+            if ((inp & ReportOptionsEnum.DATA_SET) == ReportOptionsEnum.DATA_SET) res[0] |= Scsm_MMS.OptFldsDataSet;
+            if ((inp & ReportOptionsEnum.DATA_REFERENCE) == ReportOptionsEnum.DATA_REFERENCE) res[0] |= Scsm_MMS.OptFldsDataReference;
+            if ((inp & ReportOptionsEnum.BUFFER_OVERFLOW) == ReportOptionsEnum.BUFFER_OVERFLOW) res[0] |= Scsm_MMS.OptFldsOvfl;
+            if ((inp & ReportOptionsEnum.ENTRY_ID) == ReportOptionsEnum.ENTRY_ID) res[0] |= Scsm_MMS.OptFldsEntryID;
+            if ((inp & ReportOptionsEnum.CONF_REV) == ReportOptionsEnum.CONF_REV) res[1] |= Scsm_MMS.OptFldsConfRev;
             return res;
         }
 
-        public static TriggerOptions fromBytes(this TriggerOptions res, byte[] value)
+        public static ReportTriggerOptionsEnum fromBytes(this ReportTriggerOptionsEnum res, byte[] value)
         {
-            res = TriggerOptions.NONE;
+            res = ReportTriggerOptionsEnum.NONE;
             if (value == null || value.Length < 1) return res;
-            if ((value[0] & Scsm_MMS.TrgOpsDataChange) == Scsm_MMS.TrgOpsDataChange) res |= TriggerOptions.DATA_CHANGED;
-            if ((value[0] & Scsm_MMS.TrgOpsQualChange) == Scsm_MMS.TrgOpsQualChange) res |= TriggerOptions.QUALITY_CHANGED;
-            if ((value[0] & Scsm_MMS.TrgOpsDataActual) == Scsm_MMS.TrgOpsDataActual) res |= TriggerOptions.DATA_UPDATE;
-            if ((value[0] & Scsm_MMS.TrgOpsIntegrity) == Scsm_MMS.TrgOpsIntegrity) res |= TriggerOptions.INTEGRITY;
-            if ((value[0] & Scsm_MMS.TrgOpsGI) == Scsm_MMS.TrgOpsGI) res |= TriggerOptions.GI;
+            if ((value[0] & Scsm_MMS.TrgOpsDataChange) == Scsm_MMS.TrgOpsDataChange) res |= ReportTriggerOptionsEnum.DATA_CHANGED;
+            if ((value[0] & Scsm_MMS.TrgOpsQualChange) == Scsm_MMS.TrgOpsQualChange) res |= ReportTriggerOptionsEnum.QUALITY_CHANGED;
+            if ((value[0] & Scsm_MMS.TrgOpsDataActual) == Scsm_MMS.TrgOpsDataActual) res |= ReportTriggerOptionsEnum.DATA_UPDATE;
+            if ((value[0] & Scsm_MMS.TrgOpsIntegrity) == Scsm_MMS.TrgOpsIntegrity) res |= ReportTriggerOptionsEnum.INTEGRITY;
+            if ((value[0] & Scsm_MMS.TrgOpsGI) == Scsm_MMS.TrgOpsGI) res |= ReportTriggerOptionsEnum.GI;
             return res;
         }
 
-        public static byte[] toBytes(this TriggerOptions inp)
+        public static byte[] toBytes(this ReportTriggerOptionsEnum inp)
         {
             byte[] res = new byte[1];
 
-            if ((inp & TriggerOptions.DATA_CHANGED) == TriggerOptions.DATA_CHANGED) res[0] |= Scsm_MMS.TrgOpsDataChange;
-            if ((inp & TriggerOptions.QUALITY_CHANGED) == TriggerOptions.QUALITY_CHANGED) res[0] |= Scsm_MMS.TrgOpsQualChange;
-            if ((inp & TriggerOptions.DATA_UPDATE) == TriggerOptions.DATA_UPDATE) res[0] |= Scsm_MMS.TrgOpsDataActual;
-            if ((inp & TriggerOptions.INTEGRITY) == TriggerOptions.INTEGRITY) res[0] |= Scsm_MMS.TrgOpsIntegrity;
-            if ((inp & TriggerOptions.GI) == TriggerOptions.GI) res[0] |= Scsm_MMS.TrgOpsGI;
+            if ((inp & ReportTriggerOptionsEnum.DATA_CHANGED) == ReportTriggerOptionsEnum.DATA_CHANGED) res[0] |= Scsm_MMS.TrgOpsDataChange;
+            if ((inp & ReportTriggerOptionsEnum.QUALITY_CHANGED) == ReportTriggerOptionsEnum.QUALITY_CHANGED) res[0] |= Scsm_MMS.TrgOpsQualChange;
+            if ((inp & ReportTriggerOptionsEnum.DATA_UPDATE) == ReportTriggerOptionsEnum.DATA_UPDATE) res[0] |= Scsm_MMS.TrgOpsDataActual;
+            if ((inp & ReportTriggerOptionsEnum.INTEGRITY) == ReportTriggerOptionsEnum.INTEGRITY) res[0] |= Scsm_MMS.TrgOpsIntegrity;
+            if ((inp & ReportTriggerOptionsEnum.GI) == ReportTriggerOptionsEnum.GI) res[0] |= Scsm_MMS.TrgOpsGI;
             return res;
         }
     }

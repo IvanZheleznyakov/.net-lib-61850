@@ -225,14 +225,14 @@ namespace IEDExplorer
                                         sb.Append("]");
                                         break;
                                     case "TrgOps":  // Trigger Options
-                                        TriggerOptions tr = TriggerOptions.NONE;
+                                        ReportTriggerOptionsEnum tr = ReportTriggerOptionsEnum.NONE;
                                         tr = tr.fromBytes(bbval);
                                         sb.Append(" [");
                                         sb.Append(tr.ToString());
                                         sb.Append("]");
                                         break;
                                     case "OptFlds":  // Optional fields
-                                        ReportOptions ro = ReportOptions.NONE;
+                                        ReportOptionsEnum ro = ReportOptionsEnum.NONE;
                                         ro = ro.fromBytes(bbval);
                                         sb.Append(" [");
                                         sb.Append(ro.ToString());

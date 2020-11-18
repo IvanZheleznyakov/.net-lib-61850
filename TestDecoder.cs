@@ -78,5 +78,16 @@ namespace IEDExplorer
             tmp[7] = doubleBuf[1];
             return BitConverter.ToDouble(tmp, 0);
         }
+
+        internal static DateTime DecodeAsn1Time(string stringTime)
+        {
+            stringTime = stringTime.Insert(4, "-");
+            stringTime = stringTime.Insert(7, "-");
+            stringTime = stringTime.Insert(10, "T");
+            stringTime = stringTime.Insert(13, ":");
+            stringTime = stringTime.Insert(16, ":");
+
+            return DateTime.Parse(stringTime);
+        }
     }
 }

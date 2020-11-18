@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IEDExplorer
@@ -13,7 +14,7 @@ namespace IEDExplorer
     public class LibraryManager
     {
         /// <summary>
-        /// Класс предоставляет информацию о последнем сработавшем исключении и методе, который в котором оно произошло.
+        /// Класс предоставляет информацию о последнем сработавшем исключении и методе, в котором оно произошло.
         /// </summary>
         public class LastExceptionInfo
         {
@@ -43,7 +44,7 @@ namespace IEDExplorer
             worker = new Scsm_MMS_Worker();
             worker.ConnectShutDownedEvent += Worker_ConnectShutDownedEvent;
             worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
-            worker.TreeHasBeenCreated += Worker_TreeHasBeenCreated;
+            worker.ModelHasBeenCreated += Worker_ModelHasBeenCreated;
         }
 
         /// <summary>
@@ -96,7 +97,6 @@ namespace IEDExplorer
             {
                 var node = new NodeBase("");
                 worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out node);
-                //var node = (NodeData)worker.iecs.DataModel.iec.FindNodeByAddressWithDots(name);
                 (node as NodeData).DataValue = value;
                 worker.iecs.Controller.WriteData((node as NodeData), reRead);
             }
@@ -117,8 +117,9 @@ namespace IEDExplorer
         {
             try
             {
-                var node = worker.iecs.DataModel.iec.FindNodeByAddressWithDots(name);
-                worker.iecs.Controller.ReadData(node, receiveHandler);
+                NodeBase outNode = new NodeBase("");
+                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+                worker.iecs.Controller.ReadData(outNode, receiveHandler);
             }
             catch (Exception ex)
             {
@@ -129,15 +130,33 @@ namespace IEDExplorer
             return true;
         }
 
+        public ReportControlBlock CreateReportControlBlock(string name)
+        {
+            ReportControlBlock resultRcb = new ReportControlBlock();
+            NodeBase outNode = new NodeBase("");
+            worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+            resultRcb.self = (NodeRCB)outNode;
+
+            return resultRcb;
+        }
+
+        public void UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
+        {
+
+        }
+
         /// <summary>
         /// Установка и запись параметров отчёта.
         /// </summary>
         /// <param name="rcbPar">Параметры отчёта.</param>
         /// <param name="reRead">True - прочитать данные в узле сразу после записи; False - иначе.</param>
-        public bool WriteRcb(RcbActivateParams rcbPar, bool reRead)
+        public bool WriteRcb(string name, ReportControlBlock rcbPar, bool reRead)
         {
             try
             {
+                NodeBase outNode = new NodeBase("");
+                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+                rcbPar.self = (NodeRCB)outNode;
                 worker.iecs.Controller.WriteRcb(rcbPar, reRead);
             }
             catch (Exception ex)
@@ -174,7 +193,6 @@ namespace IEDExplorer
             else
             {
                 node = worker.iecs.DataModel.files.FindFileByName(name);
-      //          node = worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
             }
 
             worker.iecs.Controller.GetFileList(node, receivedHandler);
@@ -186,20 +204,23 @@ namespace IEDExplorer
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
         public bool GetFile(string name, Scsm_MMS.responseReceivedHandler receivedHandler)
         {
-            if (worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
+            Console.WriteLine("FILE STATE: " + worker.IsFileReadingNow + " ||| " + worker.iecs.fstate.ToString());
+            if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
+                Console.WriteLine("file is reading now");
                 Exception exception = new Exception("В данный момент уже происходит чтение файла.");
                 UpdateLastExceptionInfo(exception, MethodBase.GetCurrentMethod().Name);
                 return false;
             }
             try
             {
+                worker.IsFileReadingNow = true;
                 var nodeFile = worker.iecs.DataModel.files.FindFileByName(name);
-                var nodeFile1 = (NodeFile)worker.iecs.DataModel.files.FindNodeByAddressWithDots(name);
                 worker.iecs.Controller.GetFile((NodeFile)nodeFile, receivedHandler);
             }
             catch (Exception ex)
             {
+                worker.IsFileReadingNow = false;
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return false;
             }
@@ -215,6 +236,11 @@ namespace IEDExplorer
             return lastExceptionInfo;
         }
 
+        /// <summary>
+        /// Обновление информации о последнем исключении.
+        /// </summary>
+        /// <param name="ex">Последнее сработавшее исключение.</param>
+        /// <param name="methodName">Имя метода, где сработало исключение.</param>
         protected void UpdateLastExceptionInfo(Exception ex, string methodName)
         {
             lastExceptionInfo.LastException = ex;
@@ -231,7 +257,7 @@ namespace IEDExplorer
             NewReportReceived?.Invoke(report);
         }
 
-        protected void Worker_TreeHasBeenCreated()
+        protected void Worker_ModelHasBeenCreated()
         {
             ModelHasBeenCreated?.Invoke(this);
         }

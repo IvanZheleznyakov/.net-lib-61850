@@ -193,6 +193,8 @@
     <Compile Include="EmbeddedAssembly.cs" />
     <Compile Include="RcbActivateParams.cs" />
     <Compile Include="Report.cs" />
+    <Compile Include="ReportOptionsEnum.cs" />
+    <Compile Include="ReportTriggerOptionsEnum.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="StringToDataConverter.cs" />
     <Compile Include="TestDecoder.cs" />

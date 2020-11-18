@@ -41,16 +41,24 @@ namespace IEDExplorer
         public Iec61850State iecs;
         Logger logger = Logger.getLogger();
 
+        internal bool IsFileReadingNow { get; set; } = false;
+
         public delegate void ConnectShutDowned();
         public event ConnectShutDowned ConnectShutDownedEvent;
 
-        public delegate void treeHasBeenCreatedEventHandler();
-        public event treeHasBeenCreatedEventHandler TreeHasBeenCreated;
+        public delegate void modelHasBeenCreatedEventHandler();
+        public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
         public Scsm_MMS_Worker()
         {
             _env = Env.getEnv();
             iecs = new Iec61850State();
+            iecs.mms.ReadFileStateChanged += Mms_ReadFileStateChanged;
+        }
+
+        private void Mms_ReadFileStateChanged(bool isReading)
+        {
+            IsFileReadingNow = isReading;
         }
 
         public bool Start(string hostName, int port)
@@ -249,7 +257,7 @@ namespace IEDExplorer
                                     case Iec61850lStateEnum.IEC61850_MAKEGUI:
                                         iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
                                         iecs.DataModel.BuildIECModelFromMMSModel();
-                                        TreeHasBeenCreated?.Invoke();
+                                        ModelHasBeenCreated?.Invoke();
                                         //self._env.winMgr.MakeIedTree(iecs);
                                         //self._env.winMgr.MakeIecTree(iecs);
                                         //self._env.winMgr.mainWindow.Set_iecf(iecs);

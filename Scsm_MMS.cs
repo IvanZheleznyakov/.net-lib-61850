@@ -375,10 +375,11 @@ namespace IEDExplorer
 
         static Env _env = Env.getEnv();
 
-        public bool ReportsRunning { get; set; } = false;
-
         public delegate void newReportReceivedEventhandler(Report report);
         public event newReportReceivedEventhandler NewReportReceived;
+
+        internal delegate void readFileStateChangedEventHandler(bool isReading);
+        internal event readFileStateChangedEventHandler ReadFileStateChanged;
 
         public int ReceiveData(Iec61850State iecs)
         {
@@ -621,10 +622,10 @@ namespace IEDExplorer
                         if (!nf.isDir)
                         {
                             nf.ReportedSize = de.FileAttributes.SizeOfFile.Value;
-                            nf.ReportedTime = de.FileAttributes.LastModified;
+                            nf.ReportedTime = TestDecoder.DecodeAsn1Time(de.FileAttributes.LastModified);
 
                             fileDirectory.Size = de.FileAttributes.SizeOfFile.Value;
-                            fileDirectory.TimeOfLastModification = de.FileAttributes.LastModified;
+                            fileDirectory.TimeOfLastModification = nf.ReportedTime;
                         }
                         if (absolutePath)
                         {
@@ -665,6 +666,7 @@ namespace IEDExplorer
             iecs.logger.LogInfo("FileOpen PDU received!!");
             if (iecs.lastFileOperationData[0] is NodeFile)
             {
+                ReadFileStateChanged?.Invoke(true);
                 (iecs.lastFileOperationData[0] as NodeFile).frsmId = fileopn.FrsmID.Value;
                 iecs.fstate = FileTransferState.FILE_OPENED;
                 iecs.logger.LogInfo("FileOpened: " + (iecs.lastFileOperationData[0] as NodeFile).FullName +
@@ -681,6 +683,7 @@ namespace IEDExplorer
                 if (filerd.MoreFollows)
                 {
                     iecs.fstate = FileTransferState.FILE_READ;
+                    ReadFileStateChanged?.Invoke(true);
                 }
                 else
                 {
@@ -694,6 +697,7 @@ namespace IEDExplorer
                     holdHandlerUntilFileIsRead = null;
                     iecs.fstate = FileTransferState.FILE_COMPLETE;
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
+                    ReadFileStateChanged?.Invoke(false);
                 }
             }
         }
@@ -996,7 +1000,7 @@ namespace IEDExplorer
                                                 {
                                                     recursiveReadData(iecs, dataref, b, NodeState.Reported);
 
-                                                    if (ReportsRunning) createReportRecord(iecs, varName, b);
+                                                    createReportRecord(iecs, varName, b);
                                                 }
                                             }
                                             dataReferenceCount++;
@@ -1035,11 +1039,8 @@ namespace IEDExplorer
                                                 if (list[i].Success != null)
                                                 {
                                                     recursiveReadData(iecs, dataref, nba[listmap[dataValuesCount]], NodeState.Reported);
-                                                    if (ReportsRunning)
-                                                    {
-                                                        varName = nba[listmap[dataValuesCount]].CommAddress.Domain + "/" + nba[listmap[dataValuesCount]].CommAddress.Variable;
-                                                        createReportRecord(iecs, varName, nba[listmap[dataValuesCount]]);
-                                                    }
+                                                    varName = nba[listmap[dataValuesCount]].CommAddress.Domain + "/" + nba[listmap[dataValuesCount]].CommAddress.Variable;
+                                                    createReportRecord(iecs, varName, nba[listmap[dataValuesCount]]);
                                                 }
                                             }
                                             dataValuesCount++;

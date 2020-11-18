@@ -359,9 +359,9 @@ namespace IEDExplorer
                 Logger.getLogger().LogError("Iec61850Controller.WriteData: null data (-Value), cannot send");
         }
 
-        public void WriteRcb(RcbActivateParams rpar, bool reRead)
+        public void WriteRcb(ReportControlBlock rpar, bool reRead)
         {
-            iecs.Send(rpar.getWriteArray(), rpar.self.CommAddress, ActionRequested.Write);
+            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write);
 
             if (reRead)
             {

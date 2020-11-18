@@ -8,7 +8,7 @@ namespace IEDExplorer
 {
     public class FileDirectory
     {
-        public string TimeOfLastModification { get; set; }
+        public DateTime TimeOfLastModification { get; set; }
         public int Size { get; set; }
         public string Name { get; set; }
         public byte[] FileData { get; set; }
