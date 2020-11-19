@@ -191,7 +191,8 @@
     <Compile Include="NodeGVL.cs" />
     <Compile Include="NodeVLM.cs" />
     <Compile Include="EmbeddedAssembly.cs" />
-    <Compile Include="RcbActivateParams.cs" />
+    <Compile Include="ReasonForInclusionEnum.cs" />
+    <Compile Include="ReportControlBlock.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="ReportOptionsEnum.cs" />
     <Compile Include="ReportTriggerOptionsEnum.cs" />

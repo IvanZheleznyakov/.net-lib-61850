@@ -98,11 +98,9 @@ namespace IEDExplorer
         int InvokeID = 0;
         int MaxCalls = 10;
 
-        public delegate void responseReceivedHandler(Response response);
+        private LibraryManager.responseReceivedHandler holdHandlerUntilFileIsRead = null;
 
-        private responseReceivedHandler holdHandlerUntilFileIsRead = null;
-
-        private Dictionary<int, responseReceivedHandler> waitingMmsPdu;
+        private Dictionary<int, LibraryManager.responseReceivedHandler> waitingMmsPdu;
 
         bool[] ServiceSupportOptions = new bool[96];
         enum ServiceSupportOptionsEnum
@@ -653,7 +651,7 @@ namespace IEDExplorer
                         FileDirectories = listOfFileDirectory
                     };
 
-                    waitingMmsPdu[invokeId]?.Invoke(response);
+                    waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
             }
@@ -693,7 +691,7 @@ namespace IEDExplorer
                         TypeOfError = DataAccessErrorEnum.none,
                         FileData = (iecs.lastFileOperationData[0] as NodeFile).Data
                     };
-                    holdHandlerUntilFileIsRead?.Invoke(response);
+                    holdHandlerUntilFileIsRead?.Invoke(response, null);
                     holdHandlerUntilFileIsRead = null;
                     iecs.fstate = FileTransferState.FILE_COMPLETE;
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
@@ -940,7 +938,7 @@ namespace IEDExplorer
                                         report.DataReferences = new string[datanum];
                                         report.DataIndices = new int[datanum];
                                         report.DataValues = new MmsValue[datanum];
-                                        report.ReasonForInclusion = new Report.ReasonForInclusionEnum[datanum];
+                                        report.ReasonForInclusion = new ReasonForInclusionEnum[datanum];
                                         for (int k = 0; k != datanum; ++k)
                                         {
                                             report.DataIndices[k] = listmap[k];
@@ -1067,23 +1065,23 @@ namespace IEDExplorer
                                         int size = list[i].Success.Bit_string.getLengthInBits();
                                         if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
                                         {
-                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.DATA_CHANGE;
+                                            report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_CHANGE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
                                         {
-                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.QUALITY_CHANGE;
+                                            report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.QUALITY_CHANGE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
                                         {
-                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.DATA_UPDATE;
+                                            report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_UPDATE;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
                                         {
-                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.INTEGRITY;
+                                            report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.INTEGRITY;
                                         }
                                         else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
                                         {
-                                            report.ReasonForInclusion[reasoncnt] = IEDExplorer.Report.ReasonForInclusionEnum.GI;
+                                            report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.GI;
                                         }
                                         reasoncnt++;
                                         // End or continue?
@@ -1179,6 +1177,8 @@ namespace IEDExplorer
                         iecs.logger.LogDebug("Have unknown Unconfirmed PDU: " + lstErr);
                 }
             }
+
+            NewReportReceived?.Invoke(report);
         }
 
         private void createReportRecord(Iec61850State iecs, string varName, NodeBase b)
@@ -1349,6 +1349,7 @@ namespace IEDExplorer
                             if (ar.Success != null)
                             {
                                 iecs.logger.LogDebug("Reading Actual variable value: " + lastOperationData[i].IecAddress);
+                                recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                                 if (waitingMmsPdu.ContainsKey(receivedInvokeId))
                                 {
                                     Response response = new Response()
@@ -1357,10 +1358,17 @@ namespace IEDExplorer
                                         TypeOfError = DataAccessErrorEnum.none,
                                         MmsValue = new MmsValue(ar.Success)
                                     };
-                                    waitingMmsPdu[receivedInvokeId]?.Invoke(response);
+                                    ReportControlBlock rcb = null;
+                                    if (lastOperationData[i] is NodeRCB)
+                                    {
+                                        rcb = new ReportControlBlock()
+                                        {
+                                            self = (NodeRCB)lastOperationData[i]
+                                        };
+                                    }
+                                    waitingMmsPdu[receivedInvokeId]?.Invoke(response, rcb);
                                     waitingMmsPdu.Remove(receivedInvokeId);
                                 }
-                                recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                             }
                         }
                         else
@@ -1372,7 +1380,7 @@ namespace IEDExplorer
                                     TypeOfResponse = TypeOfResponseEnum.ERROR,
                                     TypeOfError = (DataAccessErrorEnum)ar.Failure.Value
                                 };
-                                waitingMmsPdu[receivedInvokeId]?.Invoke(response);
+                                waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
                                 waitingMmsPdu.Remove(receivedInvokeId);
                             }
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
@@ -1891,7 +1899,7 @@ namespace IEDExplorer
 
         public int SendIdentify(Iec61850State iecs)
         {
-            waitingMmsPdu = new Dictionary<int, responseReceivedHandler>();
+            waitingMmsPdu = new Dictionary<int, LibraryManager.responseReceivedHandler>();
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2116,7 +2124,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendRead(Iec61850State iecs, WriteQueueElement el, responseReceivedHandler receiveHandler = null)
+        public int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();

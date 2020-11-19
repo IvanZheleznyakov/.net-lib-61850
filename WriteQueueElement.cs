@@ -26,7 +26,7 @@ namespace IEDExplorer
 {
     public class WriteQueueElement
     {
-        public WriteQueueElement(NodeBase[] Data, CommAddress Address, ActionRequested Action, Scsm_MMS.responseReceivedHandler handler = null)
+        public WriteQueueElement(NodeBase[] Data, CommAddress Address, ActionRequested Action, LibraryManager.responseReceivedHandler handler = null)
         {
             this.Data = Data;
             this.Address = Address;
@@ -37,6 +37,6 @@ namespace IEDExplorer
         public NodeBase[] Data { get; private set; }
         public CommAddress Address { get; private set; }
         public ActionRequested Action { get; private set; }
-        public Scsm_MMS.responseReceivedHandler Handler { get; private set; }
+        public LibraryManager.responseReceivedHandler Handler { get; private set; }
     }
 }

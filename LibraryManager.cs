@@ -34,7 +34,10 @@ namespace IEDExplorer
         public delegate void modelHasBeenCreatedEventHandler(LibraryManager libraryManager);
         public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        public delegate void responseReceivedHandler(Response response);
+        public delegate void reportControlBlockUpdatedEventHandler(LibraryManager libraryManager, ReportControlBlock reportControlBlock);
+        public event reportControlBlockUpdatedEventHandler ReportControlBlockUpdated;
+
+        public delegate void responseReceivedHandler(Response response, object param);
 
         /// <summary>
         /// Конструктор класса, инициализирующий необходимые поля.
@@ -113,13 +116,13 @@ namespace IEDExplorer
         /// Чтение данных.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public bool ReadData(string name, Scsm_MMS.responseReceivedHandler receiveHandler)
+        public bool ReadData(string name, responseReceivedHandler receivedHandler)
         {
             try
             {
                 NodeBase outNode = new NodeBase("");
                 worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
-                worker.iecs.Controller.ReadData(outNode, receiveHandler);
+                worker.iecs.Controller.ReadData(outNode, receivedHandler);
             }
             catch (Exception ex)
             {
@@ -142,7 +145,7 @@ namespace IEDExplorer
 
         public void UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
         {
-
+            ReadData(rcb.self.IecAddress, receivedHandler);
         }
 
         /// <summary>
@@ -150,13 +153,10 @@ namespace IEDExplorer
         /// </summary>
         /// <param name="rcbPar">Параметры отчёта.</param>
         /// <param name="reRead">True - прочитать данные в узле сразу после записи; False - иначе.</param>
-        public bool WriteRcb(string name, ReportControlBlock rcbPar, bool reRead)
+        public bool WriteRcb(ReportControlBlock rcbPar, bool reRead)
         {
             try
             {
-                NodeBase outNode = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
-                rcbPar.self = (NodeRCB)outNode;
                 worker.iecs.Controller.WriteRcb(rcbPar, reRead);
             }
             catch (Exception ex)
@@ -183,7 +183,7 @@ namespace IEDExplorer
         /// Получение списка файлов и директорий.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public void GetFileDirectory(string name, Scsm_MMS.responseReceivedHandler receivedHandler)
+        public void GetFileDirectory(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
             var node = new NodeBase("");
             if (name == "/")
@@ -202,7 +202,7 @@ namespace IEDExplorer
         /// Получение файла.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public bool GetFile(string name, Scsm_MMS.responseReceivedHandler receivedHandler)
+        public bool GetFile(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
             Console.WriteLine("FILE STATE: " + worker.IsFileReadingNow + " ||| " + worker.iecs.fstate.ToString());
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)

@@ -67,14 +67,20 @@ namespace IEDExplorer
 
             string iecAddress = iec.IecAddress;
 
-            //  addressNodesPairs.Add(iecAddress, iec);
+            if (!addressNodesPairs.ContainsKey(iecAddress))
+            {
+                addressNodesPairs.Add(iecAddress, iec);
+            }
 
             foreach (NodeLD ld in ied.GetChildNodes())      // LD level
             {
                 NodeLD ild = new NodeLD(ld.Name);
                 ild.IsIecModel = true;
                 ild = (NodeLD)iec.AddChildNode(ild);
-                //  addressNodesPairs.Add(ild.IecAddress, ild);
+                if (!addressNodesPairs.ContainsKey(ild.IecAddress))
+                {
+                    addressNodesPairs.Add(ild.IecAddress, ild);
+                }
 
                 foreach (NodeLN ln in ld.GetChildNodes())   // LN level
                 {
@@ -82,11 +88,11 @@ namespace IEDExplorer
                     iln.IsIecModel = true;
 
                     iln = (NodeLN)ild.AddChildNode(iln);
-                    //iecAddress = iln.IecAddress;
-                    //if (addressNodesPairs.ContainsKey(iecAddress))
-                    //{
-                    //    addressNodesPairs.Add(iecAddress, iln);
-                    //}
+                    iecAddress = iln.IecAddress;
+                    if (addressNodesPairs.ContainsKey(iecAddress))
+                    {
+                        addressNodesPairs.Add(iecAddress, iln);
+                    }
                     foreach (NodeFC fc in ln.GetChildNodes())   // FC level - skipping
                     {
                         if (fc.Name == "RP" || fc.Name == "BR")
@@ -100,10 +106,6 @@ namespace IEDExplorer
 
                             // AddChildNode returns original object if the same name found (new object is forgotten)
                             ido = (NodeDO)iln.AddChildNode(ido);
-                            //if (!addressNodesPairs.ContainsKey(iecAddress))
-                            //{
-                            //    addressNodesPairs.Add(iecAddress, ido);
-                            //}
                             // At this point, it can happen that we get DO more than once (same DO in several FC)
                             // For DOs, this is ok, FC is not relevant for DOs
                             // Next level is peculiar: can be DO (subDataObject) or a DA

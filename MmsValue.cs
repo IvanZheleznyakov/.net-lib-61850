@@ -88,7 +88,7 @@ namespace IEDExplorer
 
         private Data asn1Data;
 
-        public MmsTypeEnum MmsType { get; set; }
+        public MmsTypeEnum MmsType { get; internal set; }
 
         public List<MmsValue> GetMmsArray()
         {
