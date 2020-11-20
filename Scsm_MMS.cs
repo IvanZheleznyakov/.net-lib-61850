@@ -1023,7 +1023,7 @@ namespace IEDExplorer
                                 {
                                     // Report WITHOUT references:
                                     // Need to investigate report members
-                                    NodeBase lvb = iecs.DataModel.lists.FindNodeByAddress(datName, true);
+                                    NodeBase lvb = iecs.DataModel.datasets.FindNodeByAddress(datName, true);
                                     report.DataValues[dataValuesCount] = new MmsValue(list[i].Success);
                                     if (lvb != null)
                                     {
@@ -1311,7 +1311,7 @@ namespace IEDExplorer
                         {
                             string domain = Read.VariableAccessSpecification.VariableListName.Domain_specific.DomainID.Value;
                             string address = Read.VariableAccessSpecification.VariableListName.Domain_specific.ItemID.Value;
-                            NodeBase nb = iecs.DataModel.lists.FindNodeByAddress(domain, address, true);
+                            NodeBase nb = iecs.DataModel.datasets.FindNodeByAddress(domain, address, true);
                             // TODO
                             if (nb != null && nb.GetChildCount() == Read.ListOfAccessResult.Count)
                             {
@@ -1413,7 +1413,7 @@ namespace IEDExplorer
         {
             iecs.logger.LogDebug("GetNamedVariableListAttributes != null");
             if (GetNamedVariableListAttributes.MmsDeletable)
-                (iecs.DataModel.lists.GetActualChildNode().GetActualChildNode() as NodeVL).Deletable = true;
+                (iecs.DataModel.datasets.GetActualChildNode().GetActualChildNode() as NodeVL).Deletable = true;
 
             if (GetNamedVariableListAttributes.ListOfVariable != null)
             {
@@ -1424,18 +1424,18 @@ namespace IEDExplorer
                     NodeBase b = (iecs.DataModel.ied as NodeIed).FindNodeByAddress(v.VariableSpecification.Name.Domain_specific.DomainID.Value, v.VariableSpecification.Name.Domain_specific.ItemID.Value);
                     if (b != null)
                     {
-                        iecs.DataModel.lists.GetActualChildNode().GetActualChildNode().LinkChildNodeByAddress(b);
+                        iecs.DataModel.datasets.GetActualChildNode().GetActualChildNode().LinkChildNodeByAddress(b);
                     }
                 }
                 iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST;
-                if (iecs.DataModel.lists.GetActualChildNode().NextActualChildNode() == null)
+                if (iecs.DataModel.datasets.GetActualChildNode().NextActualChildNode() == null)
                 {
-                    if (iecs.DataModel.lists.NextActualChildNode() == null)
+                    if (iecs.DataModel.datasets.NextActualChildNode() == null)
                     {
                         // End of loop
                         iecs.istate = Iec61850lStateEnum.IEC61850_MAKEGUI;
                         iecs.logger.LogInfo("Init end: [IEC61850_FREILAUF]");
-                        iecs.DataModel.lists.ResetAllChildNodes();
+                        iecs.DataModel.datasets.ResetAllChildNodes();
                         //iecs.
                     }
                 }
@@ -1506,7 +1506,7 @@ namespace IEDExplorer
                         foreach (Identifier i in GetNameList.ListOfIdentifier)
                         {
                             iecs.logger.LogDebug(String.Format("GetNameList.ListOfIdentifier: {0}", i.Value));
-                            NodeBase nld = iecs.DataModel.lists.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            NodeBase nld = iecs.DataModel.datasets.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
                             NodeVL vl = new NodeVL(i.Value);
                             vl.Defined = true;
                             nld.AddChildNode(vl);
@@ -1522,7 +1522,7 @@ namespace IEDExplorer
                             iecs.logger.LogInfo("Reading variable lists attributes: [IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST]");    // next state
                             iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST; // next state
                             iecs.DataModel.ied.ResetAllChildNodes();
-                            iecs.DataModel.lists.ResetAllChildNodes();
+                            iecs.DataModel.datasets.ResetAllChildNodes();
                         }
                         else
                             iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;         // next logical device
@@ -2088,7 +2088,7 @@ namespace IEDExplorer
             ObjectName on = new ObjectName();
             ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
 
-            NodeBase n = iecs.DataModel.lists.GetActualChildNode();
+            NodeBase n = iecs.DataModel.datasets.GetActualChildNode();
             if (n == null)
             {
                 iecs.logger.LogDebug("mms.SendGetNamedVariableListAttributes: No lists defined!");
@@ -2096,7 +2096,7 @@ namespace IEDExplorer
             }
 
             dst.DomainID = new Identifier(n.Name);
-            dst.ItemID = new Identifier(iecs.DataModel.lists.GetActualChildNode().GetActualChildNode().Name);         // List name e.g. MMXU0$MX
+            dst.ItemID = new Identifier(iecs.DataModel.datasets.GetActualChildNode().GetActualChildNode().Name);         // List name e.g. MMXU0$MX
 
             iecs.logger.LogDebug("GetNamedVariableListAttributes: Get Attr for: " + dst.ItemID.Value);
             on.selectDomain_specific(dst);

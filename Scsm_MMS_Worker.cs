@@ -27,6 +27,7 @@ using org.bn;
 using MMS_ASN1_Model;
 using System.Threading;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace IEDExplorer
 {
@@ -120,6 +121,8 @@ namespace IEDExplorer
         {
             this.iecs.istate = c;
         }
+
+        private Dictionary<string, NodeBase> testdict;
 
         private void WorkerThreadProc(object obj)
         {

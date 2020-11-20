@@ -22,7 +22,7 @@ namespace IEDExplorer
             public string LastMethodWithException { get; set; }
         }
 
-        protected Scsm_MMS_Worker worker;
+        internal Scsm_MMS_Worker worker;
         protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
 
         public delegate void connectionClosedEventHandler();
@@ -225,6 +225,19 @@ namespace IEDExplorer
                 return false;
             }
             return true;
+        }
+
+        public void Select(ControlObject cntrlObj)
+        {
+            worker.iecs.Controller.ReadData(cntrlObj.self.FindChildNode("SBO"));
+        }
+
+        public ControlObject CreateControlObject(string name)
+        {
+            ControlObject cntrlObj = new ControlObject();
+            cntrlObj.libraryManager = this;
+            cntrlObj.self = (NodeDO)worker.iecs.DataModel.iec.FindNodeByAddressWithDots(name);
+            return cntrlObj;
         }
 
         /// <summary>

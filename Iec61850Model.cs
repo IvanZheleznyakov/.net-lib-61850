@@ -18,7 +18,7 @@ namespace IEDExplorer
         /// <summary>
         /// Server named variable lists
         /// </summary>
-        public NodeIed lists;
+        public NodeIed datasets;
         /// <summary>
         /// Server RP blocks (reports)
         /// </summary>
@@ -41,7 +41,7 @@ namespace IEDExplorer
         {
             ied = new NodeIed("ied", this);
             iec = new NodeIed("iec", this);
-            lists = new NodeIed("lists", this);
+            datasets = new NodeIed("datasets", this);
             urcbs = new NodeIed("urcbs", this);
             brcbs = new NodeIed("brcbs", this);
             files = new NodeIed("files", this);
@@ -49,7 +49,7 @@ namespace IEDExplorer
             ied.iecs = iecs;
             iec.iecs = iecs;
             iec.IsIecModel = true;
-            lists.iecs = iecs;
+            datasets.iecs = iecs;
             files.iecs = iecs;
             urcbs.iecs = iecs;
             brcbs.iecs = iecs;
@@ -155,7 +155,7 @@ namespace IEDExplorer
                 }
             }
             // Add datasets to LNs
-            foreach (NodeLD ld in lists.GetChildNodes())      // LD level
+            foreach (NodeLD ld in datasets.GetChildNodes())      // LD level
             {
                 foreach (NodeVL vl in ld.GetChildNodes())
                 {
