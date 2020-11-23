@@ -117,11 +117,11 @@ namespace IEDExplorer
                         cPar.ctlVal = ((NodeData)b).DataValue;
                     }
                     cPar.T = DateTime.MinValue;
-                    cPar.interlockCheck = true;
-                    cPar.synchroCheck = true;
-                    cPar.orCat = OrCat.STATION_CONTROL;
+                    cPar.interlockCheck = false;
+                    cPar.synchroCheck = false;
+                    cPar.orCat = OriginatorCategoryEnum.STATION_CONTROL;
                     cPar.orIdent = "mtra";
-                    cPar.CommandFlowFlag = CommandCtrlModel.Unknown;
+                    cPar.CommandFlowFlag = ControlModelEnum.Unknown;
                     b = data;
                     List<string> path = new List<string>();
                     do
@@ -138,9 +138,21 @@ namespace IEDExplorer
                             break;
                     }
                     if (b != null)
+                    {
                         if (b is NodeData && !(b is NodeDO))
-                            cPar.CommandFlowFlag = (CommandCtrlModel)((long)((b as NodeData).DataValue));
-                    cPar.SBOrun = false;
+                        {
+                            cPar.CommandFlowFlag = (ControlModelEnum)((long)((b as NodeData).DataValue));
+                        }
+                    }
+
+                    if (cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Enhanced_Security || cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Normal_Security)
+                    {
+                        cPar.SBOrun = true;
+                    }
+                    else 
+                    {
+                        cPar.SBOrun = false;
+                    }
                     cPar.SBOdiffTime = false;
                     cPar.SBOtimeout = 100;
                     return cPar;
@@ -160,7 +172,7 @@ namespace IEDExplorer
         {
             if (cPar.SBOrun)
             {
-                string sName = (cPar.CommandFlowFlag == CommandCtrlModel.Select_Before_Operate_With_Enhanced_Security) ? "SBOw" : "SBO";
+                string sName = (cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Enhanced_Security) ? "SBOw" : "SBO";
                 NodeData d = (NodeData)data.Parent;
                 NodeData op = null, sel = null;
                 if (d != null)

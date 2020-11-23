@@ -67,6 +67,10 @@ namespace IEDExplorer
 
             string iecAddress = iec.IecAddress;
 
+            if (iecAddress.Substring(0, 3) == "iec")
+            {
+                iecAddress = iecAddress.Remove(0, 3);
+            }
             if (!addressNodesPairs.ContainsKey(iecAddress))
             {
                 addressNodesPairs.Add(iecAddress, iec);
@@ -77,9 +81,14 @@ namespace IEDExplorer
                 NodeLD ild = new NodeLD(ld.Name);
                 ild.IsIecModel = true;
                 ild = (NodeLD)iec.AddChildNode(ild);
-                if (!addressNodesPairs.ContainsKey(ild.IecAddress))
+                iecAddress = ild.IecAddress;
+                if (iecAddress.Substring(0, 3) == "iec")
                 {
-                    addressNodesPairs.Add(ild.IecAddress, ild);
+                    iecAddress = iecAddress.Remove(0, 3);
+                }
+                if (!addressNodesPairs.ContainsKey(iecAddress))
+                {
+                    addressNodesPairs.Add(iecAddress, ild);
                 }
 
                 foreach (NodeLN ln in ld.GetChildNodes())   // LN level
@@ -89,7 +98,11 @@ namespace IEDExplorer
 
                     iln = (NodeLN)ild.AddChildNode(iln);
                     iecAddress = iln.IecAddress;
-                    if (addressNodesPairs.ContainsKey(iecAddress))
+                    if (iecAddress.Substring(0, 3) == "iec")
+                    {
+                        iecAddress = iecAddress.Remove(0, 3);
+                    }
+                    if (!addressNodesPairs.ContainsKey(iecAddress))
                     {
                         addressNodesPairs.Add(iecAddress, iln);
                     }
@@ -102,7 +115,6 @@ namespace IEDExplorer
                         {
                             NodeDO ido = new NodeDO(dO.Name);
                             ido.IsIecModel = true;
-                            iecAddress = ido.IecAddress;
 
                             // AddChildNode returns original object if the same name found (new object is forgotten)
                             ido = (NodeDO)iln.AddChildNode(ido);
@@ -118,6 +130,15 @@ namespace IEDExplorer
                             foreach (NodeBase da in dO.GetChildNodes())
                             {
                                 recursiveLinkDA(da, ido, fc);
+                            }
+                            iecAddress = ido.IecAddress;
+                            if (iecAddress.Substring(0, 3) == "iec")
+                            {
+                                iecAddress = iecAddress.Remove(0, 3);
+                            }
+                            if (!addressNodesPairs.ContainsKey(iecAddress))
+                            {
+                                addressNodesPairs.Add(iecAddress, ido);
                             }
                         }
                     }

@@ -8,10 +8,11 @@ namespace IEDExplorer
 {
     public enum ControlModelEnum
     {
-        CONTROL_MODEL_STATUS_ONLY,
-        CONTROL_MODEL_DIRECT_NORMAL,
-        CONTROL_MODEL_SBO_NORMAL,
-        CONTROL_MODEL_DIRECT_ENHANCED,
-        CONTROL_MODEL_SBO_ENHANCED
+        State_Only = 0,
+        Direct_Control_With_Normal_Security,
+        Select_Before_Operate_With_Normal_Security,
+        Direct_Control_With_Enhanced_Security,
+        Select_Before_Operate_With_Enhanced_Security,
+        Unknown,
     }
 }

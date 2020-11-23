@@ -167,6 +167,8 @@
   <ItemGroup>
     <Compile Include="ActionRequested.cs" />
     <Compile Include="BNExtension\XMLEncoder.cs" />
+    <Compile Include="ControlModelEnum.cs" />
+    <Compile Include="ControlObject.cs" />
     <Compile Include="DataAccessErrorEnum.cs" />
     <Compile Include="ExportListViewToCSV.cs" />
     <Compile Include="FileDirectory.cs" />
@@ -191,6 +193,7 @@
     <Compile Include="NodeGVL.cs" />
     <Compile Include="NodeVLM.cs" />
     <Compile Include="EmbeddedAssembly.cs" />
+    <Compile Include="OriginatorCategoryEnum.cs" />
     <Compile Include="ReasonForInclusionEnum.cs" />
     <Compile Include="ReportControlBlock.cs" />
     <Compile Include="Report.cs" />

@@ -1110,7 +1110,7 @@ namespace IEDExplorer
                         int phs = 0;
                         string cntrlObj = "";
                         ControlError error = ControlError.NoError;
-                        OrCat originOrCat = OrCat.NOT_SUPPORTED;
+                        OriginatorCategoryEnum originOrCat = OriginatorCategoryEnum.NOT_SUPPORTED;
                         string originOrStr = "";
                         long ctlNum = 0;
                         ControlAddCause addCause = ControlAddCause.ADD_CAUSE_UNKNOWN;
@@ -1140,7 +1140,7 @@ namespace IEDExplorer
                                                     if (j == 0)
                                                     {
                                                         if (d.isIntegerSelected())
-                                                            originOrCat = (OrCat)d.Integer;
+                                                            originOrCat = (OriginatorCategoryEnum)d.Integer;
                                                     }
                                                     if (j == 1)
                                                     {
@@ -1168,7 +1168,7 @@ namespace IEDExplorer
                         Logger.getLogger().LogWarning("Have got LastApplError:" +
                             ", Control Object: " + cntrlObj +
                             ", Error: " + ((int)error).ToString() + " (" + Enum.GetName(typeof(ControlError), error) + ")" +
-                            ", Originator: " + ((int)originOrCat).ToString() + " (" + Enum.GetName(typeof(OrCat), originOrCat) + "), Id = " + originOrStr +
+                            ", Originator: " + ((int)originOrCat).ToString() + " (" + Enum.GetName(typeof(OriginatorCategoryEnum), originOrCat) + "), Id = " + originOrStr +
                             ", CtlNum: " + ctlNum.ToString() +
                             ", addCause: " + ((int)addCause).ToString() + " (" + Enum.GetName(typeof(ControlAddCause), addCause) + ")"
                              );

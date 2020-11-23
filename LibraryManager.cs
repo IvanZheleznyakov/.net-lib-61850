@@ -153,7 +153,7 @@ namespace IEDExplorer
         /// </summary>
         /// <param name="rcbPar">Параметры отчёта.</param>
         /// <param name="reRead">True - прочитать данные в узле сразу после записи; False - иначе.</param>
-        public bool WriteRcb(ReportControlBlock rcbPar, bool reRead)
+        public bool SetReportControlBlock(ReportControlBlock rcbPar, bool reRead)
         {
             try
             {
@@ -230,14 +230,6 @@ namespace IEDExplorer
         public void Select(ControlObject cntrlObj)
         {
             worker.iecs.Controller.ReadData(cntrlObj.self.FindChildNode("SBO"));
-        }
-
-        public ControlObject CreateControlObject(string name)
-        {
-            ControlObject cntrlObj = new ControlObject();
-            cntrlObj.libraryManager = this;
-            cntrlObj.self = (NodeDO)worker.iecs.DataModel.iec.FindNodeByAddressWithDots(name);
-            return cntrlObj;
         }
 
         /// <summary>
