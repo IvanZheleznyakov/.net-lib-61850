@@ -29,7 +29,7 @@ using System.IO;
 namespace lib61850net.BNExtension
 {
 	
-	public class XMLEncoder: Encoder
+	internal class XMLEncoder: Encoder
 	{		
 		public XMLEncoder()
 		{

@@ -25,7 +25,7 @@ using System.IO;
 
 namespace lib61850net
 {
-    public class NodeFile : NodeBase
+    internal class NodeFile : NodeBase
     {
         public NodeFile(string Name, bool isDir)
             : base(Name)

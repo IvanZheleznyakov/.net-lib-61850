@@ -19,7 +19,7 @@
 using System;
 namespace org.bn
 {	
-    public interface IEncoder {
+    internal interface IEncoder {
          void encode<T>(T obj, System.IO.Stream stream);
     }
 }

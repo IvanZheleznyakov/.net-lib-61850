@@ -24,7 +24,7 @@ using System.Text;
 
 namespace lib61850net
 {
-    public class NodeVL : NodeBase
+    internal class NodeVL : NodeBase
     {
         public NodeVL(string Name)
             : base(Name)

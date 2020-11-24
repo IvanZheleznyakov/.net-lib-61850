@@ -30,11 +30,11 @@ namespace org.bn
             return instance;
         }
 
-        public IEncoder newEncoder() {
+        internal IEncoder newEncoder() {
             return newEncoder("BER");
         }
 
-        public IEncoder newEncoder(String encodingSchema) {
+        internal IEncoder newEncoder(String encodingSchema) {
             if(encodingSchema.Equals("BER",StringComparison.CurrentCultureIgnoreCase)) {
                 return new org.bn.coders.ber.BEREncoder();
             }

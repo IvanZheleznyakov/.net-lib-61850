@@ -160,7 +160,7 @@ namespace lib61850net
         /// </summary>
         /// <param name="variableReference">Ссылка (полное имя) переменной.</param>
         /// <param name="FC">Функциональная связь.</param>
-        /// <returns>Список MmsVariableSpecification, которые описывают данные в переменной.</returns>
+        /// <returns>Список экземпляров MmsVariableSpecification, которые описывают данные в переменной.</returns>
         public List<MmsVariableSpecification> GetDataValues(string variableReference, FunctionalConstraintEnum FC)
         {
             try

@@ -24,7 +24,7 @@ using System.Text;
 
 namespace lib61850net
 {
-    public class NodeRCB : NodeBase
+    internal class NodeRCB : NodeBase
     {
         //bool _defined = false;
 

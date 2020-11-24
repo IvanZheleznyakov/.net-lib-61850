@@ -15,7 +15,7 @@ namespace lib61850net
         Written
     }
 
-    public class NodeBase : IComparable<NodeBase>
+    internal class NodeBase : IComparable<NodeBase>
     {
         private List<String> _fc = new List<string>();
         protected List<NodeBase> _childNodes;

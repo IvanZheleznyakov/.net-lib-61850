@@ -36,20 +36,6 @@ namespace lib61850net
         {
         }
 
-        private int MapLibiecFC(string FC)
-        {
-            int fco = 0;
-            foreach (string s in Enum.GetNames(typeof(FunctionalConstraintEnum)))
-            {
-                if (s.Substring(s.LastIndexOf("_") + 1) == FC)
-                {
-                    return (int)Enum.GetValues(typeof(FunctionalConstraintEnum)).GetValue(fco);
-                }
-                fco++;
-            }
-            return -1;
-        }
-
         internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // Syntax: DO(<data object name> <nb of array elements>){…}

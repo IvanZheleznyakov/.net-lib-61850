@@ -14,7 +14,7 @@ namespace lib61850net
         public MmsTypeEnum MmsType { get; internal set; }
         internal object DataValue { get; set; }
 
-        public MmsVariableSpecification(NodeData node)
+        internal MmsVariableSpecification(NodeData node)
         {
             self = node;
             Name = self.Name;

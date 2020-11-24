@@ -24,7 +24,7 @@ using System.Text;
 
 namespace lib61850net
 {
-    public class NodeGData : NodeBase
+    internal class NodeGData : NodeBase
     {
         private MmsTypeEnum _dataType = MmsTypeEnum.STRUCTURE;
         private Object _dataValue = null;
