@@ -134,7 +134,7 @@ namespace IEDExplorer
             return node.GetChildNodeNames();
         }
 
-        public List<MmsVariableSpecification> GetDataValues(string variableReference)
+        public List<MmsVariableSpecification> GetDataValues(string variableReference, FunctionalConstraintEnum FC)
         {
             var result = new List<MmsVariableSpecification>();
             var node = new NodeBase("");
@@ -142,7 +142,10 @@ namespace IEDExplorer
             var childs = node.GetChildNodes();
             foreach (var ch in childs)
             {
-                result.Add(new MmsVariableSpecification((NodeData)ch));
+                if (ch is NodeData && (ch as NodeData).FC == FC)
+                {
+                    result.Add(new MmsVariableSpecification((NodeData)ch));
+                }
             }
 
             return result;

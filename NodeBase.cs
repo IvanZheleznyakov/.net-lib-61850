@@ -130,6 +130,19 @@ namespace IEDExplorer
             return names;
         }
 
+        public List<string> GetChildNodeNames(FunctionalConstraintEnum FC)
+        {
+            List<string> names = new List<string>();
+            foreach (NodeBase nb in _childNodes)
+            {
+                if (nb is NodeDO && (nb as NodeDO).FC == FC)
+                {
+                    names.Add(nb.Name);
+                }
+            }
+            return names;
+        }
+
         public bool isArray()
         {
             if (isLeaf()) return false;

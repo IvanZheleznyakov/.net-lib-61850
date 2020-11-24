@@ -172,6 +172,7 @@
     <Compile Include="DataAccessErrorEnum.cs" />
     <Compile Include="ExportListViewToCSV.cs" />
     <Compile Include="FileDirectory.cs" />
+    <Compile Include="FunctionalConstraintEnum.cs" />
     <Compile Include="Goose_ASN1_Model\Data.cs" />
     <Compile Include="Goose_ASN1_Model\DataSequence.cs" />
     <Compile Include="Goose_ASN1_Model\FloatingPoint.cs" />
@@ -470,7 +471,6 @@
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeTypeEnum.cs" />
     <Compile Include="IsoProtocolState.cs" />
-    <Compile Include="MmsTypeEnum1.cs" />
     <Compile Include="TcpProtocolState.cs" />
     <Compile Include="TcpState.cs" />
     <Compile Include="IsoTpktState.cs" />

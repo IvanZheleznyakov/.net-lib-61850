@@ -69,39 +69,6 @@ namespace IEDExplorer
             set { _bType = value; }
         }
 
-        protected bool isFCCalculated = false;
-        protected string _FC;
-
-        public string FC
-        {
-            get
-            {
-                if (!isFCCalculated)
-                {
-                    NodeBase nb = Parent;
-                    if (nb != null) do
-                        {
-                            if (nb is NodeFC)
-                            {
-                                isFCCalculated = true;
-                                _FC = nb.Name;
-                                return _FC;
-                            }
-                        } while (nb != null);
-                    return "";
-                }
-                else
-                {
-                    return _FC;
-                }
-            }
-            set
-            {
-                isFCCalculated = true;
-                _FC = value;
-            }
-        }
-
         public Object DataValue
         {
             get
@@ -175,6 +142,40 @@ namespace IEDExplorer
                 }
             }
             return null;
+        }
+
+        protected bool isFCCalculated = false;
+        protected FunctionalConstraintEnum _FC = FunctionalConstraintEnum.NONE;
+
+        public FunctionalConstraintEnum FC
+        {
+            get
+            {
+                if (_FC == FunctionalConstraintEnum.NONE)
+                {
+                    NodeBase nb = Parent;
+                    if (nb != null) do
+                        {
+                            if (nb is NodeFC)
+                            {
+                                isFCCalculated = true;
+                                _FC = (FunctionalConstraintEnum)MapLibiecFC(nb.Name);
+                                return _FC;
+                            }
+                            nb = nb.Parent;
+                        } while (nb != null);
+                    return FunctionalConstraintEnum.NONE;
+                }
+                else
+                {
+                    return _FC;
+                }
+            }
+            set
+            {
+                isFCCalculated = true;
+                _FC = value;
+            }
         }
 
         public string StringValue
@@ -493,47 +494,14 @@ namespace IEDExplorer
             return "";
         }
 
-         /** FCs (Functional constraints) according to IEC 61850-7-2 */
-        enum LibIecFunctionalConstraint
-        {
-            /** Status information */
-            IEC61850_FC_ST = 0,
-            /** Measurands - analog values */
-            IEC61850_FC_MX = 1,
-            /** Setpoint */
-            IEC61850_FC_SP = 2,
-            /** Substitution */
-            IEC61850_FC_SV = 3,
-            /** Configuration */
-            IEC61850_FC_CF = 4,
-            /** Description */
-            IEC61850_FC_DC = 5,
-            /** Setting group */
-            IEC61850_FC_SG = 6,
-            /** Setting group editable */
-            IEC61850_FC_SE = 7,
-            /** Service response / Service tracking */
-            IEC61850_FC_SR = 8,
-            /** Operate received */
-            IEC61850_FC_OR = 9,
-            /** Blocking */
-            IEC61850_FC_BL = 10,
-            /** Extended definition */
-            IEC61850_FC_EX = 11,
-            /** Control */
-            IEC61850_FC_CO = 12,
-            IEC61850_FC_ALL = 99,
-            IEC61850_FC_NONE = -1
-        }
-
-       int MapLibiecFC(string FC)
+        internal static int MapLibiecFC(string FC)
         {
             int fco = 0;
-            foreach (string s in Enum.GetNames(typeof(LibIecFunctionalConstraint)))
+            foreach (string s in Enum.GetNames(typeof(FunctionalConstraintEnum)))
             {
                 if (s.Substring(s.LastIndexOf("_") + 1) == FC)
                 {
-                    return (int)Enum.GetValues(typeof(LibIecFunctionalConstraint)).GetValue(fco);
+                    return (int)Enum.GetValues(typeof(FunctionalConstraintEnum)).GetValue(fco);
                 }
                 fco++;
             }

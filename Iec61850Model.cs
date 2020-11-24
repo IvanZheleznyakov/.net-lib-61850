@@ -204,7 +204,10 @@ namespace IEDExplorer
             }
             // Set FC
             if (linkedDa is NodeData && !(linkedDa is NodeDO))
+            {
                 (linkedDa as NodeData).SCL_FCDesc = fc.Name;
+                (linkedDa as NodeData).FC = (FunctionalConstraintEnum)NodeData.MapLibiecFC(fc.Name);
+            }
             // Check DO / DA types
             if (linkedDa != source)
             {
