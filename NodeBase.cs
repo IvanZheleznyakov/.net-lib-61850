@@ -117,15 +117,20 @@ namespace IEDExplorer
             }
         }
 
-        public List<string> GetChildNodeNames()
+        public List<string> GetChildNodeNames(bool isReportsNeeded, bool isDatasetsNeeded)
         {
             List<string> names = new List<string>();
             foreach (NodeBase nb in _childNodes)
             {
-                if (!(nb is NodeRCB) && !(nb is NodeVL))
+                if (!isReportsNeeded && nb is NodeRCB)
                 {
-                    names.Add(nb.Name);
+                    continue;
                 }
+                if (!isDatasetsNeeded && nb is NodeVL)
+                {
+                    continue;
+                }
+                names.Add((nb is NodeRCB) ? (nb as NodeRCB).ReportName : nb.Name);
             }
             return names;
         }

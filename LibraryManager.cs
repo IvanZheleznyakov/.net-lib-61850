@@ -98,7 +98,7 @@ namespace IEDExplorer
                 return null;
             }
 
-            return worker.iecs.DataModel.iec.GetChildNodeNames();
+            return worker.iecs.DataModel.iec.GetChildNodeNames(false, false);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace IEDExplorer
                 return null;
             }
 
-            return node.GetChildNodeNames();
+            return node.GetChildNodeNames(false, false);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace IEDExplorer
                 return null;
             }
 
-            return node.GetChildNodeNames();
+            return node.GetChildNodeNames(false, false);
         }
 
         public List<MmsVariableSpecification> GetDataValues(string variableReference, FunctionalConstraintEnum FC)
@@ -142,13 +142,31 @@ namespace IEDExplorer
             var childs = node.GetChildNodes();
             foreach (var ch in childs)
             {
-                if (ch is NodeData && (ch as NodeData).FC == FC)
+                if (ch is NodeData data && (data).FC == FC)
                 {
-                    result.Add(new MmsVariableSpecification((NodeData)ch));
+                    result.Add(new MmsVariableSpecification(data));
                 }
             }
 
             return result;
+        }
+
+        public List<string> GetDatasets(string ldName)
+        {
+            NodeBase ldDir = worker.iecs.DataModel.datasets.FindChildNode(ldName);
+            return ldDir.GetChildNodeNames(false, true);
+        }
+
+        public List<string> GetBufferedReports(string ldName)
+        {
+            NodeBase brDir = worker.iecs.DataModel.brcbs.FindChildNode(ldName);
+            return brDir.GetChildNodeNames(true, false);
+        }
+
+        public List<string> GetUnbufferedReports(string ldName)
+        {
+            NodeBase urDir = worker.iecs.DataModel.urcbs.FindChildNode(ldName);
+            return urDir.GetChildNodeNames(true, false);
         }
 
         /// <summary>
