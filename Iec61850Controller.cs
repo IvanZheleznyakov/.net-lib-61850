@@ -64,7 +64,7 @@ namespace IEDExplorer
             if ((nfi is NodeFile))
             {
                 NodeData nd = new NodeData("x");
-                nd.DataType = scsm_MMS_TypeEnum.visible_string;
+                nd.DataType = MmsTypeEnum.VISIBLE_STRING;
                 nd.DataValue = nfi.Name;
                 //    EditValue ev = new EditValue(nd);
                 //      System.Windows.Forms.DialogResult r = ev.ShowDialog();
@@ -241,7 +241,7 @@ namespace IEDExplorer
                         if (how == ActionRequested.WriteAsStructure)
                         {
                             NodeData n = new NodeData(b.Name);
-                            n.DataType = scsm_MMS_TypeEnum.structure;
+                            n.DataType = MmsTypeEnum.STRUCTURE;
                             n.DataValue = 2;
                             ndar.Add(n);
                             if ((c = b.FindChildNode("orCat")) != null)
@@ -404,7 +404,7 @@ namespace IEDExplorer
             {
                 do
                 {
-                    ur = (NodeData)iecs.DataModel.ied.FindNodeByValue(scsm_MMS_TypeEnum.visible_string, vl.IecAddress, ref ur);
+                    ur = (NodeData)iecs.DataModel.ied.FindNodeByValue(MmsTypeEnum.VISIBLE_STRING, vl.IecAddress, ref ur);
                     if (ur == null || ur.Parent == null)
                     {
                         Logger.getLogger().LogError("Suitable URCB not found, list cannot be activated!");

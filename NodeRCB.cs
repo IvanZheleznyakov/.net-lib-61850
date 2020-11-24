@@ -28,11 +28,14 @@ namespace IEDExplorer
     {
         //bool _defined = false;
 
-        public NodeRCB(string Name)
+        public NodeRCB(string Name, string reportName)
             : base(Name)
         {
             Activated = false;
+            ReportName = reportName;
         }
+
+        internal string ReportName { get; set; }
 
         public bool Activated { get; set; }
 

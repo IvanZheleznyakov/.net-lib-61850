@@ -185,6 +185,7 @@
     <Compile Include="LibraryManager.cs" />
     <Compile Include="MmsTypeEnum.cs" />
     <Compile Include="MmsValue.cs" />
+    <Compile Include="MmsVariableSpecification.cs" />
     <Compile Include="MMS_ASN1_Model\Conclude_ResponsePDU.cs" />
     <Compile Include="MyTreeView.cs">
       <SubType>Component</SubType>
@@ -469,7 +470,7 @@
     <Compile Include="NodeBase.cs" />
     <Compile Include="NodeTypeEnum.cs" />
     <Compile Include="IsoProtocolState.cs" />
-    <Compile Include="scsm_MMS_TypeEnum.cs" />
+    <Compile Include="MmsTypeEnum1.cs" />
     <Compile Include="TcpProtocolState.cs" />
     <Compile Include="TcpState.cs" />
     <Compile Include="IsoTpktState.cs" />

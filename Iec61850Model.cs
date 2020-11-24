@@ -140,6 +140,7 @@ namespace IEDExplorer
                             {
                                 addressNodesPairs.Add(iecAddress, ido);
                             }
+                            ido.FC = dO.FC;
                         }
                     }
                 }

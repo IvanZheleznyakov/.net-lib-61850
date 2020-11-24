@@ -26,7 +26,7 @@ namespace IEDExplorer
 {
     public class NodeGVL : NodeBase
     {
-        private scsm_MMS_TypeEnum _dataType = scsm_MMS_TypeEnum.structure;
+        private MmsTypeEnum _dataType = MmsTypeEnum.STRUCTURE;
         private Object _dataValue = null;
         private Object _dataParam = null;
         private Object _valueTag = null;
@@ -39,7 +39,7 @@ namespace IEDExplorer
         {
         }
 
-        public scsm_MMS_TypeEnum DataType
+        public MmsTypeEnum DataType
         {
             get
             {
@@ -99,7 +99,7 @@ namespace IEDExplorer
             }
         }
 
-        internal override NodeBase FindNodeByValue(scsm_MMS_TypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
+        internal override NodeBase FindNodeByValue(MmsTypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
         {
             if (dataValue == null)
                 return null;
@@ -135,7 +135,7 @@ namespace IEDExplorer
                 {
                     switch (DataType)
                     {
-                        case scsm_MMS_TypeEnum.utc_time:
+                        case MmsTypeEnum.UTC_TIME:
                             if (DataParam != null)
                             {
                                 if (((byte)(DataParam) & 0x60) > 0)     // Attributes ClockFailure or ClockNotSycnrhonized is Set
@@ -147,7 +147,7 @@ namespace IEDExplorer
                                 val = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString();
 
                             break;
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             byte[] bbval = (byte[])DataValue;
                             int blen = bbval.Length;
                             int trail;
@@ -180,10 +180,10 @@ namespace IEDExplorer
                 {
                     switch (DataType)
                     {
-                        case scsm_MMS_TypeEnum.utc_time:
+                        case MmsTypeEnum.UTC_TIME:
                             // Not supported
                             break;
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             byte[] bbval = (byte[])DataValue;
                             int blen = bbval.Length;
                             int trail = (int)DataParam;
@@ -198,13 +198,13 @@ namespace IEDExplorer
                             }
                             //val = sb.ToString();
                             break;
-                        case scsm_MMS_TypeEnum.boolean:
+                        case MmsTypeEnum.BOOLEAN:
                             if (value.StartsWith("0") || value.StartsWith("f", StringComparison.CurrentCultureIgnoreCase))
                                 DataValue = false;
                             if (value.StartsWith("1") || value.StartsWith("t", StringComparison.CurrentCultureIgnoreCase))
                                 DataValue = true;
                             break;
-                        case scsm_MMS_TypeEnum.visible_string:
+                        case MmsTypeEnum.VISIBLE_STRING:
                             DataValue = value;
                             break;
                         default:
@@ -224,7 +224,7 @@ namespace IEDExplorer
                 {
                     switch (DataType)
                     {
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             byte[] bbval = (byte[])DataValue;
                             int blen = bbval.Length;
                             int trail;

@@ -1733,7 +1733,7 @@ namespace IEDExplorer
                             NodeBase nrpied;
                             if (actualNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
                             else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            NodeBase nrp = new NodeRCB(newActualNode.CommAddress.Variable);
+                            NodeBase nrp = new NodeRCB(newActualNode.CommAddress.Variable, newActualNode.Name);
                             nrpied.AddChildNode(nrp);
                             foreach (NodeBase nb in newActualNode.GetChildNodes())
                             {
@@ -1746,7 +1746,7 @@ namespace IEDExplorer
             {
                 iecs.logger.LogDebug("t.Array != null");
                 if (actualNode is NodeData && !(actualNode is NodeDO))
-                    (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.array;
+                    (actualNode as NodeData).DataType = MmsTypeEnum.ARRAY;
                 for (int i = 0; i < t.Array.NumberOfElements.Value; i++)
                 {
                     NodeData newActualNode = new NodeData("[" + i.ToString() + "]");
@@ -1757,67 +1757,67 @@ namespace IEDExplorer
             else if (t.Integer != null)
             {
                 iecs.logger.LogDebug("t.Integer != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.integer;
+                (actualNode as NodeData).DataType = MmsTypeEnum.INTEGER;
             }
             else if (t.Bcd != null)
             {
                 iecs.logger.LogDebug("t.Bcd != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.bcd;
+                (actualNode as NodeData).DataType = MmsTypeEnum.BCD;
             }
             else if (t.Boolean != null)
             {
                 iecs.logger.LogDebug("t.Boolean != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.boolean;
+                (actualNode as NodeData).DataType = MmsTypeEnum.BOOLEAN;
             }
             else if (t.Floating_point != null)
             {
                 iecs.logger.LogDebug("t.Floating_point != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.floating_point;
+                (actualNode as NodeData).DataType = MmsTypeEnum.FLOATING_POINT;
             }
             else if (t.Generalized_time != null)
             {
                 iecs.logger.LogDebug("t.Generalized_time != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.generalized_time;
+                (actualNode as NodeData).DataType = MmsTypeEnum.GENERALIZED_TIME;
             }
             else if (t.MMSString != null)
             {
                 iecs.logger.LogDebug("t.MMSString != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.mMSString;
+                (actualNode as NodeData).DataType = MmsTypeEnum.MMS_STRING;
             }
             else if (t.ObjId != null)
             {
                 iecs.logger.LogDebug("t.ObjId != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.objId;
+                (actualNode as NodeData).DataType = MmsTypeEnum.OBJ_ID;
             }
             else if (t.Octet_string != null)
             {
                 iecs.logger.LogDebug("t.Octet_string != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.octet_string;
+                (actualNode as NodeData).DataType = MmsTypeEnum.OCTET_STRING;
             }
             else if (t.Unsigned != null)
             {
                 iecs.logger.LogDebug("t.Unsigned != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.unsigned;
+                (actualNode as NodeData).DataType = MmsTypeEnum.UNSIGNED;
             }
             else if (t.Utc_time != null)
             {
                 iecs.logger.LogDebug("t.Utc_time != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.utc_time;
+                (actualNode as NodeData).DataType = MmsTypeEnum.UTC_TIME;
             }
             else if (t.Visible_string != null)
             {
                 iecs.logger.LogDebug("t.Visible_string != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.visible_string;
+                (actualNode as NodeData).DataType = MmsTypeEnum.VISIBLE_STRING;
             }
             else if (t.isBinary_timeSelected())
             {
                 iecs.logger.LogDebug("t.Binary_time != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.binary_time;
+                (actualNode as NodeData).DataType = MmsTypeEnum.BINARY_TIME;
             }
             else if (t.isBit_stringSelected())
             {
                 iecs.logger.LogDebug("t.Bit_string != null");
-                (actualNode as NodeData).DataType = scsm_MMS_TypeEnum.bit_string;
+                (actualNode as NodeData).DataType = MmsTypeEnum.BIT_STRING;
             }
         }
 
@@ -2262,29 +2262,29 @@ namespace IEDExplorer
 
                     switch (d.DataType)
                     {
-                        case scsm_MMS_TypeEnum.boolean:
+                        case MmsTypeEnum.BOOLEAN:
                             dat.selectBoolean((bool)d.DataValue);
                             break;
-                        case scsm_MMS_TypeEnum.visible_string:
+                        case MmsTypeEnum.VISIBLE_STRING:
                             dat.selectVisible_string((string)d.DataValue);
                             break;
-                        case scsm_MMS_TypeEnum.octet_string:
+                        case MmsTypeEnum.OCTET_STRING:
                             dat.selectOctet_string((byte[])d.DataValue);
                             break;
-                        case scsm_MMS_TypeEnum.utc_time:
+                        case MmsTypeEnum.UTC_TIME:
                             UtcTime val = new UtcTime((byte[])d.DataValue);
                             dat.selectUtc_time(val);
                             break;
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             dat.selectBit_string(new BitString((byte[])d.DataValue, (int)d.DataParam));
                             break;
-                        case scsm_MMS_TypeEnum.unsigned:
+                        case MmsTypeEnum.UNSIGNED:
                             dat.selectUnsigned((long)d.DataValue);
                             break;
-                        case scsm_MMS_TypeEnum.integer:
+                        case MmsTypeEnum.INTEGER:
                             dat.selectInteger((long)d.DataValue);
                             break;
-                        case scsm_MMS_TypeEnum.floating_point:
+                        case MmsTypeEnum.FLOATING_POINT:
                             byte[] byteval;
                             byte[] tmp;
                             if (d.DataValue is float)
@@ -2411,29 +2411,29 @@ namespace IEDExplorer
 
                 switch (d.DataType)
                 {
-                    case scsm_MMS_TypeEnum.boolean:
+                    case MmsTypeEnum.BOOLEAN:
                         dat_Struct.selectBoolean((bool)d.DataValue);
                         break;
-                    case scsm_MMS_TypeEnum.visible_string:
+                    case MmsTypeEnum.VISIBLE_STRING:
                         dat_Struct.selectVisible_string((string)d.DataValue);
                         break;
-                    case scsm_MMS_TypeEnum.octet_string:
+                    case MmsTypeEnum.OCTET_STRING:
                         dat_Struct.selectOctet_string((byte[])d.DataValue);
                         break;
-                    case scsm_MMS_TypeEnum.utc_time:
+                    case MmsTypeEnum.UTC_TIME:
                         UtcTime val = new UtcTime((byte[])d.DataValue);
                         dat_Struct.selectUtc_time(val);
                         break;
-                    case scsm_MMS_TypeEnum.bit_string:
+                    case MmsTypeEnum.BIT_STRING:
                         dat_Struct.selectBit_string(new BitString((byte[])d.DataValue, (int)d.DataParam));
                         break;
-                    case scsm_MMS_TypeEnum.unsigned:
+                    case MmsTypeEnum.UNSIGNED:
                         dat_Struct.selectUnsigned((long)d.DataValue);
                         break;
-                    case scsm_MMS_TypeEnum.integer:
+                    case MmsTypeEnum.INTEGER:
                         dat_Struct.selectInteger((long)d.DataValue);
                         break;
-                    case scsm_MMS_TypeEnum.structure:
+                    case MmsTypeEnum.STRUCTURE:
                         List<Data> datList_Struct2 = new List<Data>();
                         MakeStruct(iecs, d.GetChildNodes(), datList_Struct2);          // Recursive call
                         dat_Struct.selectStructure(datList_Struct2);

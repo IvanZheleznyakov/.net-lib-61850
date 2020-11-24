@@ -31,7 +31,7 @@ namespace IEDExplorer
         public delegate void newReportReceivedEventhandler(Report report);
         public event newReportReceivedEventhandler NewReportReceived;
 
-        public delegate void modelHasBeenCreatedEventHandler(LibraryManager libraryManager);
+        public delegate void modelHasBeenCreatedEventHandler();
         public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
         public delegate void reportControlBlockUpdatedEventHandler(LibraryManager libraryManager, ReportControlBlock reportControlBlock);
@@ -88,20 +88,80 @@ namespace IEDExplorer
         }
 
         /// <summary>
+        /// Получение списка логических устройств.
+        /// </summary>
+        /// <returns>Список строк с названиями всех логических устройств.</returns>
+        public List<string> GetLogicalDevicesList()
+        {
+            if (worker.iecs.DataModel.iec == null || worker.iecs.DataModel.iec.GetChildCount() == 0)
+            {
+                return null;
+            }
+
+            return worker.iecs.DataModel.iec.GetChildNodeNames();
+        }
+
+        /// <summary>
+        /// Получение списка логических узлов устройства.
+        /// </summary>
+        /// <param name="serverName">Имя логического устройства.</param>
+        /// <returns>Список строк с названиями всех логических узлов устройства.</returns>
+        public List<string> GetLogicalDeviceDirectory(string ldName)
+        {
+            var node = worker.iecs.DataModel.iec.FindChildNode(ldName);
+            if (node == null)
+            {
+                return null;
+            }
+
+            return node.GetChildNodeNames();
+        }
+
+        /// <summary>
+        /// Получение данных логического узла.
+        /// </summary>
+        /// <param name="lnReference">Ссылка (полное имя) логического узла.</param>
+        /// <returns>Список строк с названиями данных логического узла.</returns>
+        public List<string> GetLogicalNodeDirectory(string lnReference)
+        {
+            var node = new NodeBase("");
+            worker.iecs.DataModel.addressNodesPairs.TryGetValue(lnReference, out node);
+            if (node == null)
+            {
+                return null;
+            }
+
+            return node.GetChildNodeNames();
+        }
+
+        public List<MmsVariableSpecification> GetDataValues(string variableReference)
+        {
+            var result = new List<MmsVariableSpecification>();
+            var node = new NodeBase("");
+            worker.iecs.DataModel.addressNodesPairs.TryGetValue(variableReference, out node);
+            var childs = node.GetChildNodes();
+            foreach (var ch in childs)
+            {
+                result.Add(new MmsVariableSpecification((NodeData)ch));
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Запись данных.
         /// </summary>
         /// <param name="name">Имя узла в дереве объектов устройства.</param>
         /// <param name="value">Записываемое значение.</param>
-        /// <param name="reRead">True - прочитать данные в узле сразу после записи; False - иначе.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла запись.</returns>
-        public bool WriteData(string name, object value, bool reRead)
+        public bool WriteData(string name, object value)
         {
             try
             {
                 var node = new NodeBase("");
                 worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out node);
                 (node as NodeData).DataValue = value;
-                worker.iecs.Controller.WriteData((node as NodeData), reRead);
+                worker.iecs.Controller.WriteData((node as NodeData), true);
             }
             catch (Exception ex)
             {
@@ -133,6 +193,11 @@ namespace IEDExplorer
             return true;
         }
 
+        /// <summary>
+        /// Создание экземпляра ReportControlBlock для настраивания параметров отчёта.
+        /// </summary>
+        /// <param name="name">Ссылка (полное имя) отчёта.</param>
+        /// <returns>Экземпляр ReportControlBlock с текущими параметрами данного отчёта.</returns>
         public ReportControlBlock CreateReportControlBlock(string name)
         {
             ReportControlBlock resultRcb = new ReportControlBlock();
@@ -143,6 +208,11 @@ namespace IEDExplorer
             return resultRcb;
         }
 
+        /// <summary>
+        /// Получить актуальные параметры отчёта с IED.
+        /// </summary>
+        /// <param name="rcb">Экземпляр ReportControlBlock, для которого хотим обновить параметры.</param>
+        /// <param name="receivedHandler">Обработчик получения ответа с IED.</param>
         public void UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
         {
             ReadData(rcb.self.IecAddress, receivedHandler);
@@ -152,12 +222,11 @@ namespace IEDExplorer
         /// Установка и запись параметров отчёта.
         /// </summary>
         /// <param name="rcbPar">Параметры отчёта.</param>
-        /// <param name="reRead">True - прочитать данные в узле сразу после записи; False - иначе.</param>
-        public bool SetReportControlBlock(ReportControlBlock rcbPar, bool reRead)
+        public bool SetReportControlBlock(ReportControlBlock rcbPar)
         {
             try
             {
-                worker.iecs.Controller.WriteRcb(rcbPar, reRead);
+                worker.iecs.Controller.WriteRcb(rcbPar, true);
             }
             catch (Exception ex)
             {
@@ -168,21 +237,6 @@ namespace IEDExplorer
             return true;
         }
 
-        /// <summary>
-        /// Отправка команды.
-        /// </summary>
-        /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        /// <param name="commandParams">Параметры команды.</param>
-        /// <param name="action"></param>
-        public void SendCommand(NodeBase node, CommandParams commandParams, ActionRequested action = ActionRequested.WriteAsStructure)
-        {
-            worker.iecs.Controller.SendCommand(node, commandParams, action);
-        }
-
-        /// <summary>
-        /// Получение списка файлов и директорий.
-        /// </summary>
-        /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
         public void GetFileDirectory(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
             var node = new NodeBase("");
@@ -198,10 +252,6 @@ namespace IEDExplorer
             worker.iecs.Controller.GetFileList(node, receivedHandler);
         }
 
-        /// <summary>
-        /// Получение файла.
-        /// </summary>
-        /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
         public bool GetFile(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
             Console.WriteLine("FILE STATE: " + worker.IsFileReadingNow + " ||| " + worker.iecs.fstate.ToString());
@@ -264,7 +314,7 @@ namespace IEDExplorer
 
         protected void Worker_ModelHasBeenCreated()
         {
-            ModelHasBeenCreated?.Invoke(this);
+            ModelHasBeenCreated?.Invoke();
         }
     }
 }

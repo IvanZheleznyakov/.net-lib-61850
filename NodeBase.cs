@@ -122,7 +122,10 @@ namespace IEDExplorer
             List<string> names = new List<string>();
             foreach (NodeBase nb in _childNodes)
             {
-                names.Add(nb.Name);
+                if (!(nb is NodeRCB) && !(nb is NodeVL))
+                {
+                    names.Add(nb.Name);
+                }
             }
             return names;
         }
@@ -451,7 +454,7 @@ namespace IEDExplorer
             return null;
         }
 
-        internal virtual NodeBase FindNodeByValue(scsm_MMS_TypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
+        internal virtual NodeBase FindNodeByValue(MmsTypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
         {
             if (dataValue == null)
                 return null;

@@ -90,7 +90,14 @@ namespace IEDExplorer
             libraryManager.worker.iecs.Controller.ReadData(self.FindChildNode("SBO"));
         }
 
-        public void Operate(bool ctlVal)
+        public void SelectWithValue(object ctlVal)
+        {
+            var sendNode = (self.FindChildNode("SBOw").FindChildNode("ctlVal") as NodeData);
+            commandParams.ctlVal = ctlVal;
+            libraryManager.worker.iecs.Controller.SendCommandToIed(sendNode, commandParams, ActionRequested.WriteAsStructure);
+        }
+
+        public void Operate(object ctlVal)
         {
             var sendNode = (self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData);
             //(self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData).DataValue = ctlVal;

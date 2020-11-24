@@ -26,7 +26,7 @@ namespace IEDExplorer
 {
     public class NodeData : NodeBase
     {
-        private scsm_MMS_TypeEnum _dataType = scsm_MMS_TypeEnum.structure;
+        private MmsTypeEnum _dataType = MmsTypeEnum.STRUCTURE;
         private string _bType = "";
         private string _type = "";
         private Object _dataValue = null;
@@ -39,7 +39,7 @@ namespace IEDExplorer
         {
         }
 
-        public scsm_MMS_TypeEnum DataType
+        public MmsTypeEnum DataType
         {
             get
             {
@@ -69,17 +69,36 @@ namespace IEDExplorer
             set { _bType = value; }
         }
 
+        protected bool isFCCalculated = false;
+        protected string _FC;
+
         public string FC
         {
             get
             {
-                NodeBase nb = Parent;
-                if (nb != null) do
+                if (!isFCCalculated)
                 {
-                    if (nb is NodeFC)
-                        return nb.Name;
-                } while (nb != null);
-                return "";
+                    NodeBase nb = Parent;
+                    if (nb != null) do
+                        {
+                            if (nb is NodeFC)
+                            {
+                                isFCCalculated = true;
+                                _FC = nb.Name;
+                                return _FC;
+                            }
+                        } while (nb != null);
+                    return "";
+                }
+                else
+                {
+                    return _FC;
+                }
+            }
+            set
+            {
+                isFCCalculated = true;
+                _FC = value;
             }
         }
 
@@ -131,7 +150,7 @@ namespace IEDExplorer
             }
         }
 
-        internal override NodeBase FindNodeByValue(scsm_MMS_TypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
+        internal override NodeBase FindNodeByValue(MmsTypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
         {
             if (dataValue == null)
                 return null;
@@ -167,7 +186,7 @@ namespace IEDExplorer
                 {
                     switch (DataType)
                     {
-                        case scsm_MMS_TypeEnum.utc_time:
+                        case MmsTypeEnum.UTC_TIME:
                             if (!(DataValue is DateTime)) break;
                             if (DataValue != null) val = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString("D3") + " [LOC]";
                             if (DataParam != null)
@@ -199,7 +218,7 @@ namespace IEDExplorer
                                 if (close) val += "]";
                             }
                             break;
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             if (DataParam != null)
                             {
                                 byte[] bbval = (byte[])DataValue;
@@ -242,10 +261,10 @@ namespace IEDExplorer
                                 val = sb.ToString();
                             }
                             break;
-                        case scsm_MMS_TypeEnum.binary_time:
+                        case MmsTypeEnum.BINARY_TIME:
                             if (DataValue != null) val = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString() + " [LOC]";
                             break;
-                        case scsm_MMS_TypeEnum.octet_string:
+                        case MmsTypeEnum.OCTET_STRING:
                             if (DataValue != null)
                             {
                                 byte[] ba = System.Text.Encoding.ASCII.GetBytes(DataValue.ToString());
@@ -291,7 +310,7 @@ namespace IEDExplorer
                     {
                         switch (DataType)
                         {
-                            case scsm_MMS_TypeEnum.utc_time:
+                            case MmsTypeEnum.UTC_TIME:
                                 string tms = value;
                                 DateTime tval;
 
@@ -324,7 +343,7 @@ namespace IEDExplorer
                                     Logger.getLogger().LogError("NodeData.StringValue - cannot parse '" + tms + "' to DateTime");
                                 }
                                 break;
-                            case scsm_MMS_TypeEnum.bit_string:
+                            case MmsTypeEnum.BIT_STRING:
                                 byte[] bbval = (byte[])DataValue;
                                 int blen = bbval.Length;
                                 int trail = (int)DataParam;
@@ -339,19 +358,19 @@ namespace IEDExplorer
                                 }
                                 //val = sb.ToString();
                                 break;
-                            case scsm_MMS_TypeEnum.boolean:
+                            case MmsTypeEnum.BOOLEAN:
                                 if (value.StartsWith("0") || value.StartsWith("f", StringComparison.CurrentCultureIgnoreCase))
                                     DataValue = false;
                                 if (value.StartsWith("1") || value.StartsWith("t", StringComparison.CurrentCultureIgnoreCase))
                                     DataValue = true;
                                 break;
-                            case scsm_MMS_TypeEnum.visible_string:
+                            case MmsTypeEnum.VISIBLE_STRING:
                                 DataValue = value;
                                 break;
-                            case scsm_MMS_TypeEnum.octet_string:
+                            case MmsTypeEnum.OCTET_STRING:
                                 DataValue = Encoding.ASCII.GetBytes(value);
                                 break;
-                            case scsm_MMS_TypeEnum.unsigned:
+                            case MmsTypeEnum.UNSIGNED:
                                 long uns;
                                 if (long.TryParse(value, out uns))
                                 {
@@ -362,7 +381,7 @@ namespace IEDExplorer
                                     Logger.getLogger().LogError("NodeData.StringValue - cannot parse '" + value + "' to unsigned (internally int64)");
                                 }
                                 break;
-                            case scsm_MMS_TypeEnum.integer:
+                            case MmsTypeEnum.INTEGER:
                                 long sint;
                                 if (long.TryParse(value, out sint))
                                 {
@@ -373,7 +392,7 @@ namespace IEDExplorer
                                     Logger.getLogger().LogError("NodeData.StringValue - cannot parse '" + value + "' to integer (internally int64)");
                                 }
                                 break;
-                            case scsm_MMS_TypeEnum.floating_point:
+                            case MmsTypeEnum.FLOATING_POINT:
                                 float fval;
                                 if (float.TryParse(value, out fval))
                                 {
@@ -555,41 +574,41 @@ namespace IEDExplorer
 	        PHYCOMADDR = 29
         }
 
-        int MapLibiecType(scsm_MMS_TypeEnum DataType)
+        int MapLibiecType(MmsTypeEnum DataType)
         {
             int type = 0;
             switch (DataType)
             {
-                case scsm_MMS_TypeEnum.boolean:
+                case MmsTypeEnum.BOOLEAN:
                     type = (int)LibIecDataAttributeType.BOOLEAN;
                     break;
-                case scsm_MMS_TypeEnum.floating_point:
+                case MmsTypeEnum.FLOATING_POINT:
                     type = (int)LibIecDataAttributeType.FLOAT32;
                     break;
-                case scsm_MMS_TypeEnum.utc_time:
+                case MmsTypeEnum.UTC_TIME:
                     type = (int)LibIecDataAttributeType.TIMESTAMP;
                     break;
-                case scsm_MMS_TypeEnum.bit_string:
+                case MmsTypeEnum.BIT_STRING:
                     type = (int)LibIecDataAttributeType.CODEDENUM;
                     if (Name == "q")
                         type = (int)LibIecDataAttributeType.QUALITY;
                     break;
-                case scsm_MMS_TypeEnum.integer:
+                case MmsTypeEnum.INTEGER:
                     type = (int)LibIecDataAttributeType.INT32;
                     break;
-                case scsm_MMS_TypeEnum.unsigned:
+                case MmsTypeEnum.UNSIGNED:
                     type = (int)LibIecDataAttributeType.INT32U;
                     break;
-                case scsm_MMS_TypeEnum.binary_time:
+                case MmsTypeEnum.BINARY_TIME:
                     type = (int)LibIecDataAttributeType.ENTRY_TIME;
                     break;
-                case scsm_MMS_TypeEnum.mMSString:
+                case MmsTypeEnum.MMS_STRING:
                     type = (int)LibIecDataAttributeType.UNICODE_STRING_255;
                     break;
-                case scsm_MMS_TypeEnum.visible_string:
+                case MmsTypeEnum.VISIBLE_STRING:
                     type = (int)LibIecDataAttributeType.VISIBLE_STRING_255;
                     break;
-                case scsm_MMS_TypeEnum.octet_string:
+                case MmsTypeEnum.OCTET_STRING:
                     type = (int)LibIecDataAttributeType.OCTET_STRING_64;
                     break;
             }
@@ -611,7 +630,7 @@ namespace IEDExplorer
                 string val = "";
                 if (DataValue != null) {
                     switch (DataType) {
-                        case scsm_MMS_TypeEnum.bit_string:
+                        case MmsTypeEnum.BIT_STRING:
                             byte[] bbval = (byte[])DataValue;
                             int blen = bbval.Length;
                             int trail;

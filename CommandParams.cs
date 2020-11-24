@@ -19,7 +19,7 @@ namespace IEDExplorer
     public class CommandParams
     {
         public CommandType CommType;
-        public scsm_MMS_TypeEnum DataType;
+        public MmsTypeEnum DataType;
         public ControlModelEnum CommandFlowFlag;
         public object ctlVal;
         public OriginatorCategoryEnum orCat;
