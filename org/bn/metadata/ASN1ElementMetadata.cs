@@ -66,7 +66,7 @@ namespace org.bn.metadata
             get { return hasDefaultValue; }
         }
 
-        public ASN1ElementMetadata(ASN1Element annotation) : 
+        public ASN1ElementMetadata(ASN1ElementAtr annotation) : 
             this(
                 annotation.Name,
                 annotation.IsOptional,

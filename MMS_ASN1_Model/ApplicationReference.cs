@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  ap_title_present = false ;
 	
-        [ASN1Element ( Name = "ap-title", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ap-title", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public AP_title Ap_title
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  ap_invocation_id_present = false ;
 	
-        [ASN1Element ( Name = "ap-invocation-id", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ap-invocation-id", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public AP_invocation_identifier Ap_invocation_id
         {
@@ -51,7 +51,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  ae_qualifier_present = false ;
 	
-        [ASN1Element ( Name = "ae-qualifier", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ae-qualifier", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public AE_qualifier Ae_qualifier
         {
@@ -65,7 +65,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  ae_invocation_id_present = false ;
 	
-        [ASN1Element ( Name = "ae-invocation-id", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ae-invocation-id", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public AE_invocation_identifier Ae_invocation_id
         {

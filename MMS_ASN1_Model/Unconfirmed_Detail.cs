@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "otherRequests" )]
     
-        [ASN1Element ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject OtherRequests
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "eventNotification", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventNotification", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public CS_EventNotification EventNotification
         {

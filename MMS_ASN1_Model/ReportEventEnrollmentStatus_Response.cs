@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Transitions eventConditionTransitions_ ;
 	
-        [ASN1Element ( Name = "eventConditionTransitions", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventConditionTransitions", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Transitions EventConditionTransitions
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
 	private bool notificationLost_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "notificationLost", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
+        [ASN1ElementAtr ( Name = "notificationLost", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
     
         public bool NotificationLost
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
           
 	private EE_Duration duration_ ;
 	
-        [ASN1Element ( Name = "duration", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "duration", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public EE_Duration Duration
         {
@@ -60,7 +60,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  alarmAcknowledgmentRule_present = false ;
 	
-        [ASN1Element ( Name = "alarmAcknowledgmentRule", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "alarmAcknowledgmentRule", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public AlarmAckRule AlarmAcknowledgmentRule
         {
@@ -72,7 +72,7 @@ namespace MMS_ASN1_Model {
           
 	private EE_State currentState_ ;
 	
-        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public EE_State CurrentState
         {

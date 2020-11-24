@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  sourceFileServer_present = false ;
 	
-        [ASN1Element ( Name = "sourceFileServer", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "sourceFileServer", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ApplicationReference SourceFileServer
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
           
 	private FileName sourceFile_ ;
 	
-        [ASN1Element ( Name = "sourceFile", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "sourceFile", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public FileName SourceFile
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
           
 	private FileName destinationFile_ ;
 	
-        [ASN1Element ( Name = "destinationFile", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "destinationFile", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public FileName DestinationFile
         {

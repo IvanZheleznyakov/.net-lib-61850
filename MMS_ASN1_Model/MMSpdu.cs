@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "confirmed-RequestPDU", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "confirmed-RequestPDU", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Confirmed_RequestPDU Confirmed_RequestPDU
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "confirmed-ResponsePDU", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "confirmed-ResponsePDU", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public Confirmed_ResponsePDU Confirmed_ResponsePDU
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "confirmed-ErrorPDU", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "confirmed-ErrorPDU", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Confirmed_ErrorPDU Confirmed_ErrorPDU
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "unconfirmed-PDU", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "unconfirmed-PDU", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Unconfirmed_PDU Unconfirmed_PDU
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "rejectPDU", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "rejectPDU", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public RejectPDU RejectPDU
         {
@@ -107,7 +107,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "cancel-RequestPDU", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "cancel-RequestPDU", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public Cancel_RequestPDU Cancel_RequestPDU
         {
@@ -123,7 +123,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "cancel-ResponsePDU", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "cancel-ResponsePDU", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
         public Cancel_ResponsePDU Cancel_ResponsePDU
         {
@@ -139,7 +139,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "cancel-ErrorPDU", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "cancel-ErrorPDU", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public Cancel_ErrorPDU Cancel_ErrorPDU
         {
@@ -155,7 +155,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "initiate-RequestPDU", IsOptional = false, HasTag = true, Tag = 8, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "initiate-RequestPDU", IsOptional = false, HasTag = true, Tag = 8, HasDefaultValue = false)]
 
         public Initiate_RequestPDU Initiate_RequestPDU
         {
@@ -171,7 +171,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "initiate-ResponsePDU", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "initiate-ResponsePDU", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
 
         public Initiate_ResponsePDU Initiate_ResponsePDU
         {
@@ -187,7 +187,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "initiate-ErrorPDU", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "initiate-ErrorPDU", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
 
         public Initiate_ErrorPDU Initiate_ErrorPDU
         {
@@ -203,7 +203,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "conclude-RequestPDU", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "conclude-RequestPDU", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
 
         public Conclude_RequestPDU Conclude_RequestPDU
         {
@@ -219,7 +219,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "conclude-ResponsePDU", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "conclude-ResponsePDU", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
 
         public Conclude_ResponsePDU Conclude_ResponsePDU
         {
@@ -235,7 +235,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1Element(Name = "conclude-ErrorPDU", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "conclude-ErrorPDU", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
 
         public Conclude_ErrorPDU Conclude_ErrorPDU
         {

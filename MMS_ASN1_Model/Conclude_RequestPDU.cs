@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model
 
         private Unsigned32 invokeID_;
 
-        [ASN1Element(Name = "invokeID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "invokeID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
         public Unsigned32 InvokeID
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model
 
         private ConfirmedServiceRequest service_;
 
-        [ASN1Element(Name = "service", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "service", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
         public ConfirmedServiceRequest Service
         {

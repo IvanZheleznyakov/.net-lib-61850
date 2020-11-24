@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GOOSE_ASN1_Model;
 using org.bn.types;
 
 namespace lib61850net

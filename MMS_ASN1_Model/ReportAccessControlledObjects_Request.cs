@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier accessControlList_ ;
 	
-        [ASN1Element ( Name = "accessControlList", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ObjectClass objectClass_ ;
 	
-        [ASN1Element ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectClass ObjectClass
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  continueAfter_present = false ;
 	
-        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ObjectName ContinueAfter
         {

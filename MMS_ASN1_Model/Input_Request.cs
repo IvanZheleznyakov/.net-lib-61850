@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private Identifier operatorStationName_;
 
-        [ASN1Element(Name = "operatorStationName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "operatorStationName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Identifier OperatorStationName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
         private bool echo_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "echo", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "echo", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
 
         public bool Echo
         {
@@ -53,7 +53,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfPromptData", IsSetOf = false)]
 
 
-        [ASN1Element(Name = "listOfPromptData", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "listOfPromptData", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<MMSString> ListOfPromptData
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model
 
         private bool inputTimeOut_present = false;
 
-        [ASN1Element(Name = "inputTimeOut", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "inputTimeOut", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Unsigned32 InputTimeOut
         {

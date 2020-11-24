@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private System.Collections.Generic.ICollection<DirectoryEntry> listOfDirectoryEntry_;
 
         [ASN1SequenceOf(Name = "listOfDirectoryEntry", IsSetOf = false)]
-        [ASN1Element(Name = "listOfDirectoryEntry", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false, IsImplicitTag = false)]
+        [ASN1ElementAtr(Name = "listOfDirectoryEntry", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false, IsImplicitTag = false)]
         public System.Collections.Generic.ICollection<DirectoryEntry> ListOfDirectoryEntry
         {
             get { return listOfDirectoryEntry_; }
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model
         private bool moreFollows_;
 
         [ASN1Boolean(Name = "")]
-        [ASN1Element(Name = "moreFollows", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "moreFollows", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = true)]
         public bool MoreFollows
         {
             get { return moreFollows_; }

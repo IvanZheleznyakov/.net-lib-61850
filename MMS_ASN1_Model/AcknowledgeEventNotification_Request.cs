@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventEnrollmentName_ ;
 	
-        [ASN1Element ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventEnrollmentName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_State acknowledgedState_ ;
 	
-        [ASN1Element ( Name = "acknowledgedState", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "acknowledgedState", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public EC_State AcknowledgedState
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private EventTime timeOfAcknowledgedTransition_ ;
 	
-        [ASN1Element ( Name = "timeOfAcknowledgedTransition", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "timeOfAcknowledgedTransition", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public EventTime TimeOfAcknowledgedTransition
         {

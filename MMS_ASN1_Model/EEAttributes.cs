@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventEnrollmentName_ ;
 	
-        [ASN1Element ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventEnrollmentName
         {
@@ -44,7 +44,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "eventCondition", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventCondition", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventCondition
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {
@@ -122,7 +122,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public EventConditionNameChoiceType EventConditionName
         {
@@ -147,7 +147,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "eventAction", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventAction", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventAction
         {
@@ -165,7 +165,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {
@@ -225,7 +225,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "eventActionName", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventActionName", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public EventActionNameChoiceType EventActionName
         {
@@ -239,7 +239,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  clientApplication_present = false ;
 	
-        [ASN1Element ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ClientApplication
         {
@@ -252,7 +252,7 @@ namespace MMS_ASN1_Model {
 	private bool mmsDeletable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  true )  ]
+        [ASN1ElementAtr ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  true )  ]
     
         public bool MmsDeletable
         {
@@ -264,7 +264,7 @@ namespace MMS_ASN1_Model {
           
 	private EE_Class enrollmentClass_ ;
 	
-        [ASN1Element ( Name = "enrollmentClass", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "enrollmentClass", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public EE_Class EnrollmentClass
         {
@@ -276,7 +276,7 @@ namespace MMS_ASN1_Model {
           
 	private EE_Duration duration_ ;
 	
-        [ASN1Element ( Name = "duration", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  true )  ]
+        [ASN1ElementAtr ( Name = "duration", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  true )  ]
     
         public EE_Duration Duration
         {
@@ -290,7 +290,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  invokeID_present = false ;
 	
-        [ASN1Element ( Name = "invokeID", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "invokeID", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public Unsigned32 InvokeID
         {
@@ -304,7 +304,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  remainingAcceptableDelay_present = false ;
 	
-        [ASN1Element ( Name = "remainingAcceptableDelay", IsOptional =  true , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "remainingAcceptableDelay", IsOptional =  true , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public Unsigned32 RemainingAcceptableDelay
         {
@@ -328,7 +328,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public string String
         {
@@ -345,7 +345,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Index
         {
@@ -363,7 +363,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noEnhancement" )]
     
-        [ASN1Element ( Name = "noEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "noEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject NoEnhancement
         {
@@ -446,7 +446,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "displayEnhancement", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "displayEnhancement", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public DisplayEnhancementChoiceType DisplayEnhancement
         {

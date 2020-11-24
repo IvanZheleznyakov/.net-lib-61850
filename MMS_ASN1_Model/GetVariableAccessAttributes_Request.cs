@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Address Address
         {

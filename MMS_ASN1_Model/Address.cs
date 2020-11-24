@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "numericAddress", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "numericAddress", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumericAddress
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "symbolicAddress", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "symbolicAddress", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public MMSString SymbolicAddress
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1OctetString( Name = "" )]
     
-        [ASN1Element ( Name = "unconstrainedAddress", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "unconstrainedAddress", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public byte[] UnconstrainedAddress
         {

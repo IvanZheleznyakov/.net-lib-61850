@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier programInvocation_ ;
 	
-        [ASN1Element ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocation
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private StartCount startCount_ ;
 	
-        [ASN1Element ( Name = "startCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
+        [ASN1ElementAtr ( Name = "startCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
     
         public StartCount StartCount
         {

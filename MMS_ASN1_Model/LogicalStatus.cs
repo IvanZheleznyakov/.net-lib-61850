@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "LogicalStatus", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "LogicalStatus", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long Value
         {

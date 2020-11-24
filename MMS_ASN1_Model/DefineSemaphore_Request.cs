@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName semaphoreName_ ;
 	
-        [ASN1Element ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName SemaphoreName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned16 numberOfTokens_ ;
 	
-        [ASN1Element ( Name = "numberOfTokens", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "numberOfTokens", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned16 NumberOfTokens
         {

@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private Integer32  val;
 
         
-        [ASN1Element ( Name = "FileClose-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "FileClose-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Integer32 Value
         {

@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "vmd-state", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vmd-state", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long Vmd_state
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "application-reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "application-reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Application_reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long Definition
         {
@@ -84,7 +84,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "resource", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "resource", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public long Resource
         {
@@ -101,7 +101,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "service", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "service", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public long Service
         {
@@ -118,7 +118,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "service-preempt", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "service-preempt", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public long Service_preempt
         {
@@ -135,7 +135,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "time-resolution", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "time-resolution", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public long Time_resolution
         {
@@ -152,7 +152,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "access", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "access", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public long Access
         {
@@ -169,7 +169,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "initiate", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "initiate", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public long Initiate
         {
@@ -186,7 +186,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "conclude", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "conclude", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public long Conclude
         {
@@ -203,7 +203,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "cancel", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "cancel", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public long Cancel
         {
@@ -220,7 +220,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "file", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "file", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public long File
         {
@@ -237,7 +237,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "others", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "others", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public long Others
         {
@@ -774,7 +774,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "errorClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "errorClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ErrorClassChoiceType ErrorClass
         {
@@ -789,7 +789,7 @@ namespace MMS_ASN1_Model {
         private bool  additionalCode_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "additionalCode", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "additionalCode", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long AdditionalCode
         {
@@ -804,7 +804,7 @@ namespace MMS_ASN1_Model {
         private bool  additionalDescription_present = false ;
 	[ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "additionalDescription", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "additionalDescription", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public string AdditionalDescription
         {
@@ -829,7 +829,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "obtainFile", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "obtainFile", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObtainFile_Error ObtainFile
         {
@@ -845,7 +845,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "start", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "start", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Start_Error Start
         {
@@ -861,7 +861,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "stop", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "stop", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Stop_Error Stop
         {
@@ -877,7 +877,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "resume", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "resume", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Resume_Error Resume
         {
@@ -893,7 +893,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "reset", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reset", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public Reset_Error Reset
         {
@@ -909,7 +909,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "deleteVariableAccess", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteVariableAccess", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public DeleteVariableAccess_Error DeleteVariableAccess
         {
@@ -925,7 +925,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "deleteNamedVariableList", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteNamedVariableList", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public DeleteNamedVariableList_Error DeleteNamedVariableList
         {
@@ -941,7 +941,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "deleteNamedType", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteNamedType", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public DeleteNamedType_Error DeleteNamedType
         {
@@ -957,7 +957,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "defineEventEnrollment-Error", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "defineEventEnrollment-Error", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public DefineEventEnrollment_Error DefineEventEnrollment_Error
         {
@@ -973,7 +973,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "fileRename", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "fileRename", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public FileRename_Error FileRename
         {
@@ -989,7 +989,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "additionalService", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "additionalService", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public AdditionalService_Error AdditionalService
         {
@@ -1005,7 +1005,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "changeAccessControl", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "changeAccessControl", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public ChangeAccessControl_Error ChangeAccessControl
         {
@@ -1473,7 +1473,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "serviceSpecificInfo", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "serviceSpecificInfo", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public ServiceSpecificInfoChoiceType ServiceSpecificInfo
         {

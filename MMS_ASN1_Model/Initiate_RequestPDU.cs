@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  localDetailCalling_present = false ;
 	
-        [ASN1Element ( Name = "localDetailCalling", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "localDetailCalling", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Integer32 LocalDetailCalling
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
           
 	private Integer16 proposedMaxServOutstandingCalling_ ;
 	
-        [ASN1Element ( Name = "proposedMaxServOutstandingCalling", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "proposedMaxServOutstandingCalling", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Integer16 ProposedMaxServOutstandingCalling
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
           
 	private Integer16 proposedMaxServOutstandingCalled_ ;
 	
-        [ASN1Element ( Name = "proposedMaxServOutstandingCalled", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "proposedMaxServOutstandingCalled", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Integer16 ProposedMaxServOutstandingCalled
         {
@@ -61,7 +61,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  proposedDataStructureNestingLevel_present = false ;
 	
-        [ASN1Element ( Name = "proposedDataStructureNestingLevel", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "proposedDataStructureNestingLevel", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Integer8 ProposedDataStructureNestingLevel
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model {
                         
 	private Integer16 proposedVersionNumber_ ;
 	
-        [ASN1Element ( Name = "proposedVersionNumber", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "proposedVersionNumber", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Integer16 ProposedVersionNumber
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model {
           
 	private ParameterSupportOptions proposedParameterCBB_ ;
 	
-        [ASN1Element ( Name = "proposedParameterCBB", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "proposedParameterCBB", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ParameterSupportOptions ProposedParameterCBB
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model {
           
 	private ServiceSupportOptions servicesSupportedCalling_ ;
 	
-        [ASN1Element ( Name = "servicesSupportedCalling", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "servicesSupportedCalling", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ServiceSupportOptions ServicesSupportedCalling
         {
@@ -115,7 +115,7 @@ namespace MMS_ASN1_Model {
           
 	private AdditionalSupportOptions additionalSupportedCalling_ ;
 	
-        [ASN1Element ( Name = "additionalSupportedCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "additionalSupportedCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public AdditionalSupportOptions AdditionalSupportedCalling
         {
@@ -127,7 +127,7 @@ namespace MMS_ASN1_Model {
           
 	private AdditionalCBBOptions additionalCbbSupportedCalling_ ;
 	
-        [ASN1Element ( Name = "additionalCbbSupportedCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "additionalCbbSupportedCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public AdditionalCBBOptions AdditionalCbbSupportedCalling
         {
@@ -140,7 +140,7 @@ namespace MMS_ASN1_Model {
 	private string privilegeClassIdentityCalling_ ;
 	[ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "privilegeClassIdentityCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "privilegeClassIdentityCalling", IsOptional =  true /*Pavel*/ , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public string PrivilegeClassIdentityCalling
         {
@@ -163,7 +163,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "initRequestDetail", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "initRequestDetail", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public InitRequestDetailSequenceType InitRequestDetail
         {

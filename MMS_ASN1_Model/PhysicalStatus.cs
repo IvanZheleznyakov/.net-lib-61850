@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "PhysicalStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "PhysicalStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Value
         {

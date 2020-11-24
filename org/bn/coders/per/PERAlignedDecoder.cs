@@ -317,7 +317,7 @@ namespace org.bn.coders.per
                         info.PreparedInfo  = elementInfo.PreparedInfo.getPropertyMetadata(i);
                     }
                     else
-                        info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                        info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
                     val = decodeClassType(decodedTag, field.PropertyType, info, stream);
                     if(val != null)
 					    invokeSelectMethodForField(field, choice, val.Value, info);

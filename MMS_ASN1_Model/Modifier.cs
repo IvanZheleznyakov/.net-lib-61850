@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "eventModifier", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventModifier", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public AttachToEventCondition EventModifier
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "semaphoreModifier", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "semaphoreModifier", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public AttachToSemaphore SemaphoreModifier
         {

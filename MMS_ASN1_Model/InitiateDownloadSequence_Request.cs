@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier domainName_ ;
 	
-        [ASN1Element ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier DomainName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfCapabilities", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<MMSString> ListOfCapabilities
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model {
 	private bool sharable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool Sharable
         {

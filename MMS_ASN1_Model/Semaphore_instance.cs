@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private Identifier name_;
 
-        [ASN1Element(Name = "name", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "name", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Identifier Name
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model
 
             [ASN1ObjectIdentifier(Name = "")]
 
-            [ASN1Element(Name = "reference", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1ElementAtr(Name = "reference", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public ObjectIdentifier Reference
             {
@@ -71,7 +71,7 @@ namespace MMS_ASN1_Model
 
                 private Access_Control_List_instance accessControl_;
 
-                [ASN1Element(Name = "accessControl", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "accessControl", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
                 public Access_Control_List_instance AccessControl
                 {
@@ -121,7 +121,7 @@ namespace MMS_ASN1_Model
                 }
 
 
-                [ASN1Element(Name = "class", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "class", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
                 public ClassEnumType Class_
                 {
@@ -136,7 +136,7 @@ namespace MMS_ASN1_Model
                 private bool numberOfTokens_present = false;
                 [ASN1Integer(Name = "")]
 
-                [ASN1Element(Name = "numberOfTokens", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "numberOfTokens", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
                 public long NumberOfTokens
                 {
@@ -154,7 +154,7 @@ namespace MMS_ASN1_Model
                 [ASN1SequenceOf(Name = "namedTokens", IsSetOf = false)]
 
 
-                [ASN1Element(Name = "namedTokens", IsOptional = true, HasTag = true, Tag = 6, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "namedTokens", IsOptional = true, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
                 public System.Collections.Generic.ICollection<string> NamedTokens
                 {
@@ -166,7 +166,7 @@ namespace MMS_ASN1_Model
 
                 private Event_Condition_instance eventCondition_;
 
-                [ASN1Element(Name = "eventCondition", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "eventCondition", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
                 public Event_Condition_instance EventCondition
                 {
@@ -201,7 +201,7 @@ namespace MMS_ASN1_Model
 
             }
 
-            [ASN1Element(Name = "details", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+            [ASN1ElementAtr(Name = "details", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
             public DetailsSequenceType Details
             {
@@ -262,7 +262,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1Element(Name = "definition", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "definition", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
         public DefinitionChoiceType Definition
         {

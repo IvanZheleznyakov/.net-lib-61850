@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Integer32 ulsmID_ ;
 	
-        [ASN1Element ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Integer32 UlsmID
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfCapabilities", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<MMSString> ListOfCapabilities
         {

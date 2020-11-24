@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ObjectName  val;
 
         
-        [ASN1Element ( Name = "AddEventConditionListReference-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "AddEventConditionListReference-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ObjectName Value
         {

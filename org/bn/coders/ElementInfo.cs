@@ -25,7 +25,7 @@ namespace org.bn.coders
 {	
 	public class ElementInfo
 	{
-        private ASN1Element element;
+        private ASN1ElementAtr element;
         private ICustomAttributeProvider parentAnnotatedClass;
 
         public ICustomAttributeProvider ParentAnnotatedClass
@@ -34,7 +34,7 @@ namespace org.bn.coders
             set { parentAnnotatedClass = value; }
         }
 
-        public ASN1Element ASN1ElementInfo
+        public ASN1ElementAtr ASN1ElementInfo
         {
             get { return element; }
             set { element = value; }

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName journalName_ ;
 	
-        [ASN1Element ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName JournalName
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
                         
 	private TimeOfDay limitingTime_ ;
 	
-        [ASN1Element ( Name = "limitingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "limitingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay LimitingTime
         {
@@ -56,7 +56,7 @@ namespace MMS_ASN1_Model {
         private bool  limitingEntry_present = false ;
 	[ASN1OctetString( Name = "" )]
     
-        [ASN1Element ( Name = "limitingEntry", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "limitingEntry", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public byte[] LimitingEntry
         {
@@ -83,7 +83,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "limitSpecification", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "limitSpecification", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public LimitSpecificationSequenceType LimitSpecification
         {

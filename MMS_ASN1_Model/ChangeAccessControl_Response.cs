@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Unsigned32 numberMatched_ ;
 	
-        [ASN1Element ( Name = "numberMatched", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "numberMatched", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumberMatched
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned32 numberChanged_ ;
 	
-        [ASN1Element ( Name = "numberChanged", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "numberChanged", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumberChanged
         {

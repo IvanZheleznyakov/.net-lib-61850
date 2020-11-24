@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ServiceSupportOptions services_Client_ ;
 	
-        [ASN1Element ( Name = "services-Client", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "services-Client", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ServiceSupportOptions Services_Client
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ServiceSupportOptions services_Server_ ;
 	
-        [ASN1Element ( Name = "services-Server", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "services-Server", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ServiceSupportOptions Services_Server
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private ParameterSupportOptions parameters_ ;
 	
-        [ASN1Element ( Name = "parameters", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "parameters", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ParameterSupportOptions Parameters
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
 	private long nest_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "nest", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "nest", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public long Nest
         {
@@ -70,7 +70,7 @@ namespace MMS_ASN1_Model {
           
 	private AdditionalSupportOptions extendedServices_Client_ ;
 	
-        [ASN1Element ( Name = "extendedServices-Client", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "extendedServices-Client", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public AdditionalSupportOptions ExtendedServices_Client
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
           
 	private AdditionalSupportOptions extendedServices_Server_ ;
 	
-        [ASN1Element ( Name = "extendedServices-Server", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "extendedServices-Server", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public AdditionalSupportOptions ExtendedServices_Server
         {
@@ -94,7 +94,7 @@ namespace MMS_ASN1_Model {
           
 	private AdditionalCBBOptions extendedParameters_ ;
 	
-        [ASN1Element ( Name = "extendedParameters", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "extendedParameters", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public AdditionalCBBOptions ExtendedParameters
         {
@@ -106,7 +106,7 @@ namespace MMS_ASN1_Model {
           
 	private GeneralManagementParameters generalManagement_ ;
 	
-        [ASN1Element ( Name = "generalManagement", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "generalManagement", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public GeneralManagementParameters GeneralManagement
         {
@@ -118,7 +118,7 @@ namespace MMS_ASN1_Model {
           
 	private VMDSupportParameters vMDSupport_ ;
 	
-        [ASN1Element ( Name = "vMDSupport", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vMDSupport", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public VMDSupportParameters VMDSupport
         {
@@ -130,7 +130,7 @@ namespace MMS_ASN1_Model {
           
 	private DomainManagementParameters domainManagement_ ;
 	
-        [ASN1Element ( Name = "domainManagement", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "domainManagement", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public DomainManagementParameters DomainManagement
         {
@@ -142,7 +142,7 @@ namespace MMS_ASN1_Model {
           
 	private ProgramInvocationManagementParameters programInvocation_ ;
 	
-        [ASN1Element ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public ProgramInvocationManagementParameters ProgramInvocation
         {
@@ -154,7 +154,7 @@ namespace MMS_ASN1_Model {
           
 	private VariableAccessParameters variableAccess_ ;
 	
-        [ASN1Element ( Name = "variableAccess", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "variableAccess", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public VariableAccessParameters VariableAccess
         {
@@ -166,7 +166,7 @@ namespace MMS_ASN1_Model {
           
 	private DataParameters dataParameters_ ;
 	
-        [ASN1Element ( Name = "dataParameters", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "dataParameters", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public DataParameters DataParameters
         {
@@ -178,7 +178,7 @@ namespace MMS_ASN1_Model {
           
 	private SemaphoreManagementParameters semaphoreManagement_ ;
 	
-        [ASN1Element ( Name = "semaphoreManagement", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "semaphoreManagement", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public SemaphoreManagementParameters SemaphoreManagement
         {
@@ -190,7 +190,7 @@ namespace MMS_ASN1_Model {
           
 	private OperatorCommunicationParameters operatorCommunication_ ;
 	
-        [ASN1Element ( Name = "operatorCommunication", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "operatorCommunication", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public OperatorCommunicationParameters OperatorCommunication
         {
@@ -202,7 +202,7 @@ namespace MMS_ASN1_Model {
           
 	private ErrorParameters errors_ ;
 	
-        [ASN1Element ( Name = "errors", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "errors", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
     
         public ErrorParameters Errors
         {
@@ -214,7 +214,7 @@ namespace MMS_ASN1_Model {
           
 	private FileManagementParameters fileManagement_ ;
 	
-        [ASN1Element ( Name = "fileManagement", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "fileManagement", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
     
         public FileManagementParameters FileManagement
         {

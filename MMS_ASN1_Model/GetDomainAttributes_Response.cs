@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfCapabilities", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfCapabilities", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<MMSString> ListOfCapabilities
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
           
 	private DomainState state_ ;
 	
-        [ASN1Element ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public DomainState State
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model {
 	private bool mmsDeletable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool MmsDeletable
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
 	private bool sharable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public bool Sharable
         {
@@ -77,7 +77,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfProgramInvocations", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfProgramInvocations", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfProgramInvocations", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> ListOfProgramInvocations
         {
@@ -89,7 +89,7 @@ namespace MMS_ASN1_Model {
           
 	private Integer8 uploadInProgress_ ;
 	
-        [ASN1Element ( Name = "uploadInProgress", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "uploadInProgress", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public Integer8 UploadInProgress
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  accessControlList_present = false ;
 	
-        [ASN1Element ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {

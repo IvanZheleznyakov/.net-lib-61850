@@ -26,7 +26,6 @@ using org.bn.types;
 using org.bn;
 using MMS_ASN1_Model;
 using System.Threading;
-using System.Windows.Forms;
 using System.Collections.Generic;
 
 namespace lib61850net

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName name_ ;
 	
-        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1ObjectIdentifier( Name = "" )]
     
-        [ASN1Element ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectIdentifier Reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                         
 	private Access_Control_List_instance accessControl_ ;
 	
-        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Access_Control_List_instance AccessControl
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model {
           
 	private EE_Class eeClass_ ;
 	
-        [ASN1Element ( Name = "eeClass", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eeClass", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public EE_Class EeClass
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model {
           
 	private Event_Condition_instance eventCondition_ ;
 	
-        [ASN1Element ( Name = "eventCondition", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventCondition", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public Event_Condition_instance EventCondition
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model {
           
 	private Transitions ecTransitions_ ;
 	
-        [ASN1Element ( Name = "ecTransitions", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "ecTransitions", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public Transitions EcTransitions
         {
@@ -129,7 +129,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "time", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "time", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public long Time
         {
@@ -147,7 +147,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "forever" )]
     
-        [ASN1Element ( Name = "forever", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "forever", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public NullObject Forever
         {
@@ -207,7 +207,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "remainingDelay", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "remainingDelay", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public RemainingDelayChoiceType RemainingDelay
         {
@@ -221,7 +221,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  eventAction_present = false ;
 	
-        [ASN1Element ( Name = "eventAction", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventAction", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public Event_Action_instance EventAction
         {
@@ -235,7 +235,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  duration_present = false ;
 	
-        [ASN1Element ( Name = "duration", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "duration", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public EE_Duration Duration
         {
@@ -249,7 +249,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  clientApplication_present = false ;
 	
-        [ASN1Element ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ClientApplication
         {
@@ -263,7 +263,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  aaRule_present = false ;
 	
-        [ASN1Element ( Name = "aaRule", IsOptional =  true , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "aaRule", IsOptional =  true , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public AlarmAckRule AaRule
         {
@@ -286,7 +286,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "text", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "text", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public MMSString Text
         {
@@ -303,7 +303,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "number", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "number", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public long Number
         {
@@ -321,7 +321,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "none" )]
     
-        [ASN1Element ( Name = "none", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "none", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
     
         public NullObject None
         {
@@ -404,7 +404,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "displayEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "displayEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DisplayEnhancementChoiceType DisplayEnhancement
         {
@@ -447,7 +447,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DetailsSequenceType Details
         {
@@ -503,7 +503,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DefinitionChoiceType Definition
         {

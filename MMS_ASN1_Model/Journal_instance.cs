@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName name_ ;
 	
-        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1ObjectIdentifier( Name = "" )]
     
-        [ASN1Element ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectIdentifier Reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                         
 	private Access_Control_List_instance accessControl_ ;
 	
-        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Access_Control_List_instance AccessControl
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "entries", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "entries", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "entries", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Journal_Entry_instance> Entries
         {
@@ -105,7 +105,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DetailsSequenceType Details
         {
@@ -161,7 +161,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DefinitionChoiceType Definition
         {

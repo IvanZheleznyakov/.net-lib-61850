@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName variableName_ ;
 	
-        [ASN1Element ( Name = "variableName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "variableName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName VariableName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Address address_ ;
 	
-        [ASN1Element ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Address Address
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  typeSpecification_present = false ;
 	
-        [ASN1Element ( Name = "typeSpecification", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeSpecification", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public TypeSpecification TypeSpecification
         {

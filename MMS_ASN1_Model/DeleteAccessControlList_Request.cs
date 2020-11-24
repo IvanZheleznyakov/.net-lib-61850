@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private Identifier  val;
 
         
-        [ASN1Element ( Name = "DeleteAccessControlList-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "DeleteAccessControlList-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Identifier Value
         {

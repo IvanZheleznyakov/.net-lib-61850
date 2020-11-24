@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private UnconfirmedService service_;
 
-        [ASN1Element(Name = "service", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "service", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
         public UnconfirmedService Service
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
 
         private bool service_ext_present = false;
 
-        [ASN1Element(Name = "service-ext", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "service-ext", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
 
         public Unconfirmed_Detail Service_ext
         {

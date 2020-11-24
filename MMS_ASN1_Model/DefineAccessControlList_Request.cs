@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier accessControlListName_ ;
 	
-        [ASN1Element ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlListName
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  readAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "readAccessCondition", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "readAccessCondition", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public AccessCondition ReadAccessCondition
         {
@@ -55,7 +55,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  storeAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "storeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "storeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public AccessCondition StoreAccessCondition
         {
@@ -69,7 +69,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  writeAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "writeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "writeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public AccessCondition WriteAccessCondition
         {
@@ -83,7 +83,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  loadAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "loadAccessCondition", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "loadAccessCondition", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public AccessCondition LoadAccessCondition
         {
@@ -97,7 +97,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  executeAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "executeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "executeAccessCondition", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public AccessCondition ExecuteAccessCondition
         {
@@ -111,7 +111,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  deleteAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "deleteAccessCondition", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteAccessCondition", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public AccessCondition DeleteAccessCondition
         {
@@ -125,7 +125,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  editAccessCondition_present = false ;
 	
-        [ASN1Element ( Name = "editAccessCondition", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "editAccessCondition", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public AccessCondition EditAccessCondition
         {
@@ -176,7 +176,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "accessControlListElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlListElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public AccessControlListElementsSequenceType AccessControlListElements
         {

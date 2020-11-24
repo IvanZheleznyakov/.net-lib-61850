@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier operatorStationName_ ;
 	
-        [ASN1Element ( Name = "operatorStationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "operatorStationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier OperatorStationName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfOutputData", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfOutputData", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfOutputData", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<MMSString> ListOfOutputData
         {

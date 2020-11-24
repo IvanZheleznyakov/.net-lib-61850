@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventEnrollmentName_ ;
 	
-        [ASN1Element ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventEnrollmentName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ObjectName eventConditionName_ ;
 	
-        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private Transitions causingTransitions_ ;
 	
-        [ASN1Element ( Name = "causingTransitions", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "causingTransitions", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Transitions CausingTransitions
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  acceptableDelay_present = false ;
 	
-        [ASN1Element ( Name = "acceptableDelay", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "acceptableDelay", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Unsigned32 AcceptableDelay
         {

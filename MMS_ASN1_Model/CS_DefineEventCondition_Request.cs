@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public string String
         {
@@ -52,7 +52,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Index
         {
@@ -70,7 +70,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noEnhancement" )]
     
-        [ASN1Element ( Name = "noEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "noEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject NoEnhancement
         {
@@ -153,7 +153,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "CS-DefineEventCondition-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "CS-DefineEventCondition-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public CS_DefineEventCondition_RequestChoiceType Value
         {

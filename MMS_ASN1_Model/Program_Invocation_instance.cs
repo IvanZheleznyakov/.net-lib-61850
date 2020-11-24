@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier name_ ;
 	
-        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier Name
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1ObjectIdentifier( Name = "" )]
     
-        [ASN1Element ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectIdentifier Reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                         
 	private ProgramInvocationState programInvocationState_ ;
 	
-        [ASN1Element ( Name = "programInvocationState", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "programInvocationState", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public ProgramInvocationState ProgramInvocationState
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "domains", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "domains", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "domains", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Domain_instance> Domains
         {
@@ -97,7 +97,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "accessControl", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Access_Control_List_instance> AccessControl
         {
@@ -110,7 +110,7 @@ namespace MMS_ASN1_Model {
 	private bool reusable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "reusable", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reusable", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public bool Reusable
         {
@@ -123,7 +123,7 @@ namespace MMS_ASN1_Model {
 	private bool monitor_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "monitor", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "monitor", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public bool Monitor
         {
@@ -140,7 +140,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "eventCondition", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "eventCondition", IsOptional =  true , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventCondition", IsOptional =  true , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Event_Condition_instance> EventCondition
         {
@@ -157,7 +157,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "eventAction", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "eventAction", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventAction", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Event_Action_instance> EventAction
         {
@@ -174,7 +174,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "eventEnrollment", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "eventEnrollment", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventEnrollment", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Event_Enrollment_instance> EventEnrollment
         {
@@ -186,7 +186,7 @@ namespace MMS_ASN1_Model {
           
 	private MMSString executionArgument_ ;
 	
-        [ASN1Element ( Name = "executionArgument", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "executionArgument", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public MMSString ExecutionArgument
         {
@@ -198,7 +198,7 @@ namespace MMS_ASN1_Model {
           
 	private Control_State control_ ;
 	
-        [ASN1Element ( Name = "control", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "control", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public Control_State Control
         {
@@ -210,7 +210,7 @@ namespace MMS_ASN1_Model {
           
 	private Program_Invocation_instance controlling_Program_Invocation_ ;
 	
-        [ASN1Element ( Name = "controlling-Program-Invocation", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "controlling-Program-Invocation", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public Program_Invocation_instance Controlling_Program_Invocation
         {
@@ -227,7 +227,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "controlled-Program-Invocations", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "controlled-Program-Invocations", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "controlled-Program-Invocations", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Program_Invocation_instance> Controlled_Program_Invocations
         {
@@ -266,7 +266,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DetailsSequenceType Details
         {
@@ -322,7 +322,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DefinitionChoiceType Definition
         {

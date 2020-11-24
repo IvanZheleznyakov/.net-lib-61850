@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName typeName_ ;
 	
-        [ASN1Element ( Name = "typeName", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeName", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ObjectName TypeName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private TypeSpecification typeSpecification_ ;
 	
-        [ASN1Element ( Name = "typeSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public TypeSpecification TypeSpecification
         {

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Journal_instance journal_ ;
 	
-        [ASN1Element ( Name = "journal", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "journal", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Journal_instance Journal
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
 	private byte[] entry_ ;
 	[ASN1OctetString( Name = "" )]
     
-        [ASN1Element ( Name = "entry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "entry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public byte[] Entry
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
           
 	private ApplicationReference clientApplication_ ;
 	
-        [ASN1Element ( Name = "clientApplication", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "clientApplication", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ClientApplication
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
           
 	private TimeOfDay timeStamp_ ;
 	
-        [ASN1Element ( Name = "timeStamp", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "timeStamp", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public TimeOfDay TimeStamp
         {
@@ -71,7 +71,7 @@ namespace MMS_ASN1_Model {
 	private long orderOfReceipt_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "orderOfReceipt", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "orderOfReceipt", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public long OrderOfReceipt
         {
@@ -120,7 +120,7 @@ namespace MMS_ASN1_Model {
     }
 
                 
-        [ASN1Element ( Name = "informationType", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "informationType", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public InformationTypeEnumType InformationType
         {
@@ -134,7 +134,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  textComment_present = false ;
 	
-        [ASN1Element ( Name = "textComment", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "textComment", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public MMS255String TextComment
         {
@@ -154,7 +154,7 @@ namespace MMS_ASN1_Model {
                         
 	private ObjectName name_ ;
 	
-        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -166,7 +166,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_State currentState_ ;
 	
-        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public EC_State CurrentState
         {
@@ -189,7 +189,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "eventTransitionRecord", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventTransitionRecord", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public EventTransitionRecordSequenceType EventTransitionRecord
         {
@@ -209,7 +209,7 @@ namespace MMS_ASN1_Model {
                         
 	private MMS255String variableTag_ ;
 	
-        [ASN1Element ( Name = "variableTag", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "variableTag", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public MMS255String VariableTag
         {
@@ -221,7 +221,7 @@ namespace MMS_ASN1_Model {
           
 	private Data valueSpecification_ ;
 	
-        [ASN1Element ( Name = "valueSpecification", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "valueSpecification", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public Data ValueSpecification
         {
@@ -247,7 +247,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "journalVariables", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "journalVariables", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "journalVariables", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<JournalVariablesSequenceType> JournalVariables
         {

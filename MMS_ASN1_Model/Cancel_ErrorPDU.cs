@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Unsigned32 originalInvokeID_ ;
 	
-        [ASN1Element ( Name = "originalInvokeID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "originalInvokeID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 OriginalInvokeID
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ServiceError serviceError_ ;
 	
-        [ASN1Element ( Name = "serviceError", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "serviceError", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ServiceError ServiceError
         {

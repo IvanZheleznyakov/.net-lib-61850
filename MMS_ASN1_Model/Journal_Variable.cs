@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMS255String variableTag_ ;
 	
-        [ASN1Element ( Name = "variableTag", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "variableTag", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public MMS255String VariableTag
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Data valueSpecification_ ;
 	
-        [ASN1Element ( Name = "valueSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "valueSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Data ValueSpecification
         {

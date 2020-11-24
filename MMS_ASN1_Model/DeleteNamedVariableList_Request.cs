@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model
         private long scopeOfDelete_;
         [ASN1Integer(Name = "")]
 
-        [ASN1Element(Name = "scopeOfDelete", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "scopeOfDelete", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
         public long ScopeOfDelete
         {
@@ -44,7 +44,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfVariableListName", IsSetOf = false)]
 
 
-        [ASN1Element(Name = "listOfVariableListName", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "listOfVariableListName", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<ObjectName> ListOfVariableListName
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model
 
         private bool domainName_present = false;
 
-        [ASN1Element(Name = "domainName", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "domainName", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Identifier DomainName
         {

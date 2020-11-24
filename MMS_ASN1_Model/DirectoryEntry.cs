@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private FileName fileName_ ;
 
-    [ASN1Element(Name = "fileName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false, IsImplicitTag = true)]
+    [ASN1ElementAtr(Name = "fileName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false, IsImplicitTag = true)]
         public FileName FileName
         {
             get { return fileName_; }
@@ -32,7 +32,7 @@ namespace MMS_ASN1_Model {
           
 	private FileAttributes fileAttributes_ ;
 	
-        [ASN1Element ( Name = "fileAttributes", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "fileAttributes", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public FileAttributes FileAttributes
         {

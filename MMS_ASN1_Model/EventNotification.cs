@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private ObjectName eventEnrollmentName_;
 
-        [ASN1Element(Name = "eventEnrollmentName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "eventEnrollmentName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public ObjectName EventEnrollmentName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model
 
         private ObjectName eventConditionName_;
 
-        [ASN1Element(Name = "eventConditionName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "eventConditionName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public ObjectName EventConditionName
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model
 
         private Severity severity_;
 
-        [ASN1Element(Name = "severity", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "severity", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Severity Severity
         {
@@ -61,7 +61,7 @@ namespace MMS_ASN1_Model
 
         private bool currentState_present = false;
 
-        [ASN1Element(Name = "currentState", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "currentState", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public EC_State CurrentState
         {
@@ -73,7 +73,7 @@ namespace MMS_ASN1_Model
 
         private EventTime transitionTime_;
 
-        [ASN1Element(Name = "transitionTime", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "transitionTime", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public EventTime TransitionTime
         {
@@ -86,7 +86,7 @@ namespace MMS_ASN1_Model
         private bool notificationLost_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "notificationLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "notificationLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
 
         public bool NotificationLost
         {
@@ -100,7 +100,7 @@ namespace MMS_ASN1_Model
 
         private bool alarmAcknowledgmentRule_present = false;
 
-        [ASN1Element(Name = "alarmAcknowledgmentRule", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "alarmAcknowledgmentRule", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public AlarmAckRule AlarmAcknowledgmentRule
         {
@@ -121,7 +121,7 @@ namespace MMS_ASN1_Model
 
             private ObjectName eventActionName_;
 
-            [ASN1Element(Name = "eventActionName", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1ElementAtr(Name = "eventActionName", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public ObjectName EventActionName
             {
@@ -152,7 +152,7 @@ namespace MMS_ASN1_Model
 
                     private ConfirmedServiceResponse confirmedServiceResponse_;
 
-                    [ASN1Element(Name = "confirmedServiceResponse", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+                    [ASN1ElementAtr(Name = "confirmedServiceResponse", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
                     public ConfirmedServiceResponse ConfirmedServiceResponse
                     {
@@ -166,7 +166,7 @@ namespace MMS_ASN1_Model
 
                     private bool cs_Response_Detail_present = false;
 
-                    [ASN1Element(Name = "cs-Response-Detail", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
+                    [ASN1ElementAtr(Name = "cs-Response-Detail", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
 
                     public Response_Detail Cs_Response_Detail
                     {
@@ -196,7 +196,7 @@ namespace MMS_ASN1_Model
 
                 }
 
-                [ASN1Element(Name = "success", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "success", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
                 public SuccessSequenceType Success
                 {
@@ -221,7 +221,7 @@ namespace MMS_ASN1_Model
 
                     private bool modifierPosition_present = false;
 
-                    [ASN1Element(Name = "modifierPosition", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
+                    [ASN1ElementAtr(Name = "modifierPosition", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
                     public Unsigned32 ModifierPosition
                     {
@@ -233,7 +233,7 @@ namespace MMS_ASN1_Model
 
                     private ServiceError serviceError_;
 
-                    [ASN1Element(Name = "serviceError", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+                    [ASN1ElementAtr(Name = "serviceError", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
                     public ServiceError ServiceError
                     {
@@ -263,7 +263,7 @@ namespace MMS_ASN1_Model
 
                 }
 
-                [ASN1Element(Name = "failure", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+                [ASN1ElementAtr(Name = "failure", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
                 public FailureSequenceType Failure
                 {
@@ -324,7 +324,7 @@ namespace MMS_ASN1_Model
 
             }
 
-            [ASN1Element(Name = "successOrFailure", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1ElementAtr(Name = "successOrFailure", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public SuccessOrFailureChoiceType SuccessOrFailure
             {
@@ -349,7 +349,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1Element(Name = "actionResult", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "actionResult", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
 
         public ActionResultSequenceType ActionResult
         {

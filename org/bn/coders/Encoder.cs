@@ -41,7 +41,7 @@ namespace org.bn.coders
             }
             else 
             {
-                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(obj.GetType());
+                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(obj.GetType());
 			    sizeOfEncodedBytes = encodeClassType(obj, stream, elemInfo);
             }
 
@@ -133,7 +133,7 @@ namespace org.bn.coders
 				resultSize += encodeNull(obj, stream, elementInfo);
 			}
 			else
-            if (elementInfo.isAttributePresent<ASN1Element>())
+            if (elementInfo.isAttributePresent<ASN1ElementAtr>())
 			{
 				resultSize += encodeElement(obj, stream, elementInfo);
 			}
@@ -277,7 +277,7 @@ namespace org.bn.coders
                 info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
             }
             else
-                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
 
 			int resultSize = 0;
             if (CoderUtils.isNullField (field, info))
@@ -311,7 +311,7 @@ namespace org.bn.coders
                     info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx));
                 }
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
             
                 if (invokeSelectedMethodForField(field, obj, info)) {
                     break;
@@ -387,13 +387,13 @@ namespace org.bn.coders
 
             if (elementInfo.ASN1ElementInfo == null)
             {
-                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
             }
             else
             {
                 if (!elementInfo.ASN1ElementInfo.HasTag)
                 {
-                    ASN1Element fieldInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                    ASN1ElementAtr fieldInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
                     if (fieldInfo!=null && fieldInfo.HasTag)
                     {
                         elementInfo.ASN1ElementInfo.HasTag = true;

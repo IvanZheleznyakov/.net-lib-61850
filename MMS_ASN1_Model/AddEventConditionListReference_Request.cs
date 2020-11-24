@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventConditionListName_ ;
 	
-        [ASN1Element ( Name = "eventConditionListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventConditionListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionListName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfEventConditionName", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfEventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfEventConditionName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> ListOfEventConditionName
         {
@@ -53,7 +53,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfEventConditionListName", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfEventConditionListName", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfEventConditionListName", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> ListOfEventConditionListName
         {

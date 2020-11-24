@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private ObjectName semaphoreName_;
 
-        [ASN1Element(Name = "semaphoreName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "semaphoreName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public ObjectName SemaphoreName
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
 
         private bool namedToken_present = false;
 
-        [ASN1Element(Name = "namedToken", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "namedToken", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public Identifier NamedToken
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model
 
         private Priority priority_;
 
-        [ASN1Element(Name = "priority", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "priority", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
 
         public Priority Priority
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model
 
         private bool acceptableDelay_present = false;
 
-        [ASN1Element(Name = "acceptableDelay", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "acceptableDelay", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Unsigned32 AcceptableDelay
         {
@@ -77,7 +77,7 @@ namespace MMS_ASN1_Model
 
         private bool controlTimeOut_present = false;
 
-        [ASN1Element(Name = "controlTimeOut", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "controlTimeOut", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public Unsigned32 ControlTimeOut
         {
@@ -92,7 +92,7 @@ namespace MMS_ASN1_Model
         private bool abortOnTimeOut_present = false;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "abortOnTimeOut", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "abortOnTimeOut", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public bool AbortOnTimeOut
         {
@@ -105,7 +105,7 @@ namespace MMS_ASN1_Model
         private bool relinquishIfConnectionLost_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "relinquishIfConnectionLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "relinquishIfConnectionLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
 
         public bool RelinquishIfConnectionLost
         {
@@ -119,7 +119,7 @@ namespace MMS_ASN1_Model
 
         private bool applicationToPreempt_present = false;
 
-        [ASN1Element(Name = "applicationToPreempt", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "applicationToPreempt", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public ApplicationReference ApplicationToPreempt
         {

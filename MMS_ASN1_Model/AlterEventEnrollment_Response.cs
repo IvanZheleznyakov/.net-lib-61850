@@ -32,7 +32,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public EE_State State
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {
@@ -110,7 +110,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public CurrentStateChoiceType CurrentState
         {
@@ -122,7 +122,7 @@ namespace MMS_ASN1_Model {
           
 	private EventTime transitionTime_ ;
 	
-        [ASN1Element ( Name = "transitionTime", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "transitionTime", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public EventTime TransitionTime
         {

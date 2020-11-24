@@ -188,7 +188,7 @@ namespace org.bn.coders
             int tagNA = -1;
             foreach (PropertyInfo field in objClass.GetProperties())
             {
-                ASN1Element element = CoderUtils.getAttribute<ASN1Element>(field);
+                ASN1ElementAtr element = CoderUtils.getAttribute<ASN1ElementAtr>(field);
                 if (element != null)
                 {
                     try
@@ -295,8 +295,8 @@ namespace org.bn.coders
                 return false;
             }
             else
-            if( isAttributePresent<ASN1Element> (field)) {
-                ASN1Element info = getAttribute<ASN1Element>(field);
+            if( isAttributePresent<ASN1ElementAtr> (field)) {
+                ASN1ElementAtr info = getAttribute<ASN1ElementAtr>(field);
                 if(info.IsOptional || info.HasDefaultValue)
                     return true;
             }        

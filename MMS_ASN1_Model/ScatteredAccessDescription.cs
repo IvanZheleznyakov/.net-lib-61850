@@ -30,7 +30,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  componentName_present = false ;
 	
-        [ASN1Element ( Name = "componentName", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "componentName", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier ComponentName
         {
@@ -42,7 +42,7 @@ namespace MMS_ASN1_Model {
           
 	private VariableSpecification variableSpecification_ ;
 	
-        [ASN1Element ( Name = "variableSpecification", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "variableSpecification", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public VariableSpecification VariableSpecification
         {
@@ -56,7 +56,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  alternateAccess_present = false ;
 	
-        [ASN1Element ( Name = "alternateAccess", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "alternateAccess", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public AlternateAccess AlternateAccess
         {

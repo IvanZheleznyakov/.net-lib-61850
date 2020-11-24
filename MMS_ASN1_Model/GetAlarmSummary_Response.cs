@@ -26,7 +26,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfAlarmSummary", IsSetOf = false)]
 
 
-        [ASN1Element(Name = "listOfAlarmSummary", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "listOfAlarmSummary", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<AlarmSummary> ListOfAlarmSummary
         {
@@ -39,7 +39,7 @@ namespace MMS_ASN1_Model
         private bool moreFollows_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "moreFollows", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "moreFollows", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
 
         public bool MoreFollows
         {

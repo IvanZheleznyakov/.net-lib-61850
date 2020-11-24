@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private bool mmsDeletable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1Element ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public bool MmsDeletable
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  address_present = false ;
 	
-        [ASN1Element ( Name = "address", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "address", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Address Address
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model {
           
 	private TypeDescription typeDescription_ ;
 	
-        [ASN1Element ( Name = "typeDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public TypeDescription TypeDescription
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  accessControlList_present = false ;
 	
-        [ASN1Element ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {
@@ -77,7 +77,7 @@ namespace MMS_ASN1_Model {
         private bool  meaning_present = false ;
 	[ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "meaning", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "meaning", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public string Meaning
         {

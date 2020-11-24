@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString fileName_ ;
 	
-        [ASN1Element ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString FileName
         {

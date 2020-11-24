@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ServiceError  val;
 
         
-        [ASN1Element ( Name = "Conclude-ErrorPDU", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "Conclude-ErrorPDU", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ServiceError Value
         {

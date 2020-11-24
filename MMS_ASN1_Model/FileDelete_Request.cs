@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private FileName  val;
 
         
-        [ASN1Element ( Name = "FileDelete-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "FileDelete-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public FileName Value
         {

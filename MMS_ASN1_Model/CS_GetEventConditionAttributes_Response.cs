@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Priority Priority
         {
@@ -52,7 +52,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {
@@ -112,7 +112,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "groupPriorityOverride", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "groupPriorityOverride", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public GroupPriorityOverrideChoiceType GroupPriorityOverride
         {
@@ -129,7 +129,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfReferencingECL", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfReferencingECL", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfReferencingECL", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> ListOfReferencingECL
         {
@@ -153,7 +153,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1Element ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "string", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public string String
         {
@@ -170,7 +170,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Index
         {
@@ -188,7 +188,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noEnhancement" )]
     
-        [ASN1Element ( Name = "noEnhancement", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "noEnhancement", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public NullObject NoEnhancement
         {
@@ -271,7 +271,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1Element ( Name = "displayEnhancement", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "displayEnhancement", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DisplayEnhancementChoiceType DisplayEnhancement
         {

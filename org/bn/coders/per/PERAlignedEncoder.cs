@@ -480,7 +480,7 @@ namespace org.bn.coders.per
                 if (elementInfo.hasPreparedInfo())
                     info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
 
                 if (invokeSelectedMethodForField(field, obj, info))
                 {

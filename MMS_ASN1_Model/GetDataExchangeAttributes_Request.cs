@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ObjectName  val;
 
         
-        [ASN1Element ( Name = "GetDataExchangeAttributes-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "GetDataExchangeAttributes-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ObjectName Value
         {

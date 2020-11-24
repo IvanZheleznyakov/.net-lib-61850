@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "timeOfDay", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "timeOfDay", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay TimeOfDay
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "timeSequenceIdentifier", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "timeSequenceIdentifier", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 TimeSequenceIdentifier
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {

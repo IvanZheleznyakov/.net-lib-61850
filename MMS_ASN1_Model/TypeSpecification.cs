@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "typeName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName TypeName
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "typeDescription", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeDescription", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public TypeDescription TypeDescription
         {

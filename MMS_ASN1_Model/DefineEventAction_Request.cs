@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventActionName_ ;
 	
-        [ASN1Element ( Name = "eventActionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventActionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventActionName
         {
@@ -38,7 +38,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfModifier", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfModifier", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfModifier", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Modifier> ListOfModifier
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
           
 	private ConfirmedServiceRequest confirmedServiceRequest_ ;
 	
-        [ASN1Element ( Name = "confirmedServiceRequest", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "confirmedServiceRequest", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ConfirmedServiceRequest ConfirmedServiceRequest
         {
@@ -64,7 +64,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  cs_extension_present = false ;
 	
-        [ASN1Element ( Name = "cs-extension", IsOptional =  true , HasTag =  true, Tag = 79 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "cs-extension", IsOptional =  true , HasTag =  true, Tag = 79 , HasDefaultValue =  false )  ]
     
         public Request_Detail Cs_extension
         {

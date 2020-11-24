@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ProgramInvocationState  val;
 
         
-        [ASN1Element ( Name = "Stop-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "Stop-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ProgramInvocationState Value
         {

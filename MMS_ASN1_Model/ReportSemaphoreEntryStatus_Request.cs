@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName semaphoreName_ ;
 	
-        [ASN1Element ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName SemaphoreName
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
 	private long state_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "state", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long State
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model {
         private bool  entryIDToStartAfter_present = false ;
 	[ASN1OctetString( Name = "" )]
     
-        [ASN1Element ( Name = "entryIDToStartAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "entryIDToStartAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public byte[] EntryIDToStartAfter
         {

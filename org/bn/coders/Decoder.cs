@@ -45,7 +45,7 @@ namespace org.bn.coders
             }
             else
             {
-                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(objectClass);
+                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(objectClass);
                 return (T)decodeClassType(decodeTag(stream), objectClass, elemInfo, stream).Value;
             }            
         }
@@ -134,7 +134,7 @@ namespace org.bn.coders
 				return decodeNull(decodedTag, objectClass, elementInfo, stream);
 			}
 			else
-            if (elementInfo.isAttributePresent<ASN1Element>())
+            if (elementInfo.isAttributePresent<ASN1ElementAtr>())
 			{
 				return decodeElement(decodedTag, objectClass, elementInfo, stream);
 			}
@@ -288,7 +288,7 @@ namespace org.bn.coders
                             info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(i + 1));
                         }
                         else
-                            info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(fields[i+1]);
+                            info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(fields[i+1]);
                         isAny = CoderUtils.isAnyField(fields[i + 1], info);
                     }
 
@@ -331,7 +331,7 @@ namespace org.bn.coders
                 info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
             }
             else
-                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
             
 			if(CoderUtils.isNullField(field,info))
 			{
@@ -368,7 +368,7 @@ namespace org.bn.coders
                     info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
                 }
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
 
                 val = decodeClassType(decodedTag, field.PropertyType, info, stream);
                 fieldIdx++;
@@ -452,13 +452,13 @@ namespace org.bn.coders
 			PropertyInfo field = objectClass.GetProperty("Value");
             if (elementInfo.ASN1ElementInfo == null)
             {
-                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
             }
             else
             {
                 if (!elementInfo.ASN1ElementInfo.HasTag)
                 {
-                    ASN1Element fieldInfo = CoderUtils.getAttribute<ASN1Element>(field);
+                    ASN1ElementAtr fieldInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
                     if (fieldInfo!=null && fieldInfo.HasTag)
                     {
                         elementInfo.ASN1ElementInfo.HasTag = true;

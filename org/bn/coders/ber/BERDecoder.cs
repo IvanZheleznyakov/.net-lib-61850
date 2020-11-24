@@ -152,7 +152,7 @@ namespace org.bn.coders.ber
                                 info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(i + 1));
                             }
                             else
-                                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(fields[i + 1]);
+                                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(fields[i + 1]);
                             isAny = CoderUtils.isAnyField(fields[i + 1], info);
                         }
 

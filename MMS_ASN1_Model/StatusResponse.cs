@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private long vmdLogicalStatus_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "vmdLogicalStatus", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vmdLogicalStatus", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long VmdLogicalStatus
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	private long vmdPhysicalStatus_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "vmdPhysicalStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vmdPhysicalStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long VmdPhysicalStatus
         {
@@ -57,7 +57,7 @@ namespace MMS_ASN1_Model {
 		
 		) ]
 	    
-        [ASN1Element ( Name = "localDetail", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "localDetail", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public BitString LocalDetail
         {

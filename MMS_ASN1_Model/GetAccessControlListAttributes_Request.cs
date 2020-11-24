@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlListName
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "vMD" )]
     
-        [ASN1Element ( Name = "vMD", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vMD", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject VMD
         {
@@ -65,7 +65,7 @@ namespace MMS_ASN1_Model {
                         
 	private ObjectClass objectClass_ ;
 	
-        [ASN1Element ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectClass ObjectClass
         {
@@ -77,7 +77,7 @@ namespace MMS_ASN1_Model {
           
 	private ObjectName objectName_ ;
 	
-        [ASN1Element ( Name = "objectName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "objectName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectName ObjectName
         {
@@ -100,7 +100,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1Element ( Name = "namedObject", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "namedObject", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public NamedObjectSequenceType NamedObject
         {

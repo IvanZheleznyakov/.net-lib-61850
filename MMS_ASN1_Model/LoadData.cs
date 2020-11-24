@@ -26,7 +26,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1OctetString( Name = "" )]
     
-        [ASN1Element ( Name = "non-coded", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "non-coded", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public byte[] Non_coded
         {

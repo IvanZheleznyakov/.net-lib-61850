@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private FileName fileName_ ;
 	
-        [ASN1Element ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public FileName FileName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned32 initialPosition_ ;
 	
-        [ASN1Element ( Name = "initialPosition", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "initialPosition", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 InitialPosition
         {

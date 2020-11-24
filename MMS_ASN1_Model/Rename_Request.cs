@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectClass objectClass_ ;
 	
-        [ASN1Element ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectClass ObjectClass
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ObjectName currentName_ ;
 	
-        [ASN1Element ( Name = "currentName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "currentName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectName CurrentName
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private Identifier newIdentifier_ ;
 	
-        [ASN1Element ( Name = "newIdentifier", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "newIdentifier", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier NewIdentifier
         {

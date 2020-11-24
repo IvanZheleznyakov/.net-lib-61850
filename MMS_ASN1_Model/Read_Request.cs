@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private bool specificationWithResult_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "specificationWithResult", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "specificationWithResult", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
         public bool SpecificationWithResult
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
 
         private VariableAccessSpecification variableAccessSpecification_;
 
-        [ASN1Element(Name = "variableAccessSpecification", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "variableAccessSpecification", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public VariableAccessSpecification VariableAccessSpecification
         {

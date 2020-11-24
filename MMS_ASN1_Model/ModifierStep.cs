@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private long modifierID_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1Element ( Name = "modifierID", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "modifierID", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public long ModifierID
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
           
 	private Modifier modifier_ ;
 	
-        [ASN1Element ( Name = "modifier", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "modifier", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Modifier Modifier
         {

@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "vMDStop", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vMDStop", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public VMDStop_Request VMDStop
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "vMDReset", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "vMDReset", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public VMDReset_Request VMDReset
         {
@@ -57,7 +57,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "select", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "select", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Select_Request Select
         {
@@ -73,7 +73,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "alterPI", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "alterPI", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public AlterProgramInvocationAttributes_Request AlterPI
         {
@@ -89,7 +89,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "initiateUCLoad", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "initiateUCLoad", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public InitiateUnitControlLoad_Request InitiateUCLoad
         {
@@ -105,7 +105,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "uCLoad", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "uCLoad", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public UnitControlLoadSegment_Request UCLoad
         {
@@ -121,7 +121,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "uCUpload", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "uCUpload", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public UnitControlUpload_Request UCUpload
         {
@@ -137,7 +137,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "startUC", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "startUC", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public StartUnitControl_Request StartUC
         {
@@ -153,7 +153,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "stopUC", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "stopUC", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public StopUnitControl_Request StopUC
         {
@@ -169,7 +169,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "createUC", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "createUC", IsOptional =  false , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public CreateUnitControl_Request CreateUC
         {
@@ -185,7 +185,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "addToUC", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "addToUC", IsOptional =  false , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public AddToUnitControl_Request AddToUC
         {
@@ -201,7 +201,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "removeFromUC", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "removeFromUC", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public RemoveFromUnitControl_Request RemoveFromUC
         {
@@ -217,7 +217,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "getUCAttributes", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "getUCAttributes", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public GetUnitControlAttributes_Request GetUCAttributes
         {
@@ -233,7 +233,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "loadUCFromFile", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "loadUCFromFile", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public LoadUnitControlFromFile_Request LoadUCFromFile
         {
@@ -249,7 +249,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "storeUCToFile", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "storeUCToFile", IsOptional =  false , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public StoreUnitControlToFile_Request StoreUCToFile
         {
@@ -265,7 +265,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "deleteUC", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteUC", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
     
         public DeleteUnitControl_Request DeleteUC
         {
@@ -281,7 +281,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "defineECL", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "defineECL", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
     
         public DefineEventConditionList_Request DefineECL
         {
@@ -297,7 +297,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "deleteECL", IsOptional =  false , HasTag =  true, Tag = 17 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "deleteECL", IsOptional =  false , HasTag =  true, Tag = 17 , HasDefaultValue =  false )  ]
     
         public DeleteEventConditionList_Request DeleteECL
         {
@@ -313,7 +313,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "addECLReference", IsOptional =  false , HasTag =  true, Tag = 18 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "addECLReference", IsOptional =  false , HasTag =  true, Tag = 18 , HasDefaultValue =  false )  ]
     
         public AddEventConditionListReference_Request AddECLReference
         {
@@ -329,7 +329,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "removeECLReference", IsOptional =  false , HasTag =  true, Tag = 19 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "removeECLReference", IsOptional =  false , HasTag =  true, Tag = 19 , HasDefaultValue =  false )  ]
     
         public RemoveEventConditionListReference_Request RemoveECLReference
         {
@@ -345,7 +345,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "getECLAttributes", IsOptional =  false , HasTag =  true, Tag = 20 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "getECLAttributes", IsOptional =  false , HasTag =  true, Tag = 20 , HasDefaultValue =  false )  ]
     
         public GetEventConditionListAttributes_Request GetECLAttributes
         {
@@ -361,7 +361,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "reportECLStatus", IsOptional =  false , HasTag =  true, Tag = 21 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "reportECLStatus", IsOptional =  false , HasTag =  true, Tag = 21 , HasDefaultValue =  false )  ]
     
         public ReportEventConditionListStatus_Request ReportECLStatus
         {
@@ -377,7 +377,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1Element ( Name = "alterECLMonitoring", IsOptional =  false , HasTag =  true, Tag = 22 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "alterECLMonitoring", IsOptional =  false , HasTag =  true, Tag = 22 , HasDefaultValue =  false )  ]
     
         public AlterEventConditionListMonitoring_Request AlterECLMonitoring
         {

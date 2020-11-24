@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventConditionListName_ ;
 	
-        [ASN1Element ( Name = "eventConditionListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "eventConditionListName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionListName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  continueAfter_present = false ;
 	
-        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier ContinueAfter
         {

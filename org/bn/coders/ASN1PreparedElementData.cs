@@ -222,8 +222,8 @@ namespace org.bn.coders
                 typeMeta = new ASN1BoxedTypeMetadata ( objectClass, CoderUtils.getAttribute<ASN1BoxedType> (annotated) ) ;
             }        
             else
-            if( CoderUtils.isAttributePresent<ASN1Element>(annotated) ) {
-                typeMeta = new ASN1ElementMetadata ( CoderUtils.getAttribute<ASN1Element> (annotated) ) ;
+            if( CoderUtils.isAttributePresent<ASN1ElementAtr>(annotated) ) {
+                typeMeta = new ASN1ElementMetadata ( CoderUtils.getAttribute<ASN1ElementAtr> (annotated) ) ;
             }
             else
             if(objectClass.Equals(typeof(String))) {
@@ -250,8 +250,8 @@ namespace org.bn.coders
                 typeMeta = new ASN1OctetStringMetadata( ) ;
             }
             
-            if( CoderUtils.isAttributePresent<ASN1Element>(annotated) ) {
-                asn1ElementInfo = new ASN1ElementMetadata(CoderUtils.getAttribute<ASN1Element>(annotated));
+            if( CoderUtils.isAttributePresent<ASN1ElementAtr>(annotated) ) {
+                asn1ElementInfo = new ASN1ElementMetadata(CoderUtils.getAttribute<ASN1ElementAtr>(annotated));
             }
 
             //ASN1CyclicDefinition.Depth = 0; // Pavel

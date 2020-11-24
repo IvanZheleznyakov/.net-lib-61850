@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName journalName_ ;
 	
-        [ASN1Element ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName JournalName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfJournalEntry", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfJournalEntry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfJournalEntry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<EntryContent> ListOfJournalEntry
         {

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName scatteredAccessName_ ;
 	
-        [ASN1Element ( Name = "scatteredAccessName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "scatteredAccessName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName ScatteredAccessName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private ScatteredAccessDescription scatteredAccessDescription_ ;
 	
-        [ASN1Element ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ScatteredAccessDescription ScatteredAccessDescription
         {

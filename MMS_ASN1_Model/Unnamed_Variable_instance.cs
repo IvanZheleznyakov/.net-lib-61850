@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Address address_ ;
 	
-        [ASN1Element ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Address Address
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Access_Control_List_instance accessControl_ ;
 	
-        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Access_Control_List_instance AccessControl
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private TypeDescription typeDescription_ ;
 	
-        [ASN1Element ( Name = "typeDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "typeDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public TypeDescription TypeDescription
         {

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString algorithm_ ;
 	
-        [ASN1Element ( Name = "algorithm", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "algorithm", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString Algorithm
         {

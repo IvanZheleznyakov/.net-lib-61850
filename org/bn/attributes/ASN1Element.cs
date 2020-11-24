@@ -22,7 +22,7 @@ using org.bn.coders;
 namespace org.bn.attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ASN1Element : Attribute
+    public class ASN1ElementAtr : Attribute
     {
         private string name = "";
 

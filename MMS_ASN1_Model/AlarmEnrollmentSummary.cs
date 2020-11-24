@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private ObjectName eventEnrollmentName_;
 
-        [ASN1Element(Name = "eventEnrollmentName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "eventEnrollmentName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public ObjectName EventEnrollmentName
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
 
         private bool clientApplication_present = false;
 
-        [ASN1Element(Name = "clientApplication", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "clientApplication", IsOptional = true, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public ApplicationReference ClientApplication
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model
 
         private Unsigned8 severity_;
 
-        [ASN1Element(Name = "severity", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "severity", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Unsigned8 Severity
         {
@@ -61,7 +61,7 @@ namespace MMS_ASN1_Model
 
         private EC_State currentState_;
 
-        [ASN1Element(Name = "currentState", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "currentState", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public EC_State CurrentState
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model
 
         private bool displayEnhancement_present = false;
 
-        [ASN1Element(Name = "displayEnhancement", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "displayEnhancement", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public EN_Additional_Detail DisplayEnhancement
         {
@@ -88,7 +88,7 @@ namespace MMS_ASN1_Model
         private bool notificationLost_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1Element(Name = "notificationLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
+        [ASN1ElementAtr(Name = "notificationLost", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = true)]
 
         public bool NotificationLost
         {
@@ -100,7 +100,7 @@ namespace MMS_ASN1_Model
 
         private AlarmAckRule alarmAcknowledgmentRule_;
 
-        [ASN1Element(Name = "alarmAcknowledgmentRule", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "alarmAcknowledgmentRule", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public AlarmAckRule AlarmAcknowledgmentRule
         {
@@ -114,7 +114,7 @@ namespace MMS_ASN1_Model
 
         private bool enrollmentState_present = false;
 
-        [ASN1Element(Name = "enrollmentState", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "enrollmentState", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
 
         public EE_State EnrollmentState
         {
@@ -128,7 +128,7 @@ namespace MMS_ASN1_Model
 
         private bool timeOfLastTransitionToActive_present = false;
 
-        [ASN1Element(Name = "timeOfLastTransitionToActive", IsOptional = true, HasTag = true, Tag = 9, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "timeOfLastTransitionToActive", IsOptional = true, HasTag = true, Tag = 9, HasDefaultValue = false)]
 
         public EventTime TimeOfLastTransitionToActive
         {
@@ -142,7 +142,7 @@ namespace MMS_ASN1_Model
 
         private bool timeActiveAcknowledged_present = false;
 
-        [ASN1Element(Name = "timeActiveAcknowledged", IsOptional = true, HasTag = true, Tag = 10, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "timeActiveAcknowledged", IsOptional = true, HasTag = true, Tag = 10, HasDefaultValue = false)]
 
         public EventTime TimeActiveAcknowledged
         {
@@ -156,7 +156,7 @@ namespace MMS_ASN1_Model
 
         private bool timeOfLastTransitionToIdle_present = false;
 
-        [ASN1Element(Name = "timeOfLastTransitionToIdle", IsOptional = true, HasTag = true, Tag = 11, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "timeOfLastTransitionToIdle", IsOptional = true, HasTag = true, Tag = 11, HasDefaultValue = false)]
 
         public EventTime TimeOfLastTransitionToIdle
         {
@@ -170,7 +170,7 @@ namespace MMS_ASN1_Model
 
         private bool timeIdleAcknowledged_present = false;
 
-        [ASN1Element(Name = "timeIdleAcknowledged", IsOptional = true, HasTag = true, Tag = 12, HasDefaultValue = false)]
+        [ASN1ElementAtr(Name = "timeIdleAcknowledged", IsOptional = true, HasTag = true, Tag = 12, HasDefaultValue = false)]
 
         public EventTime TimeIdleAcknowledged
         {

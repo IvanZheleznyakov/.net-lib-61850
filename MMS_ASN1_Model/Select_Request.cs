@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  controlling_present = false ;
 	
-        [ASN1Element ( Name = "controlling", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "controlling", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier Controlling
         {
@@ -40,7 +40,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "controlled", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "controlled", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "controlled", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> Controlled
         {

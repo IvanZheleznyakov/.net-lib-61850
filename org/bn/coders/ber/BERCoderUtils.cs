@@ -49,15 +49,15 @@ namespace org.bn.coders.ber
             }
             else 
             {
-			    ASN1Element elementInfo = null;
+			    ASN1ElementAtr elementInfo = null;
 			    if (info.ASN1ElementInfo != null)
 			    {
 				    elementInfo = info.ASN1ElementInfo;
 			    }
 			    else 
-                if (info.isAttributePresent<ASN1Element>())
+                if (info.isAttributePresent<ASN1ElementAtr>())
 			    {
-				    elementInfo = info.getAttribute<ASN1Element>();
+				    elementInfo = info.getAttribute<ASN1ElementAtr>();
 			    }
     			
 			    if (elementInfo != null)

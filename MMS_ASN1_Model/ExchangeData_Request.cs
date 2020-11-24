@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName dataExchangeName_ ;
 	
-        [ASN1Element ( Name = "dataExchangeName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "dataExchangeName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName DataExchangeName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfRequestData", IsSetOf = false  )]
 
     
-        [ASN1Element ( Name = "listOfRequestData", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "listOfRequestData", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Data> ListOfRequestData
         {

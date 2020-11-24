@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier programInvocationName_ ;
 	
-        [ASN1Element ( Name = "programInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "programInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocationName
         {

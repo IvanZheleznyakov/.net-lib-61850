@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  continueAfter_present = false ;
 	
-        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public MMSString ContinueAfter
         {
