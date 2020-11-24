@@ -4,16 +4,16 @@
  *  This file is part of IEDExplorer.
  *
  *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU General internal License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  IEDExplorer is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU General internal License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU General internal License
  *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace IEDExplorer
 {
-    public enum NodeState
+    internal enum NodeState
     {
         Initial,
         Read,
@@ -41,12 +41,12 @@ namespace IEDExplorer
         private int _actualChildNode;
         protected string _address;
         protected bool _addressLock = false;
-        public event EventHandler StateChanged;
+        internal event EventHandler StateChanged;
         private NodeState _nodeState;
         // Persistence for SCL server library objects
-        public object SCLServerModelObject { get; set; }
+        internal object SCLServerModelObject { get; set; }
 
-        public NodeBase(string Name)
+        internal NodeBase(string Name)
         {
             this.Name = Name;
             _childNodes = new List<NodeBase>();
@@ -54,7 +54,7 @@ namespace IEDExplorer
             IsIecModel = false;
         }
 
-        public NodeState NodeState
+        internal NodeState NodeState
         {
             get
             {
@@ -78,21 +78,21 @@ namespace IEDExplorer
             }
         }
 
-        public string Name { get; private set; }
-        public void NameSet4Test(string name)
+        internal string Name { get; private set; }
+        internal void NameSet4Test(string name)
         {
             this.Name = name;
         }
-        public string TypeId { get; set; }
+        internal string TypeId { get; set; }
 
-        public bool IsIecModel { get; set; }
+        internal bool IsIecModel { get; set; }
 
-        public object Tag { get; set; }
-        public object TagR { get; set; }    // reserve for secondary Iec TreeView
+        internal object Tag { get; set; }
+        internal object TagR { get; set; }    // reserve for secondary Iec TreeView
 
-        public NodeBase Parent { get; set; }
+        internal NodeBase Parent { get; set; }
 
-        /*public List<String> FC
+        /*internal List<String> FC
         {
             get
             {
@@ -100,12 +100,12 @@ namespace IEDExplorer
             }
         }*/
 
-        public NodeBase[] GetChildNodes()
+        internal NodeBase[] GetChildNodes()
         {
             return (NodeBase[])_childNodes.ToArray();
         }
 
-        public NodeBase GetChildNode(int idx)
+        internal NodeBase GetChildNode(int idx)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace IEDExplorer
             }
         }
 
-        public List<string> GetChildNodeNames(bool isReportsNeeded, bool isDatasetsNeeded)
+        internal List<string> GetChildNodeNames(bool isReportsNeeded, bool isDatasetsNeeded)
         {
             List<string> names = new List<string>();
             foreach (NodeBase nb in _childNodes)
@@ -135,7 +135,7 @@ namespace IEDExplorer
             return names;
         }
 
-        public List<string> GetChildNodeNames(FunctionalConstraintEnum FC)
+        internal List<string> GetChildNodeNames(FunctionalConstraintEnum FC)
         {
             List<string> names = new List<string>();
             foreach (NodeBase nb in _childNodes)
@@ -148,7 +148,7 @@ namespace IEDExplorer
             return names;
         }
 
-        public bool isArray()
+        internal bool isArray()
         {
             if (isLeaf()) return false;
             foreach (NodeBase nb in _childNodes)
@@ -159,7 +159,7 @@ namespace IEDExplorer
             return true;
         }
 
-        public bool isArrayElement()
+        internal bool isArrayElement()
         {
             if (!Name.StartsWith("["))
                 return false;
@@ -168,7 +168,7 @@ namespace IEDExplorer
             return true;
         }
 
-        public NodeBase findArray()
+        internal NodeBase findArray()
         {
             NodeBase arr = this;
             while (arr != null)
@@ -182,24 +182,24 @@ namespace IEDExplorer
             return null;
         }
 
-        public bool isLeaf()
+        internal bool isLeaf()
         {
             return _childNodes.Count == 0;
         }
 
-        public int getArraySize()
+        internal int getArraySize()
         {
             if (isArray()) return _childNodes.Count;
             if (isArrayElement()) return Parent._childNodes.Count;
             return 0;
         }
 
-        public int GetChildCount()
+        internal int GetChildCount()
         {
             return _childNodes.Count;
         }
 
-        public NodeBase AddChildNode(NodeBase Node, bool AddDeep = false)
+        internal NodeBase AddChildNode(NodeBase Node, bool AddDeep = false)
         {
             if (Node == null) return null;       // defensive
             if (Node == this) return null;
@@ -218,14 +218,14 @@ namespace IEDExplorer
             return Node;
         }
 
-        public NodeBase ForceAddChildNode(NodeBase Node)
+        internal NodeBase ForceAddChildNode(NodeBase Node)
         {
             _childNodes.Add(Node);
             Node.Parent = this;
             return Node;
         }
 
-        public NodeBase LinkChildNodeByAddress(NodeBase Node)
+        internal NodeBase LinkChildNodeByAddress(NodeBase Node)
         {
             foreach (var n in _childNodes.Where(n => Node.CommAddress.Variable == n.CommAddress.Variable))
             {
@@ -235,7 +235,7 @@ namespace IEDExplorer
             return Node;
         }
 
-        public NodeBase LinkChildNodeByName(NodeBase Node)
+        internal NodeBase LinkChildNodeByName(NodeBase Node)
         {
             foreach (var n in _childNodes.Where(n => Node.Name == n.Name))
             {
@@ -250,13 +250,13 @@ namespace IEDExplorer
         /// </summary>
         /// <param name="Node"></param>
         /// <returns> the linked node </returns>
-        public NodeBase ForceLinkChildNode(NodeBase Node)
+        internal NodeBase ForceLinkChildNode(NodeBase Node)
         {
             _childNodes.Add(Node);
             return Node;
         }
 
-        public NodeBase LinkChildNode(NodeBase Node)
+        internal NodeBase LinkChildNode(NodeBase Node)
         {
             foreach (NodeBase n in _childNodes)
             {
@@ -271,12 +271,12 @@ namespace IEDExplorer
             return Node;
         }
 
-        public void RemoveChildNode(NodeBase Node)
+        internal void RemoveChildNode(NodeBase Node)
         {
             _childNodes.Remove(Node);
         }
 
-        public void ReplaceChildNode(NodeBase Node, NodeBase newNode)
+        internal void ReplaceChildNode(NodeBase Node, NodeBase newNode)
         {
             int i = _childNodes.IndexOf(Node);
             if (i >= 0)
@@ -286,20 +286,20 @@ namespace IEDExplorer
             }
         }
 
-        public void Remove()
+        internal void Remove()
         {
             _childNodes.Clear();
             if (Parent != null) Parent.RemoveChildNode(this);
             //Tag = null;
         }
 
-        public NodeBase GetActualChildNode()
+        internal NodeBase GetActualChildNode()
         {
             if (_childNodes.Count <= _actualChildNode) return null;
             return (NodeBase)_childNodes[_actualChildNode];
         }
 
-        public NodeBase NextActualChildNode()
+        internal NodeBase NextActualChildNode()
         {
             _actualChildNode++;
             if (_actualChildNode >= _childNodes.Count)
@@ -310,12 +310,12 @@ namespace IEDExplorer
             return (NodeBase)_childNodes[_actualChildNode];
         }
 
-        public NodeBase FindChildNode(string Name)
+        internal NodeBase FindChildNode(string Name)
         {
             return _childNodes.FirstOrDefault(n => n.Name == Name);
         }
 
-        public NodeBase FindSubNode(string subName)
+        internal NodeBase FindSubNode(string subName)
         {
             string[] parts = subName.Split(new char[] { '/', '.', '$' });
             NodeBase n = this;
@@ -329,12 +329,12 @@ namespace IEDExplorer
             return null;
         }
 
-        public void ResetActualChildNode()
+        internal void ResetActualChildNode()
         {
             _actualChildNode = 0;
         }
 
-        public void ResetAllChildNodes()
+        internal void ResetAllChildNodes()
         {
             _actualChildNode = 0;
             foreach (var n in _childNodes)
@@ -343,7 +343,7 @@ namespace IEDExplorer
             }
         }
 
-        public string IecAddress
+        internal string IecAddress
         {
             get
             {
@@ -401,7 +401,7 @@ namespace IEDExplorer
             }
         }
 
-        public CommAddress CommAddress
+        internal CommAddress CommAddress
         {
             get
             {
@@ -442,7 +442,7 @@ namespace IEDExplorer
             }
         }
 
-        public CommAddress CommAddressDots
+        internal CommAddress CommAddressDots
         {
             get
             {
@@ -489,7 +489,7 @@ namespace IEDExplorer
             return null;
         }
 
-        public void SortImmediateChildren()
+        internal void SortImmediateChildren()
         {
             _childNodes = _childNodes.OrderBy(n => n.Name).ToList();
         }
@@ -499,12 +499,12 @@ namespace IEDExplorer
             return string.Compare(Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public virtual void SaveModel(List<String> lines, bool fromSCL)
+        internal virtual void SaveModel(List<String> lines, bool fromSCL)
         {
             return;
         }
 
-        public void GetAllLeaves(List<NodeBase> leaves)
+        internal void GetAllLeaves(List<NodeBase> leaves)
         {
             foreach (NodeBase b in _childNodes)
             {

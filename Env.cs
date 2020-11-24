@@ -26,24 +26,24 @@ using System.Windows.Forms;
 
 namespace IEDExplorer
 {
-    public class Env
+    internal class Env
     {
-        public Logger logger;
-     //   public WindowManager winMgr;
+        internal Logger logger;
+        //   public WindowManager winMgr;
         /// <summary>
         /// Flag to read data on startup.
         /// </summary>
-        public bool dataReadOnStartup = true;
-        static Env sEnv;
+        internal bool dataReadOnStartup = true;
+        private static Env sEnv;
 
-        public static Env getEnv()
+        internal static Env getEnv()
         {
             if (sEnv == null)
                 new Env();
             return sEnv;
         }
 
-        public Env()
+        internal Env()
         {
             sEnv = this;
         }

@@ -419,7 +419,7 @@ namespace IEDExplorer
 
         public int sAddr { get; set; }
 
-        public override void SaveModel(List<String> lines, bool fromSCL)
+        internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // DA(<data attribute name> <nb of array elements> <type> <FC> <trigger options> <sAddr>)[=value];
             // Constructed>

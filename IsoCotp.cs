@@ -7,10 +7,10 @@ using System.IO;
 
 namespace IEDExplorer
 {
-    public class IsoCotp
+    internal class IsoCotp
     {
         private const int COTP_HDR_CR_SIZEOF = 6; //18;
-        public const int COTP_HDR_DT_SIZEOF = 3;
+        internal const int COTP_HDR_DT_SIZEOF = 3;
 
         private const int COTP_HDR_IDX_HDRLEN = 0;
         private const int COTP_HDR_IDX_CODE = 1;
@@ -20,8 +20,8 @@ namespace IEDExplorer
 
         private const byte COTP_CODE_CR = 0xe0;
         private const byte COTP_CODE_CC = 0xd0;
-        public const byte COTP_CODE_DT = 0xf0;
-        public const byte COTP_CODE_DR = 0x80;
+        internal const byte COTP_CODE_DT = 0xf0;
+        internal const byte COTP_CODE_DR = 0x80;
 
         private const byte COTP_PCODE_TSIZ = 0xc0;
         private const byte COTP_PCODE_DSAP = 0xc2;
@@ -36,12 +36,12 @@ namespace IEDExplorer
 
         private byte[] dataReserveBuffer = new byte[TcpState.sendBufferSize];
 
-        public struct TSelector
+        internal struct TSelector
         {
-            public byte size; /** 0 .. 4 - 0 means T-selector is not present */
-            public int value;
-            public TSelector(byte sz, int val) { size = sz; value = val; }
-            public byte[] GetBytes()
+            internal byte size; /** 0 .. 4 - 0 means T-selector is not present */
+            internal int value;
+            internal TSelector(byte sz, int val) { size = sz; value = val; }
+            internal byte[] GetBytes()
             {
                 byte[] b = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(value));
                 byte[] ret = new byte[size];
@@ -50,7 +50,7 @@ namespace IEDExplorer
             }
         }
 
-        public enum CotpReceiveResult
+        internal enum CotpReceiveResult
         {
             ERROR,
             INIT,
@@ -60,10 +60,10 @@ namespace IEDExplorer
 
         class CotpOptions
         {
-            public TSelector tSelDst;
-            public TSelector tSelSrc;
-            public byte tpduSize;
-            public CotpOptions(IsoConnectionParameters cp)
+            internal TSelector tSelDst;
+            internal TSelector tSelSrc;
+            internal byte tpduSize;
+            internal CotpOptions(IsoConnectionParameters cp)
             {
                 if (cp == null)
                 {
@@ -78,7 +78,7 @@ namespace IEDExplorer
                     tpduSize = 0x0a;	// 1024 byte max PDU size
                 }
             }
-            public int getSize()
+            internal int getSize()
             {
                 int size = tSelDst.size + tSelSrc.size + 7;
                 return size;
@@ -87,7 +87,7 @@ namespace IEDExplorer
 
         CotpOptions options;
 
-        public IsoCotp(IsoConnectionParameters cp)
+        internal IsoCotp(IsoConnectionParameters cp)
         {
             Reset(cp);
         }
@@ -100,7 +100,7 @@ namespace IEDExplorer
             options = new CotpOptions(cp);
         }
 
-        public CotpReceiveResult Receive(Iec61850State iecs)
+        internal CotpReceiveResult Receive(Iec61850State iecs)
         {
             CotpReceiveResult res = CotpReceiveResult.ERROR;
             int ret;
@@ -142,7 +142,7 @@ namespace IEDExplorer
             return res;
         }
 
-        public int Send(Iec61850State iecs)
+        internal int Send(Iec61850State iecs)
         {
             // Make COTP data telegramm
             int offs = IsoTpkt.TPKT_SIZEOF;
@@ -231,7 +231,7 @@ namespace IEDExplorer
             return 0;	//O.K.
         }
 
-        public int SendInit(Iec61850State iecs)
+        internal int SendInit(Iec61850State iecs)
         {
             //Reset dstref
             Reset(iecs.cp);

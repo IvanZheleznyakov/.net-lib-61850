@@ -34,9 +34,6 @@ namespace IEDExplorer
         public delegate void modelHasBeenCreatedEventHandler();
         public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        public delegate void reportControlBlockUpdatedEventHandler(LibraryManager libraryManager, ReportControlBlock reportControlBlock);
-        public event reportControlBlockUpdatedEventHandler ReportControlBlockUpdated;
-
         public delegate void responseReceivedHandler(Response response, object param);
 
         /// <summary>

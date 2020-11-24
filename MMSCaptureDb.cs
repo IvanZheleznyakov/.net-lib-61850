@@ -5,14 +5,14 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class MMSCaptureDb
+    internal class MMSCaptureDb
     {
         Iec61850State iecs;
-        public delegate void NewPacket(MMSCapture cap);
-        public event NewPacket OnNewPacket;
+        internal delegate void NewPacket(MMSCapture cap);
+        internal event NewPacket OnNewPacket;
         int PacketNr;
 
-        public MMSCaptureDb(Iec61850State _iecs)
+        internal MMSCaptureDb(Iec61850State _iecs)
         {
             iecs = _iecs;
         }
@@ -23,16 +23,16 @@ namespace IEDExplorer
         /// <summary>
         /// Capture of MMS packets (PDUs) active
         /// </summary>
-        public bool CaptureActive = false;
+        internal bool CaptureActive = false;
 
-        public void AddPacket(MMSCapture cap)
+        internal void AddPacket(MMSCapture cap)
         {
             CapturedData.Add(cap);
             cap.PacketNr = PacketNr++;
             if (OnNewPacket != null) OnNewPacket(cap);
         }
 
-        public void Clear()
+        internal void Clear()
         {
             CapturedData.Clear();
             PacketNr = 0;

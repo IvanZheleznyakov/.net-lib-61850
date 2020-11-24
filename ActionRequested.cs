@@ -24,7 +24,7 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public enum ActionRequested
+    internal enum ActionRequested
     {
         Write,
         WriteAsStructure,

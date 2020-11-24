@@ -34,7 +34,7 @@ namespace IEDExplorer
         public event EventHandler ValueChanged;
         public event EventHandler AddDataToGraph;
 
-        public NodeGData(string Name)
+        internal NodeGData(string Name)
             : base(Name)
         {
         }

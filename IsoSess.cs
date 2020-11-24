@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class IsoSess
+    internal class IsoSess
     {
         ushort callingSessionSelector;
         ushort calledSessionSelector;
@@ -13,17 +13,17 @@ namespace IEDExplorer
         byte protocolOptions;
         int userDataIndex = 0;
 
-        public int UserDataIndex { get { return userDataIndex; } }
+        internal int UserDataIndex { get { return userDataIndex; } }
 
         Iec61850State iecs;
 
-        public IsoSess(Iec61850State iec)
+        internal IsoSess(Iec61850State iec)
         {
             iecs = iec;
             init();
         }
 
-        public enum IsoSessionIndication
+        internal enum IsoSessionIndication
         {
             SESSION_OK,
             SESSION_ERROR,
@@ -199,7 +199,7 @@ namespace IEDExplorer
 
         byte[] dataSpdu = { 0x01, 0x00, 0x01, 0x00 };
 
-        public int createDataSpdu(byte[] buffer, int offset)
+        internal int createDataSpdu(byte[] buffer, int offset)
         {
             dataSpdu.CopyTo(buffer, offset);
             return offset + 4;
@@ -257,7 +257,7 @@ namespace IEDExplorer
             return offset;
         }
 
-        public int createConnectSpdu(IsoConnectionParameters isoParameters, byte[] buffer, byte[] payload, int payloadLength)
+        internal int createConnectSpdu(IsoConnectionParameters isoParameters, byte[] buffer, byte[] payload, int payloadLength)
         {
             int offset = 0;
             int lengthOffset;
@@ -288,7 +288,7 @@ namespace IEDExplorer
             return payloadLength + offset;
         }
 
-        public int createAbortSpdu(byte[] buffer, byte[] payload, byte payloadLength)
+        internal int createAbortSpdu(byte[] buffer, byte[] payload, byte payloadLength)
         {
             int offset = 0;
 
@@ -304,7 +304,7 @@ namespace IEDExplorer
             return payloadLength + offset;
         }
 
-        public int createFinishSpdu(byte[] buffer, byte[] payload, byte payloadLength)
+        internal int createFinishSpdu(byte[] buffer, byte[] payload, byte payloadLength)
         {
             int offset = 0;
 
@@ -321,7 +321,7 @@ namespace IEDExplorer
             return payloadLength + offset;
         }
 
-        public int createDisconnectSpdu(byte[] buffer, byte[] payload, byte payloadLength)
+        internal int createDisconnectSpdu(byte[] buffer, byte[] payload, byte payloadLength)
         {
             int offset = 0;
 
@@ -335,7 +335,7 @@ namespace IEDExplorer
             return payloadLength + offset;
         }
 
-        public int IsoSession_createAcceptSpdu(byte[] buffer, byte[] payload, byte payloadLength)
+        internal int IsoSession_createAcceptSpdu(byte[] buffer, byte[] payload, byte payloadLength)
         {
             int offset = 0;
             int lengthOffset;
@@ -372,7 +372,7 @@ namespace IEDExplorer
             return userDataIndex;
         }
 
-        public IsoSessionIndication parseMessage(byte[] buffer, int messageLength)
+        internal IsoSessionIndication parseMessage(byte[] buffer, int messageLength)
         {
             byte id;
             byte length;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public enum CommandType
+    internal enum CommandType
     {
         SingleCommand,
         DoubleCommand,
@@ -16,7 +16,7 @@ namespace IEDExplorer
         AnalogueByBinary,
     }
 
-    public class CommandParams
+    internal class CommandParams
     {
         public CommandType CommType;
         public MmsTypeEnum DataType;

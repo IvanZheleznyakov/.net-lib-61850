@@ -4,16 +4,16 @@
  *  This file is part of IEDExplorer.
  *
  *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU General internal License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  IEDExplorer is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU General internal License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU General internal License
  *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -30,51 +30,51 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class Scsm_MMS
+    internal class Scsm_MMS
     {
         // Protocol IEC6850 - definitions
         // OptFlds - report Optional Fields
         // 1st Byte
-        public const byte OptFldsReserved = 0x80; // bit "0" in MMS interpretation
-        public const byte OptFldsSeqNum = 0x40;
-        public const byte OptFldsTimeOfEntry = 0x20;
-        public const byte OptFldsReasonCode = 0x10;
-        public const byte OptFldsDataSet = 0x08;
-        public const byte OptFldsDataReference = 0x04;
-        public const byte OptFldsOvfl = 0x02;
-        public const byte OptFldsEntryID = 0x01;
+        internal const byte OptFldsReserved = 0x80; // bit "0" in MMS interpretation
+        internal const byte OptFldsSeqNum = 0x40;
+        internal const byte OptFldsTimeOfEntry = 0x20;
+        internal const byte OptFldsReasonCode = 0x10;
+        internal const byte OptFldsDataSet = 0x08;
+        internal const byte OptFldsDataReference = 0x04;
+        internal const byte OptFldsOvfl = 0x02;
+        internal const byte OptFldsEntryID = 0x01;
         // 2nd Byte
-        public const byte OptFldsConfRev = 0x80;
-        public const byte OptFldsMoreSegments = 0x40; // bit "10" in MMS interpretation
+        internal const byte OptFldsConfRev = 0x80;
+        internal const byte OptFldsMoreSegments = 0x40; // bit "10" in MMS interpretation
 
         // TrgOps - report Trigger Options
-        public const byte TrgOpsReserved = 0x80;	// bit "0" in MMS interpretation
-        public const byte TrgOpsDataChange = 0x40;
-        public const byte TrgOpsQualChange = 0x20;
-        public const byte TrgOpsDataActual = 0x10;
-        public const byte TrgOpsIntegrity = 0x08;
-        public const byte TrgOpsGI = 0x04; // bit "6" in MMS interpretation
+        internal const byte TrgOpsReserved = 0x80;	// bit "0" in MMS interpretation
+        internal const byte TrgOpsDataChange = 0x40;
+        internal const byte TrgOpsQualChange = 0x20;
+        internal const byte TrgOpsDataActual = 0x10;
+        internal const byte TrgOpsIntegrity = 0x08;
+        internal const byte TrgOpsGI = 0x04; // bit "6" in MMS interpretation
 
         // DatQual - Data Quality Codes
-        public const byte DatQualValidity0 = 0x80; // bit "0" in MMS interpretation
-        public const byte DatQualValidity1 = 0x40;
-        public const byte DatQualOverflow = 0x20;
-        public const byte DatQualOutOfRange = 0x10;
-        public const byte DatQualBadReference = 0x08;
-        public const byte DatQualOscillatory = 0x04;
-        public const byte DatQualFailure = 0x02;
-        public const byte DatQualOldData = 0x01;
+        internal const byte DatQualValidity0 = 0x80; // bit "0" in MMS interpretation
+        internal const byte DatQualValidity1 = 0x40;
+        internal const byte DatQualOverflow = 0x20;
+        internal const byte DatQualOutOfRange = 0x10;
+        internal const byte DatQualBadReference = 0x08;
+        internal const byte DatQualOscillatory = 0x04;
+        internal const byte DatQualFailure = 0x02;
+        internal const byte DatQualOldData = 0x01;
         // 2nd Byte
-        public const byte DatQualInconsistent = 0x80;
-        public const byte DatQualInaccurate = 0x40;
-        public const byte DatQualSource = 0x20;
-        public const byte DatQualTest = 0x10;
-        public const byte DatQualOperatorBlocked = 0x08; // bit "12" in MMS interpretation
+        internal const byte DatQualInconsistent = 0x80;
+        internal const byte DatQualInaccurate = 0x40;
+        internal const byte DatQualSource = 0x20;
+        internal const byte DatQualTest = 0x10;
+        internal const byte DatQualOperatorBlocked = 0x08; // bit "12" in MMS interpretation
 
         // TimQual - Time Quality Codes
-        public const byte TimQualExtraSeconds = 0x80; // bit "0" in MMS interpretation
-        public const byte TimQualTimeBaseErr = 0x40;
-        public const byte TimQualNotSynchronized = 0x20; // bit "2". Bits 3-7=time precision encoding
+        internal const byte TimQualExtraSeconds = 0x80; // bit "0" in MMS interpretation
+        internal const byte TimQualTimeBaseErr = 0x40;
+        internal const byte TimQualNotSynchronized = 0x20; // bit "2". Bits 3-7=time precision encoding
 
         // Report Reading Phases
         const int phsRptID = 0;
@@ -373,13 +373,13 @@ namespace IEDExplorer
 
         static Env _env = Env.getEnv();
 
-        public delegate void newReportReceivedEventhandler(Report report);
-        public event newReportReceivedEventhandler NewReportReceived;
+        internal delegate void newReportReceivedEventhandler(Report report);
+        internal event newReportReceivedEventhandler NewReportReceived;
 
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
 
-        public int ReceiveData(Iec61850State iecs)
+        internal int ReceiveData(Iec61850State iecs)
         {
             if (iecs == null)
                 return -1;
@@ -1098,6 +1098,7 @@ namespace IEDExplorer
                             }
                         }
                     }
+                    NewReportReceived?.Invoke(report);
                 }
             }
             else if (Report != null && Report.VariableAccessSpecification != null && Report.VariableAccessSpecification.isListOfVariableSelected())
@@ -1178,7 +1179,7 @@ namespace IEDExplorer
                 }
             }
 
-            NewReportReceived?.Invoke(report);
+           // NewReportReceived?.Invoke(report);
         }
 
         private void createReportRecord(Iec61850State iecs, string varName, NodeBase b)
@@ -1821,7 +1822,7 @@ namespace IEDExplorer
             }
         }
 
-        public int ReceiveInitiate(Iec61850State iecs, Initiate_ResponsePDU initiate_ResponsePDU)
+        internal int ReceiveInitiate(Iec61850State iecs, Initiate_ResponsePDU initiate_ResponsePDU)
         {
             if (initiate_ResponsePDU != null)
             {
@@ -1865,7 +1866,7 @@ namespace IEDExplorer
 
         /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-        public int SendConclude(Iec61850State iecs)
+        internal int SendConclude(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -1897,7 +1898,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendIdentify(Iec61850State iecs)
+        internal int SendIdentify(Iec61850State iecs)
         {
             waitingMmsPdu = new Dictionary<int, LibraryManager.responseReceivedHandler>();
             MMSpdu mymmspdu = new MMSpdu();
@@ -1930,7 +1931,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendGetNameListDomain(Iec61850State iecs)
+        internal int SendGetNameListDomain(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -1965,7 +1966,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendGetNameListVariables(Iec61850State iecs)
+        internal int SendGetNameListVariables(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2001,7 +2002,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendGetNameListNamedVariableList(Iec61850State iecs)
+        internal int SendGetNameListNamedVariableList(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2037,7 +2038,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendGetVariableAccessAttributes(Iec61850State iecs)
+        internal int SendGetVariableAccessAttributes(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2077,7 +2078,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendGetNamedVariableListAttributes(Iec61850State iecs)
+        internal int SendGetNamedVariableListAttributes(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2124,7 +2125,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
+        internal int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2186,7 +2187,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendReadVL(Iec61850State iecs, WriteQueueElement el)
+        internal int SendReadVL(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2230,7 +2231,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendWrite(Iec61850State iecs, WriteQueueElement el)
+        internal int SendWrite(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2349,7 +2350,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendWriteAsStructure(Iec61850State iecs, WriteQueueElement el)
+        internal int SendWriteAsStructure(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2448,7 +2449,7 @@ namespace IEDExplorer
             }
         }
 
-        public int SendDefineNVL(Iec61850State iecs, WriteQueueElement el)
+        internal int SendDefineNVL(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2500,7 +2501,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendDeleteNVL(Iec61850State iecs, WriteQueueElement el)
+        internal int SendDeleteNVL(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2544,7 +2545,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendFileDirectory(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileDirectory(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2597,7 +2598,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendFileOpen(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileOpen(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2642,7 +2643,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendFileRead(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileRead(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2682,7 +2683,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendFileDelete(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileDelete(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2724,7 +2725,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendFileClose(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileClose(Iec61850State iecs, WriteQueueElement el)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2763,7 +2764,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendInitiate(Iec61850State iecs)
+        internal int SendInitiate(Iec61850State iecs)
         {
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2835,20 +2836,20 @@ namespace IEDExplorer
             }
         }
 
-        public static DateTime ConvertFromUnixTimestamp(double timestamp)
+        internal static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             return origin.AddSeconds(timestamp);
         }
 
-        public static long ConvertToUnixTimestamp(DateTime date)
+        internal static long ConvertToUnixTimestamp(DateTime date)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             TimeSpan diff = date - origin;
             return (long)Math.Floor(diff.TotalSeconds);
         }
 
-        public static void ConvertToUtcTime(DateTime dt, byte[] utc_time)
+        internal static void ConvertToUtcTime(DateTime dt, byte[] utc_time)
         {
             int t = (int)Scsm_MMS.ConvertToUnixTimestamp(dt);
             byte[] uib = BitConverter.GetBytes(t);
@@ -2868,7 +2869,7 @@ namespace IEDExplorer
         }
 
 
-        public static DateTime ConvertFromUtcTime(byte[] utc_time, Object dataParam)
+        internal static DateTime ConvertFromUtcTime(byte[] utc_time, Object dataParam)
         {
             long seconds;
             long millis;
@@ -2902,7 +2903,7 @@ namespace IEDExplorer
             }
         }
 
-        public static DateTime ConvertFromUtcTime2(byte[] utc_time, Object dataParam)
+        internal static DateTime ConvertFromUtcTime2(byte[] utc_time, Object dataParam)
         {
             long seconds;
             long fractionOfSecond;

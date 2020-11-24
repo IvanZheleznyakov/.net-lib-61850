@@ -50,7 +50,7 @@ namespace IEDExplorer
             return -1;
         }
 
-        public override void SaveModel(List<String> lines, bool fromSCL)
+        internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // Syntax: DO(<data object name> <nb of array elements>){…}
             int nrElem = 0;

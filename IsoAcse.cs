@@ -5,36 +5,36 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class IsoAcse
+    internal class IsoAcse
     {
-        public enum AcseAuthenticationMechanism
+        internal enum AcseAuthenticationMechanism
         {
             ACSE_AUTH_NONE = 0,
             ACSE_AUTH_PASSWORD = 1
         }
 
-        public class AcseAuthenticationParameter
+        internal class AcseAuthenticationParameter
         {
-            public AcseAuthenticationMechanism mechanism;
-            public byte[] paswordOctetString;
-            public int passwordLength;
-            public string password;
+            internal AcseAuthenticationMechanism mechanism;
+            internal byte[] paswordOctetString;
+            internal int passwordLength;
+            internal string password;
         }
 
-        byte[] appContextNameMms = { 0x28, 0xca, 0x22, 0x02, 0x03 };
+        private byte[] appContextNameMms = { 0x28, 0xca, 0x22, 0x02, 0x03 };
 
-        byte[] auth_mech_password_oid = { 0x52, 0x03, 0x01 };
+        private byte[] auth_mech_password_oid = { 0x52, 0x03, 0x01 };
 
-        byte[] requirements_authentication = { 0x80 };
+        private byte[] requirements_authentication = { 0x80 };
 
-        AcseAuthenticationMechanism aAuthenticationMechanism = AcseAuthenticationMechanism.ACSE_AUTH_NONE;
+        private AcseAuthenticationMechanism aAuthenticationMechanism = AcseAuthenticationMechanism.ACSE_AUTH_NONE;
 
-        enum AcseConnectionState
+        private enum AcseConnectionState
         {
             idle, requestIndicated, connected
         }
 
-        public enum AcseIndication
+        internal enum AcseIndication
         {
             ACSE_ERROR,
             ACSE_ASSOCIATE,
@@ -46,26 +46,26 @@ namespace IEDExplorer
         }
 
         AcseConnectionState state;
-        long nextReference;
-        int userDataBufferIndex;
-        int userDataBufferSize;
-        AcseAuthenticationParameter authentication;
-        string password;
+        private long nextReference;
+        private int userDataBufferIndex;
+        private int userDataBufferSize;
+        private AcseAuthenticationParameter authentication;
+        private string password;
 
-        public int UserDataIndex { get { return userDataBufferIndex; } }
+        internal int UserDataIndex { get { return userDataBufferIndex; } }
 
-        const int ACSE_RESULT_ACCEPT = 0;
-        const int ACSE_RESULT_REJECT_PERMANENT = 1;
-        const int ACSE_RESULT_REJECT_TRANSIENT = 2;
+        private const int ACSE_RESULT_ACCEPT = 0;
+        private const int ACSE_RESULT_REJECT_PERMANENT = 1;
+        private const int ACSE_RESULT_REJECT_TRANSIENT = 2;
 
-        Iec61850State iecs;
+        private Iec61850State iecs;
 
-        public IsoAcse(Iec61850State iec)
+        internal IsoAcse(Iec61850State iec)
         {
             iecs = iec;
         }
 
-        public int Receive(Iec61850State iecs)
+        internal int Receive(Iec61850State iecs)
         {
             int ret = 0;
 
@@ -77,12 +77,12 @@ namespace IEDExplorer
             return ret;
         }
 
-        public int Send(Iec61850State iecs)
+        internal int Send(Iec61850State iecs)
         {
             return 0;
         }
 
-        AcseAuthenticationMechanism checkAuthMechanismName(byte[] buffer, int authMechanismPos, int authMechLen)
+        private AcseAuthenticationMechanism checkAuthMechanismName(byte[] buffer, int authMechanismPos, int authMechLen)
         {
             AcseAuthenticationMechanism authenticationMechanism = AcseAuthenticationMechanism.ACSE_AUTH_NONE;
 
@@ -100,7 +100,7 @@ namespace IEDExplorer
             return authenticationMechanism;
         }
 
-        bool authenticateClient(AcseAuthenticationMechanism mechanism, byte[] buffer, int authValuePos, int authValueLen, byte[] password)
+        private bool authenticateClient(AcseAuthenticationMechanism mechanism, byte[] buffer, int authValuePos, int authValueLen, byte[] password)
         {
             if (mechanism == AcseAuthenticationMechanism.ACSE_AUTH_PASSWORD)
             {
@@ -112,7 +112,7 @@ namespace IEDExplorer
             //return authenticator(authenticatorParameter, authParameter, &(securityToken));
         }
 
-        bool checkAuthentication(byte[] buffer, int authMechanismPos, int authMechLen, int authValuePos, int authValueLen)
+        private bool checkAuthentication(byte[] buffer, int authMechanismPos, int authMechLen, int authValuePos, int authValueLen)
         {
             if (password != null && password != "")
             {
@@ -123,7 +123,7 @@ namespace IEDExplorer
                 return true;
         }
 
-        int parseUserInformation(byte[] buffer, int bufPos, int maxBufPos, ref bool userInfoValid)
+        private int parseUserInformation(byte[] buffer, int bufPos, int maxBufPos, ref bool userInfoValid)
         {
             iecs.logger.LogDebug(String.Format("ACSE: parseUserInformation {0} {1}", bufPos, maxBufPos));
 
@@ -175,7 +175,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        AcseIndication parseAarePdu(byte[] buffer, int bufPos, int maxBufPos)
+        private AcseIndication parseAarePdu(byte[] buffer, int bufPos, int maxBufPos)
         {
             iecs.logger.LogDebug("ACSE: parse AARE PDU");
 
@@ -242,7 +242,7 @@ namespace IEDExplorer
             return AcseIndication.ACSE_ASSOCIATE;
         }
 
-        AcseIndication parseAarqPdu(byte[] buffer, int bufPos, int maxBufPos)
+        private AcseIndication parseAarqPdu(byte[] buffer, int bufPos, int maxBufPos)
         {
             iecs.logger.LogDebug("ACSE: parse AARQ PDU\n");
 
@@ -345,7 +345,7 @@ namespace IEDExplorer
             return AcseIndication.ACSE_ASSOCIATE;
         }
 
-        public void init()
+        internal void init()
         {
             state = AcseConnectionState.idle;
             nextReference = 0;
@@ -353,7 +353,7 @@ namespace IEDExplorer
             userDataBufferSize = 0;
         }
 
-        public AcseIndication parseMessage(byte[] buffer, int offset, int length)
+        internal AcseIndication parseMessage(byte[] buffer, int offset, int length)
         {
             AcseIndication indication;
 
@@ -400,12 +400,12 @@ namespace IEDExplorer
             return indication;
         }
 
-        public int createAssociateFailedMessage(byte[] buffer, int bufPos)
+        internal int createAssociateFailedMessage(byte[] buffer, int bufPos)
         {
             return createAssociateResponseMessage(ACSE_RESULT_REJECT_PERMANENT, buffer, bufPos, null, 0);
         }
 
-        public int createAssociateResponseMessage(byte acseResult, byte[] buffer, int bufIndex, byte[] payload, int payloadLength)
+        internal int createAssociateResponseMessage(byte acseResult, byte[] buffer, int bufIndex, byte[] payload, int payloadLength)
         {
             int appContextLength = 9;
             int resultLength = 5;
@@ -486,7 +486,7 @@ namespace IEDExplorer
             return bufPos + payloadLength;
         }
 
-        public int createAssociateRequestMessage(IsoConnectionParameters isoParameters, byte[] buffer, int bufIndex, byte[] payload, int payloadLength)
+        internal int createAssociateRequestMessage(IsoConnectionParameters isoParameters, byte[] buffer, int bufIndex, byte[] payload, int payloadLength)
         {
             int authValueLength;
             int authValueStringLength = 0;
@@ -703,7 +703,7 @@ namespace IEDExplorer
         /**
          * \param isProvider specifies abort source (false = user/client; true = provider/server)
          */
-        public int createAbortMessage(byte[] buffer, int bufIndex, bool isProvider)
+        internal int createAbortMessage(byte[] buffer, int bufIndex, bool isProvider)
         {
             buffer[0] = 0x64; /* [APPLICATION 4] */
             buffer[1] = 3;
@@ -722,7 +722,7 @@ namespace IEDExplorer
             return 5;
         }
 
-        public int createReleaseRequestMessage(byte[] buffer, int bufIndex)
+        internal int createReleaseRequestMessage(byte[] buffer, int bufIndex)
         {
             buffer[0] = 0x62;
             buffer[1] = 3;
@@ -737,7 +737,7 @@ namespace IEDExplorer
             return 5;
         }
 
-        public int createReleaseResponseMessage(byte[] buffer, int bufIndex)
+        internal int createReleaseResponseMessage(byte[] buffer, int bufIndex)
         {
             buffer[0] = 0x63;
             buffer[1] = 0;

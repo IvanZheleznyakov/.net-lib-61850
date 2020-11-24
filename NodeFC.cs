@@ -31,7 +31,7 @@ namespace IEDExplorer
         {
         }
 
-        public override void SaveModel(List<String> lines, bool fromSCL)
+        internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // Pass saving to next level
             foreach (NodeBase b in _childNodes)

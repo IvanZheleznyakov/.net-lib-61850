@@ -8,18 +8,18 @@ using System.Security.Cryptography;
 /// <summary>
 /// A class for loading Embedded Assembly
 /// </summary>
-public class EmbeddedAssembly
+internal class EmbeddedAssembly
 {
     // Version 1.3
 
-    static Dictionary<string, Assembly> dic = null;
+    private static Dictionary<string, Assembly> dic = null;
 
     /// <summary>
     /// Load Assembly, DLL from Embedded Resources into memory.
     /// </summary>
     /// <param name="embeddedResource">Embedded Resource string. Example: WindowsFormsApplication1.SomeTools.dll</param>
     /// <param name="fileName">File Name. Example: SomeTools.dll</param>
-    public static void Load(string embeddedResource, string fileName)
+    internal static void Load(string embeddedResource, string fileName)
     {
         if (dic == null)
             dic = new Dictionary<string, Assembly>();
@@ -109,7 +109,7 @@ public class EmbeddedAssembly
     /// </summary>
     /// <param name="assemblyFullName"></param>
     /// <returns></returns>
-    public static Assembly Get(string assemblyFullName)
+    internal static Assembly Get(string assemblyFullName)
     {
         if (dic == null || dic.Count == 0)
             return null;

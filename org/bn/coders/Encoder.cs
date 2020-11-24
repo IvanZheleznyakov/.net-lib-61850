@@ -141,8 +141,8 @@ namespace org.bn.coders
 				resultSize += encodeCSElement(obj, stream, elementInfo);
 			return resultSize;
 		}
-		
-		public virtual int encodeCSElement(object obj, System.IO.Stream stream, ElementInfo info)
+
+        public virtual int encodeCSElement(object obj, System.IO.Stream stream, ElementInfo info)
 		{
 			if (obj.GetType().Equals(typeof(string)))
 			{
@@ -217,8 +217,8 @@ namespace org.bn.coders
             );        
         }
 
-			
-		public virtual object invokeGetterMethodForField(PropertyInfo field, object obj, ElementInfo info)
+
+        public virtual object invokeGetterMethodForField(PropertyInfo field, object obj, ElementInfo info)
 		{
             MethodInfo method = null;
             if (info!=null && info.hasPreparedInfo())
@@ -240,9 +240,9 @@ namespace org.bn.coders
             }
             return field.GetValue(obj, null);
 		}
-		
-		
-		public virtual bool invokeSelectedMethodForField(PropertyInfo field, object obj, ElementInfo info)
+
+
+        public virtual bool invokeSelectedMethodForField(PropertyInfo field, object obj, ElementInfo info)
 		{
             if (info!=null && info.hasPreparedInfo())
             {
@@ -254,8 +254,8 @@ namespace org.bn.coders
                 return (bool)method.Invoke(obj, null);
             }
 		}
-		
-		public virtual int encodeSequence(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+
+        public virtual int encodeSequence(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			int resultSize = 0;
             PropertyInfo[] fields = elementInfo.getProperties(obj.GetType());
@@ -266,8 +266,8 @@ namespace org.bn.coders
 			}
 			return resultSize;
 		}
-		
-		public virtual int encodeSequenceField(object obj, int fieldIdx, PropertyInfo field, System.IO.Stream stream, ElementInfo elementInfo)
+
+        public virtual int encodeSequenceField(object obj, int fieldIdx, PropertyInfo field, System.IO.Stream stream, ElementInfo elementInfo)
 		{
             ElementInfo info = new ElementInfo();
             info.AnnotatedClass = field;
@@ -327,8 +327,8 @@ namespace org.bn.coders
             }        
             return info;
         }
-		
-		public virtual int encodeChoice(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+
+        public virtual int encodeChoice(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
             int resultSize = 0;
             ElementInfo info = getChoiceSelectedElement(obj, elementInfo);
@@ -336,9 +336,9 @@ namespace org.bn.coders
             resultSize+=encodeClassType(invokeObjResult, stream, info);
             return resultSize;
 		}
-		
-		
-		public virtual int encodeEnum(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+
+
+        public virtual int encodeEnum(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			int resultSize = 0;
 			PropertyInfo field = 
@@ -371,16 +371,16 @@ namespace org.bn.coders
 			resultSize += encodeEnumItem(result, enumClass, stream, elementInfo);
 			return resultSize;
 		}
-		
-		public abstract int encodeEnumItem(object enumConstant, Type enumClass, System.IO.Stream stream, ElementInfo elementInfo);		
-		
-		public virtual int encodeElement(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+
+        public abstract int encodeEnumItem(object enumConstant, Type enumClass, System.IO.Stream stream, ElementInfo elementInfo);
+
+        public virtual int encodeElement(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			elementInfo.AnnotatedClass = obj.GetType();
 			return encodeClassType(obj, stream, elementInfo);
 		}
-		
-		public virtual int encodeBoxedType(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+
+        public virtual int encodeBoxedType(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			PropertyInfo field = obj.GetType().GetProperty("Value");
 			elementInfo.AnnotatedClass = field;
@@ -412,24 +412,24 @@ namespace org.bn.coders
                 return encodeClassType(invokeGetterMethodForField(field, obj, elementInfo), stream, elementInfo);
 			}
 		}
-		
-		public abstract int encodeBoolean(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-		
-		public abstract int encodeAny(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-		
-		public abstract int encodeNull(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-		
-		public abstract int encodeInteger(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+
+        public abstract int encodeBoolean(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+
+        public abstract int encodeAny(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+
+        public abstract int encodeNull(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+
+        public abstract int encodeInteger(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeReal(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
-		public abstract int encodeOctetString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+        public abstract int encodeOctetString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeBitString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
-		
-		public abstract int encodeString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
-		
-		public abstract int encodeSequenceOf(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+
+        public abstract int encodeString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+
+        public abstract int encodeSequenceOf(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeObjectIdentifier(Object obj, System.IO.Stream stream, ElementInfo elementInfo);
 	}

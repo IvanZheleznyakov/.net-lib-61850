@@ -4,16 +4,16 @@
  *  This file is part of IEDExplorer.
  *
  *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU General internal License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  IEDExplorer is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU General internal License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU General internal License
  *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -31,7 +31,7 @@ using System.Collections.Generic;
 
 namespace IEDExplorer
 {
-    public class Scsm_MMS_Worker
+    internal class Scsm_MMS_Worker
     {
         private Thread _workerThread;
         private bool _run;
@@ -39,18 +39,18 @@ namespace IEDExplorer
         private Env _env;
         private bool restart_allowed = false;
         WaitHandle[] _waitHandles = new WaitHandle[5];
-        public Iec61850State iecs;
+        internal Iec61850State iecs;
         Logger logger = Logger.getLogger();
 
         internal bool IsFileReadingNow { get; set; } = false;
 
-        public delegate void ConnectShutDowned();
-        public event ConnectShutDowned ConnectShutDownedEvent;
+        internal delegate void ConnectShutDowned();
+        internal event ConnectShutDowned ConnectShutDownedEvent;
 
-        public delegate void modelHasBeenCreatedEventHandler();
-        public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
+        internal delegate void modelHasBeenCreatedEventHandler();
+        internal event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        public Scsm_MMS_Worker()
+        internal Scsm_MMS_Worker()
         {
             _env = Env.getEnv();
             iecs = new Iec61850State();
@@ -62,7 +62,7 @@ namespace IEDExplorer
             IsFileReadingNow = isReading;
         }
 
-        public bool Start(string hostName, int port)
+        internal bool Start(string hostName, int port)
         {
             isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
@@ -86,7 +86,7 @@ namespace IEDExplorer
             return true;
         }
 
-        public void Stop()
+        internal void Stop()
         {
             if (iecs != null)
             {
@@ -98,7 +98,7 @@ namespace IEDExplorer
             }
         }
 
-        public void Stop(bool restart_enable)
+        internal void Stop(bool restart_enable)
         {
             restart_allowed = restart_enable;
             if (_workerThread != null)
@@ -117,7 +117,7 @@ namespace IEDExplorer
             //});
         }
 
-        public void SendCommand(Iec61850lStateEnum c)
+        internal void SendCommand(Iec61850lStateEnum c)
         {
             this.iecs.istate = c;
         }

@@ -24,12 +24,12 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public struct CommAddress
+    internal struct CommAddress
     {
-        public string Domain;
-        public string Variable;
-        public string LogicalNode;
-        public string VariablePath;
-        public NodeBase owner;
+        internal string Domain;
+        internal string Variable;
+        internal string LogicalNode;
+        internal string VariablePath;
+        internal NodeBase owner;
     }
 }

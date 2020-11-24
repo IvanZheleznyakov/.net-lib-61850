@@ -7,35 +7,35 @@ using org.bn.metadata;
 
 namespace IEDExplorer
 {
-    public class IsoConnectionParameters
+    internal class IsoConnectionParameters
     {
-        public IsoAcse.AcseAuthenticationParameter acseAuthParameter;
+        internal IsoAcse.AcseAuthenticationParameter acseAuthParameter;
 
-        public string hostname;
-        public int port;
+        internal string hostname;
+        internal int port;
 
-        public byte[] remoteApTitle = new byte[10];
-        public string remoteApTitleS = "";
-        public int remoteApTitleLen;
-        public int remoteAEQualifier;
-        public uint remotePSelector;
-        public ushort remoteSSelector;
-        public IsoCotp.TSelector remoteTSelector;
+        internal byte[] remoteApTitle = new byte[10];
+        internal string remoteApTitleS = "";
+        internal int remoteApTitleLen;
+        internal int remoteAEQualifier;
+        internal uint remotePSelector;
+        internal ushort remoteSSelector;
+        internal IsoCotp.TSelector remoteTSelector;
 
-        public byte[] localApTitle = new byte[10];
-        public string localApTitleS = "";
-        public int localApTitleLen;
-        public int localAEQualifier;
-        public uint localPSelector;
-        public ushort localSSelector;
-        public IsoCotp.TSelector localTSelector;
+        internal byte[] localApTitle = new byte[10];
+        internal string localApTitleS = "";
+        internal int localApTitleLen;
+        internal int localAEQualifier;
+        internal uint localPSelector;
+        internal ushort localSSelector;
+        internal IsoCotp.TSelector localTSelector;
 
-        public IsoConnectionParameters(string host, int port)
+        internal IsoConnectionParameters(string host, int port)
         {
             Init(null, host, port);
         }
 
-        public IsoConnectionParameters(IsoAcse.AcseAuthenticationParameter acseAuthPar)
+        internal IsoConnectionParameters(IsoAcse.AcseAuthenticationParameter acseAuthPar)
         {
             Init(acseAuthPar);
         }
@@ -55,7 +55,7 @@ namespace IEDExplorer
             acseAuthParameter = acseAuthPar;
         }
 
-        public IsoConnectionParameters(StringDictionary stringDictionary)
+        internal IsoConnectionParameters(StringDictionary stringDictionary)
         {
             Init(null);
             int remoteTSelectorVal = remoteTSelector.value;
@@ -122,7 +122,7 @@ namespace IEDExplorer
             }
         }
 
-        public void Save(StringDictionary stringDictionary)
+        internal void Save(StringDictionary stringDictionary)
         {
             if (stringDictionary == null) stringDictionary = new StringDictionary();
             stringDictionary.Clear();
@@ -148,39 +148,39 @@ namespace IEDExplorer
             }
         }
 
-        public void setLocalAddresses(uint pSelector, ushort sSelector, IsoCotp.TSelector tSelector)
+        internal void setLocalAddresses(uint pSelector, ushort sSelector, IsoCotp.TSelector tSelector)
         {
             localPSelector = pSelector;
             localSSelector = sSelector;
             localTSelector = tSelector;
         }
-        public void setLocalApTitle(string ApTitle, int AEQualifier)
+        internal void setLocalApTitle(string ApTitle, int AEQualifier)
         {
             localApTitleS = ApTitle;
             localApTitleLen = IsoUtil.BerEncoder_encodeOIDToBuffer(ApTitle, localApTitle, 10);
             localAEQualifier = AEQualifier;
         }
 
-        public void setRemoteAddresses(uint pSelector, ushort sSelector, IsoCotp.TSelector tSelector)
+        internal void setRemoteAddresses(uint pSelector, ushort sSelector, IsoCotp.TSelector tSelector)
         {
             remotePSelector = pSelector;
             remoteSSelector = sSelector;
             remoteTSelector = tSelector;
         }
 
-        public void setRemoteApTitle(string ApTitle, int AEQualifier)
+        internal void setRemoteApTitle(string ApTitle, int AEQualifier)
         {
             remoteApTitleS = ApTitle;
             remoteApTitleLen = IsoUtil.BerEncoder_encodeOIDToBuffer(ApTitle, remoteApTitle, 10);
             remoteAEQualifier = AEQualifier;
         }
 
-        public string getRemoteApTitle()
+        internal string getRemoteApTitle()
         {
             return remoteApTitleS;
         }
 
-        public string geLocalApTitle()
+        internal string geLocalApTitle()
         {
             return localApTitleS;
         }

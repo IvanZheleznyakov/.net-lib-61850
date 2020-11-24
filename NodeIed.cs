@@ -4,16 +4,16 @@
  *  This file is part of IEDExplorer.
  *
  *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
+ *  it under the terms of the GNU General internal License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  IEDExplorer is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU General internal License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU General internal License
  *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -24,9 +24,9 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class NodeIed : NodeBase
+    internal class NodeIed : NodeBase
     {
-        public NodeIed(string Name, Iec61850Model _model)
+        internal NodeIed(string Name, Iec61850Model _model)
             : base(Name)
         {
             model = _model;
@@ -34,17 +34,17 @@ namespace IEDExplorer
         
         Iec61850Model model;
 
-        public string VendorName { get; set; }
+        internal string VendorName { get; set; }
 
-        public string ModelName { get; set; }
+        internal string ModelName { get; set; }
 
-        public string Revision { get; set; }
+        internal string Revision { get; set; }
 
-        public bool DefineNVL { get; set; }
+        internal bool DefineNVL { get; set; }
 
-        public bool Identify { get; set; }
+        internal bool Identify { get; set; }
 
-        public NodeBase FindNodeByAddress(string Domain, string IecAddress, bool FindList = false)
+        internal NodeBase FindNodeByAddress(string Domain, string IecAddress, bool FindList = false)
         {
             if (Domain == null || IecAddress == null)
                 return null;
@@ -88,7 +88,7 @@ namespace IEDExplorer
             return null;
         }
 
-        public NodeBase FindNodeByAddress(string CompleteIecAddress, bool FindList = false)
+        internal NodeBase FindNodeByAddress(string CompleteIecAddress, bool FindList = false)
         {
             if (CompleteIecAddress == null)
                 return null;
@@ -98,7 +98,7 @@ namespace IEDExplorer
             return null;
         }
 
-        public NodeBase FindNodeByAddressWithDots(string domain, string iecAddress, bool findList = false)
+        internal NodeBase FindNodeByAddressWithDots(string domain, string iecAddress, bool findList = false)
         {
             if (domain == null || iecAddress == null)
                 return null;
@@ -142,7 +142,7 @@ namespace IEDExplorer
             return null;
         }
 
-        public NodeBase FindNodeByAddressWithDots(string completeIecAddress, bool findList = false)
+        internal NodeBase FindNodeByAddressWithDots(string completeIecAddress, bool findList = false)
         {
             if (completeIecAddress == null)
             {
@@ -156,7 +156,7 @@ namespace IEDExplorer
             return null;
         }
 
-        public NodeBase FindFileByName(string fullName)
+        internal NodeBase FindFileByName(string fullName)
         {
             if (fullName == null)
             {
@@ -182,9 +182,9 @@ namespace IEDExplorer
             return b;
         }
 
-        public Iec61850State iecs { get; set; }
+        internal Iec61850State iecs { get; set; }
 
-        public override void SaveModel(List<String> lines, bool fromSCL)
+        internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // Syntax: MODEL(<model name>){…}
             lines.Add("MODEL(" + IedModelName + "){");
@@ -195,11 +195,11 @@ namespace IEDExplorer
             lines.Add("}");
         }
 
-        public string IedModelName { get; set; }
+        internal string IedModelName { get; set; }
 
-        public Iec61850Model Model { get { return model; } }
+        internal Iec61850Model Model { get { return model; } }
 
-        public bool isIecTree() { return model.iec == this; }
+        internal bool isIecTree() { return model.iec == this; }
 
     }
 }

@@ -20,6 +20,6 @@ using System;
 namespace org.bn
 {	
     public interface IEncoder {
-        void encode<T>(T obj, System.IO.Stream stream);
+         void encode<T>(T obj, System.IO.Stream stream);
     }
 }

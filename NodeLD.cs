@@ -31,7 +31,7 @@ namespace IEDExplorer
         {
         }
 
-        public override void SaveModel(List<String> lines, bool fromSCL)
+        internal override void SaveModel(List<String> lines, bool fromSCL)
         {
             // Syntax: LD(<logical device name>){…}
             // Logical device name is the end of the LD Name string, it begins with model name which has to be subtracted

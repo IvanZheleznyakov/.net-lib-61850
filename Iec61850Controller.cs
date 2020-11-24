@@ -6,35 +6,35 @@ using System.Threading.Tasks;
 
 namespace IEDExplorer
 {
-    public class Iec61850Controller
+    internal class Iec61850Controller
     {
-        Iec61850State iecs;
-        Iec61850Model model;
-        long m_ctlNum = 0;
-        System.Threading.Timer delayTimer;
+        private Iec61850State iecs;
+        private Iec61850Model model;
+        private long m_ctlNum = 0;
+        private System.Threading.Timer delayTimer;
 
-        public delegate void newReportReceivedEventhandler(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
-        public event newReportReceivedEventhandler NewReportReceived;
+        internal delegate void newReportReceivedEventhandler(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
+        internal event newReportReceivedEventhandler NewReportReceived;
 
-        public Iec61850Controller(Iec61850State iecs, Iec61850Model model)
+        internal Iec61850Controller(Iec61850State iecs, Iec61850Model model)
         {
             this.iecs = iecs;
             this.model = model;
         }
 
-        public void FireNewReport(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)
+        internal void FireNewReport(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)
         {
             NewReportReceived?.Invoke(rptdVarQualityLog, rptdVarTimestampLog, rptdVarPathLog, rptdVarDescriptionLog, rptdVarValueLog);
         }
 
-        public void DeleteNVL(NodeVL nvl)
+        internal void DeleteNVL(NodeVL nvl)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = nvl;
             iecs.Send(ndarr, nvl.CommAddress, ActionRequested.DeleteNVL);
         }
 
-        public void GetFileList(NodeBase nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
+        internal void GetFileList(NodeBase nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
         {
             CommAddress ad = new CommAddress();
             ad.Variable = "/";  // for the case of reading root
@@ -55,7 +55,7 @@ namespace IEDExplorer
             iecs.Send(ndarr, ad, ActionRequested.GetDirectory, receivedHandler);
         }
 
-        public void GetFile(NodeFile nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
+        internal void GetFile(NodeFile nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
         {
             CommAddress ad = new CommAddress();
             NodeBase[] ndarr = new NodeBase[1];
@@ -80,7 +80,7 @@ namespace IEDExplorer
             iecs.Send(ndarr, ad, ActionRequested.OpenFile, receivedHandler);
         }
 
-        public void FileDelete(NodeFile nfi)
+        internal void FileDelete(NodeFile nfi)
         {
              CommAddress ad = new CommAddress();
              NodeBase[] ndarr = new NodeBase[1];
@@ -90,7 +90,7 @@ namespace IEDExplorer
              iecs.Send(ndarr, ad, ActionRequested.FileDelete);
         }
 
-        public void DefineNVL(NodeVL nvl)
+        internal void DefineNVL(NodeVL nvl)
         {
             List<NodeBase> ndar = new List<NodeBase>();
             foreach (NodeBase n in nvl.GetChildNodes())
@@ -100,7 +100,7 @@ namespace IEDExplorer
             iecs.Send(ndar.ToArray(), nvl.CommAddress, ActionRequested.DefineNVL);
         }
 
-        public CommandParams PrepareSendCommand(NodeBase data)
+        internal CommandParams PrepareSendCommand(NodeBase data)
         {
             if (data != null)
             {
@@ -163,12 +163,12 @@ namespace IEDExplorer
             return null;
         }
 
-        async Task PutTaskDelay(int millis)
+        private async Task PutTaskDelay(int millis)
         {
             await Task.Delay(millis);
         }
 
-        public async void SendCommand(NodeBase data, CommandParams cPar, ActionRequested how)
+        internal async void SendCommand(NodeBase data, CommandParams cPar, ActionRequested how)
         {
             if (cPar.SBOrun)
             {
@@ -217,7 +217,7 @@ namespace IEDExplorer
                 SendCommandToIed(data, cPar, how);
         }
 
-        public void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how)
+        internal void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how)
         {
             if (data != null)
             {
@@ -339,7 +339,7 @@ namespace IEDExplorer
             }
         }
 
-        public static NodeData PrepareWriteData(NodeData data)
+        internal static NodeData PrepareWriteData(NodeData data)
         {
             NodeData nd = new NodeData(data.Name)
             {
@@ -351,7 +351,7 @@ namespace IEDExplorer
             return nd;
         }
 
-        public void WriteData(NodeData data, bool reRead)
+        internal void WriteData(NodeData data, bool reRead)
         {
             if (data != null && data.DataValue != null)
             {
@@ -371,7 +371,7 @@ namespace IEDExplorer
                 Logger.getLogger().LogError("Iec61850Controller.WriteData: null data (-Value), cannot send");
         }
 
-        public void WriteRcb(ReportControlBlock rpar, bool reRead)
+        internal void WriteRcb(ReportControlBlock rpar, bool reRead)
         {
             iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write);
             rpar.ResetFlags();
@@ -385,14 +385,14 @@ namespace IEDExplorer
             }
         }
 
-        public void ReadData(NodeBase data, LibraryManager.responseReceivedHandler receivehandler = null)
+        internal void ReadData(NodeBase data, LibraryManager.responseReceivedHandler receivehandler = null)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = data;
             iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, receivehandler);
         }
 
-        public void ActivateNVL(NodeVL vl)
+        internal void ActivateNVL(NodeVL vl)
         {
             //Logger.getLogger().LogError("Function not active, try to configure an RCB!");
             //return;
@@ -479,7 +479,7 @@ namespace IEDExplorer
                 Logger.getLogger().LogError("Basic structure not found!");
         }
 
-        public void DeactivateNVL(NodeVL vl)
+        internal void DeactivateNVL(NodeVL vl)
         {
             Iec61850State iecs = vl.GetIecs();
             if (iecs != null)

@@ -5,39 +5,39 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class Iec61850Model
+    internal class Iec61850Model
     {
         /// <summary>
         /// Server data
         /// </summary>
-        public NodeIed ied;
+        internal NodeIed ied;
         /// <summary>
         /// Server data ordered by IEC61850 data model
         /// </summary>
-        public NodeIed iec;
+        internal NodeIed iec;
         /// <summary>
         /// Server named variable lists
         /// </summary>
-        public NodeIed datasets;
+        internal NodeIed datasets;
         /// <summary>
         /// Server RP blocks (reports)
         /// </summary>
-        public NodeIed urcbs;
+        internal NodeIed urcbs;
         /// <summary>
         /// Server BR blocks (reports)
         /// </summary>
-        public NodeIed brcbs;
+        internal NodeIed brcbs;
         /// <summary>
         /// Server files
         /// </summary>
-        public NodeIed files;
+        internal NodeIed files;
         /// Enum types
         /// </summary>
-        public NodeIed enums;
+        internal NodeIed enums;
 
-        public Dictionary<string, NodeBase> addressNodesPairs;
+        internal Dictionary<string, NodeBase> addressNodesPairs;
 
-        public Iec61850Model(Iec61850State iecs)
+        internal Iec61850Model(Iec61850State iecs)
         {
             ied = new NodeIed("ied", this);
             iec = new NodeIed("iec", this);
@@ -58,7 +58,7 @@ namespace IEDExplorer
             addressNodesPairs = new Dictionary<string, NodeBase>();
         }
 
-        public void BuildIECModelFromMMSModel()
+        internal void BuildIECModelFromMMSModel()
         {
             iec.DefineNVL = ied.DefineNVL;
             iec.Revision = ied.Revision;
@@ -195,7 +195,7 @@ namespace IEDExplorer
 
         }
 
-        void recursiveLinkDA(NodeBase source, NodeBase target, NodeFC fc)
+        private void recursiveLinkDA(NodeBase source, NodeBase target, NodeFC fc)
         {
             NodeBase linkedDa = target.LinkChildNodeByName(source);
             if (!addressNodesPairs.ContainsKey(linkedDa.IecAddress))

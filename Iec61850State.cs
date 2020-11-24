@@ -27,88 +27,88 @@ using System.Collections.Concurrent;
 
 namespace IEDExplorer
 {
-    public class Iec61850State: TcpState
+    internal class Iec61850State: TcpState
     {
         /// <summary>
         /// Size of data buffer.
         /// </summary>
-        public const int dataBufferSize = 2048;
+        internal const int dataBufferSize = 2048;
         /// <summary>
         /// Index of receive buffer.
         /// </summary>
-        public int dataBufferIndex = 0;
+        internal int dataBufferIndex = 0;
         /// <summary>
         /// TPKT Length
         /// </summary>
-        public int TpktLen = 0;
+        internal int TpktLen = 0;
         /// <summary>
         /// TPKT Datagram buffer.
         /// </summary>
-        public byte[] dataBuffer = new byte[dataBufferSize];
+        internal byte[] dataBuffer = new byte[dataBufferSize];
         /// <summary>
         /// Upper level protocol state
         /// </summary>
-        public Iec61850lStateEnum istate = Iec61850lStateEnum.IEC61850_STATE_START;
+        internal Iec61850lStateEnum istate = Iec61850lStateEnum.IEC61850_STATE_START;
         /// <summary>
         /// TPKT Receive state
         /// </summary>
-        public IsoTpktState kstate = IsoTpktState.TPKT_RECEIVE_START;
+        internal IsoTpktState kstate = IsoTpktState.TPKT_RECEIVE_START;
         /// <summary>
         /// OSI Receive state
         /// </summary>
-        public IsoProtocolState ostate = IsoProtocolState.OSI_STATE_START;
+        internal IsoProtocolState ostate = IsoProtocolState.OSI_STATE_START;
         /// <summary>
         /// MMS File service state
         /// </summary>
-        public FileTransferState fstate = FileTransferState.FILE_NO_ACTION;
- /*       /// <summary>
-        /// OSI Protocol emulation
-        /// </summary>
-        public OsiEmul osi = new OsiEmul();*/
+        internal FileTransferState fstate = FileTransferState.FILE_NO_ACTION;
+        /*       /// <summary>
+               /// OSI Protocol emulation
+               /// </summary>
+               public OsiEmul osi = new OsiEmul();*/
         /// <summary>
         /// ISO Protocol layers (new implementation)
         /// </summary>
-        public IsoLayers iso;
+        internal IsoLayers iso;
         /// <summary>
         /// ISO Layers connection parameters
         /// </summary>
-        public IsoConnectionParameters cp;
+        internal IsoConnectionParameters cp;
         /// <summary>
         /// MMS Protocol
         /// </summary>
-        public Scsm_MMS mms = new Scsm_MMS();
+        internal Scsm_MMS mms = new Scsm_MMS();
         /// <summary>
         /// Input stream of MMS parsing
         /// </summary>
-        public MemoryStream msMMS = new MemoryStream();
+        internal MemoryStream msMMS = new MemoryStream();
         /// <summary>
         /// Output stream of MMS coding
         /// </summary>
-        public MemoryStream msMMSout;
+        internal MemoryStream msMMSout;
         /// <summary>
         /// Memory for continuation of requests
         /// </summary>
-        public Identifier continueAfter;
+        internal Identifier continueAfter;
         /// <summary>
         /// Memory for continuation of file directory requests
         /// </summary>
-        public FileName continueAfterFileDirectory;
+        internal FileName continueAfterFileDirectory;
         /// <summary>
         /// Server data
         /// </summary>
-        public Iec61850Model DataModel;
+        internal Iec61850Model DataModel;
         /// <summary>
         /// Queue for sending data from another threads
         /// </summary>
-        public ConcurrentQueue<WriteQueueElement> SendQueue = new ConcurrentQueue<WriteQueueElement>();
-        public ManualResetEvent sendQueueWritten = new ManualResetEvent(false);
-        public NodeBase[] lastFileOperationData = null;
-        public ConcurrentDictionary<int, NodeBase[]> OutstandingCalls;
+        internal ConcurrentQueue<WriteQueueElement> SendQueue = new ConcurrentQueue<WriteQueueElement>();
+        internal ManualResetEvent sendQueueWritten = new ManualResetEvent(false);
+        internal NodeBase[] lastFileOperationData = null;
+        internal ConcurrentDictionary<int, NodeBase[]> OutstandingCalls;
 
-        public MMSCaptureDb CaptureDb;
-        public Iec61850Controller Controller;
+        internal MMSCaptureDb CaptureDb;
+        internal Iec61850Controller Controller;
 
-        public Iec61850State()
+        internal Iec61850State()
         {
             DataModel = new Iec61850Model(this);
             CaptureDb = new MMSCaptureDb(this);
@@ -117,11 +117,11 @@ namespace IEDExplorer
             Controller = new Iec61850Controller(this, DataModel);
         }
 
-        public void NextState()
+        internal void NextState()
         {
         }
 
-        public void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, LibraryManager.responseReceivedHandler receiveHandler = null)
+        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, LibraryManager.responseReceivedHandler receiveHandler = null)
         {
             WriteQueueElement el = new WriteQueueElement(Data, Address, Action, receiveHandler);
             SendQueue.Enqueue(el);

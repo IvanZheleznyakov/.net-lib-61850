@@ -7,31 +7,31 @@ using System.Net;
 
 namespace IEDExplorer
 {
-    public class IsoLayers
+    internal class IsoLayers
     {
         // ISO layers TPKT, COTP, SESS, PRES, ACSE coordinations
         Iec61850State iecs;
         /// <summary>
         /// OSI Protocol ACSE layer (new implementation)
         /// </summary>
-        public IsoAcse isoAcse;
+        internal IsoAcse isoAcse;
         /// <summary>
         /// OSI Protocol PRES layer (new implementation)
         /// </summary>
-        public IsoPres isoPres;
+        internal IsoPres isoPres;
         /// <summary>
         /// OSI Protocol SESS layer (new implementation)
         /// </summary>
-        public IsoSess isoSess;
+        internal IsoSess isoSess;
         /// <summary>
         /// OSI Protocol COTP layer (new implementation)
         /// </summary>
-        public IsoCotp isoCotp;
+        internal IsoCotp isoCotp;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="iec"></param>
-        public IsoLayers(Iec61850State iec)
+        internal IsoLayers(Iec61850State iec)
         {
             iecs = iec;
             Reset();
@@ -45,7 +45,7 @@ namespace IEDExplorer
             isoCotp = new IsoCotp(iecs.cp);
         }
 
-        public int SendCOTPSessionInit(Iec61850State iecs)
+        internal int SendCOTPSessionInit(Iec61850State iecs)
         {
             // Make COTP init telegramm
             return isoCotp.SendInit(iecs);
@@ -77,7 +77,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int SendReleaseAcse(Iec61850State iecs)
+        internal int SendReleaseAcse(Iec61850State iecs)
         {
             byte[] b1 = new byte[1024];
             int len = isoAcse.createReleaseRequestMessage(b1, 0);
@@ -153,7 +153,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int Receive(Iec61850State iecs)
+        internal int Receive(Iec61850State iecs)
         {
             iecs.logger.LogDebug("Iso.Receive");
             IsoCotp.CotpReceiveResult res = isoCotp.Receive(iecs);
@@ -212,7 +212,7 @@ namespace IEDExplorer
             return 0;
         }
 
-        public int Send(Iec61850State iecs)
+        internal int Send(Iec61850State iecs)
         {
             if (iecs.ostate == IsoProtocolState.OSI_CONNECT_PRES)
             {

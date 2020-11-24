@@ -48,7 +48,7 @@ using System.Diagnostics;
 
 namespace org.mkulu.config {
     #region IniFileManager
-    public class IniFileManager {
+    internal class IniFileManager {
         #region Data Members
         private string configFileName;
         private byte[] cryptoKey;
@@ -59,13 +59,13 @@ namespace org.mkulu.config {
         #endregion
 
         #region Constructors
-        public IniFileManager(string fileToManage) {
+        internal IniFileManager(string fileToManage) {
             configFileName = fileToManage;
             fileIsEncrypted = false;
             cacheIniFile();
         }
 
-        public IniFileManager(string fileToManage, string key) {
+        internal IniFileManager(string fileToManage, string key) {
             configFileName = fileToManage;
             fileIsEncrypted = true;
             aes = new AesManaged();
@@ -199,7 +199,7 @@ namespace org.mkulu.config {
         #endregion
 
         #region Data Access - Read
-        public string getString(string section, string key, string defaultValue) {
+        internal string getString(string section, string key, string defaultValue) {
             key = key.ToLower();
             if (!cache.ContainsKey(section)) {
                 return defaultValue;
@@ -212,7 +212,7 @@ namespace org.mkulu.config {
             return sectionData[key];
         }
 
-        public int getInt(string section, string key, int defaultValue) {
+        internal int getInt(string section, string key, int defaultValue) {
             string value = getString(section, key, defaultValue.ToString());
             int result;
             try {
@@ -223,7 +223,7 @@ namespace org.mkulu.config {
             }
         }
 
-        public bool getBool(string section, string key, bool defaultValue) {
+        internal bool getBool(string section, string key, bool defaultValue) {
             string value = getString(section, key, defaultValue.ToString());
             bool result;
             if (Boolean.TryParse(value, out result)) {
@@ -233,11 +233,11 @@ namespace org.mkulu.config {
             }
         }
 
-        public List<string> getSections() {
+        internal List<string> getSections() {
             return cache.Keys.ToList<string>();
         }
 
-        public StringDictionary getSection(string section) {
+        internal StringDictionary getSection(string section) {
             if (cache.Keys.Contains(section)) {
                 return cache[section];
             } else {
@@ -247,7 +247,7 @@ namespace org.mkulu.config {
         #endregion
 
         #region Data Access - Write
-        public void writeString(string section, string key, string value) {
+        internal void writeString(string section, string key, string value) {
             if (!cache.ContainsKey(section)) {
                 cache.Add(section, new StringDictionary());
             }
@@ -261,24 +261,24 @@ namespace org.mkulu.config {
             dumpCache();
         }
 
-        public void writeInt(string section, string key, int value) {
+        internal void writeInt(string section, string key, int value) {
             writeString(section, key, value.ToString());
         }
 
-        public void writeBool(string section, string key, bool value) {
+        internal void writeBool(string section, string key, bool value) {
             writeString(section, key, value.ToString());
         }
         #endregion
-        
+
         #region Data Access - Delete
-        public void deleteSection(string section) {
+        internal void deleteSection(string section) {
             if (cache.ContainsKey(section)) {
         		cache.Remove(section);
         		dumpCache();
             }        	
         }
-        
-        public void deleteKey(string section, string key) {
+
+        internal void deleteKey(string section, string key) {
         	if (cache.ContainsKey(section) && ((StringDictionary)cache[section]).ContainsKey(key)) {
         		((StringDictionary)(cache[section])).Remove(key);
         		dumpCache();
@@ -289,7 +289,7 @@ namespace org.mkulu.config {
     #endregion
 
     #region IniCacheSorter
-    public class IniCacheSorter<T> : IComparer<T> where T: IComparable<T> {
+    internal class IniCacheSorter<T> : IComparer<T> where T: IComparable<T> {
 
         // Return values
         //    Less than zero: x is less than y.

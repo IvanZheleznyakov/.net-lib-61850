@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IEDExplorer
 {
-    public class IsoPres
+    internal class IsoPres
     {
         uint callingPresentationSelector;
         uint calledPresentationSelector;
@@ -15,21 +15,21 @@ namespace IEDExplorer
         int nextPayload_bufferIndex;
         int nextPayload_size;
 
-        public int UserDataIndex { get { return nextPayload_bufferIndex; } }
+        internal int UserDataIndex { get { return nextPayload_bufferIndex; } }
 
         Iec61850State iecs;
 
-        public IsoPres(Iec61850State iec)
+        internal IsoPres(Iec61850State iec)
         {
             iecs = iec;
         }
 
-        public int Receive(Iec61850State iecs)
+        internal int Receive(Iec61850State iecs)
         {
             return 0;
         }
 
-        public int Send(Iec61850State iecs)
+        internal int Send(Iec61850State iecs)
         {
             return 0;
         }
@@ -435,7 +435,7 @@ namespace IEDExplorer
         /// <param name="offset">Index of the first message byte</param>
         /// <param name="length">Length of the buffer from offset to end</param>
         /// <returns>Index to the user data (payload) in the absolute numbering (from the buffer index 0)</returns>
-        public int parseAcceptMessage(byte[] buffer, int offset, int length)
+        internal int parseAcceptMessage(byte[] buffer, int offset, int length)
         {
             int maxBufPos = offset + length;
 
@@ -490,12 +490,12 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public void init()
+        internal void init()
         {
 
         }
 
-        public int createUserData(byte[] buffer, int offset, int payloadLength)
+        internal int createUserData(byte[] buffer, int offset, int payloadLength)
         {
             int bufPos = offset;
 
@@ -524,7 +524,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public int createUserDataACSE(byte[] buffer, byte[] payload, int payloadLength)
+        internal int createUserDataACSE(byte[] buffer, byte[] payload, int payloadLength)
         {
             int bufPos = 0;
 
@@ -560,7 +560,7 @@ namespace IEDExplorer
         /// <param name="offset">Index of the first message byte</param>
         /// <param name="length">Length of the buffer from offset to end</param>
         /// <returns>Index to the user data (payload) in the absolute numbering (from the buffer index 0)</returns>
-        public int parseUserData(byte[] buffer, int offset, int length)
+        internal int parseUserData(byte[] buffer, int offset, int length)
         {
             int bufPos = offset;
 
@@ -604,7 +604,7 @@ namespace IEDExplorer
         /// <param name="offset">Index of the first message byte</param>
         /// <param name="length">Length of the buffer from offset to end</param>
         /// <returns>Index to the user data (payload) in the absolute numbering (from the buffer index 0)</returns>
-        public int parseConnect(byte[] buffer, int offset, int length)
+        internal int parseConnect(byte[] buffer, int offset, int length)
         {
             int maxBufPos = offset + length;
 
@@ -671,7 +671,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public int createConnectPdu(IsoConnectionParameters parameters, byte[] buffer, byte[] payload, int payloadLength)
+        internal int createConnectPdu(IsoConnectionParameters parameters, byte[] buffer, byte[] payload, int payloadLength)
         {
             acseContextId = 1;
             mmsContextId = 3;
@@ -680,7 +680,7 @@ namespace IEDExplorer
             return createConnectPdu(buffer, payload, payloadLength);
         }
 
-        public int createAbortUserMessage(byte[] buffer, byte[] payload, int payloadLength)
+        internal int createAbortUserMessage(byte[] buffer, byte[] payload, int payloadLength)
         {
             int contentLength = 0;
 
@@ -703,7 +703,7 @@ namespace IEDExplorer
             return bufPos + payloadLength;
         }
 
-        public int createCpaMessage(byte[] buffer, byte[] payload, int payloadLength)
+        internal int createCpaMessage(byte[] buffer, byte[] payload, int payloadLength)
         {
             int contentLength = 0;
 
