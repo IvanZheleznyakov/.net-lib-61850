@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     public class NodeFile : NodeBase
     {

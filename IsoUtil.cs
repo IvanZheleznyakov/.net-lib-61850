@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     static class IsoUtil
     {
-        public static int BerEncoder_encodeLength(uint length, byte[] buffer, int bufPos)
+        internal static int BerEncoder_encodeLength(uint length, byte[] buffer, int bufPos)
         {
             if (length < 128)
             {
@@ -29,7 +26,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public static int BerEncoder_encodeTL(byte tag, uint length, byte[] buffer, int bufPos)
+        internal static int BerEncoder_encodeTL(byte tag, uint length, byte[] buffer, int bufPos)
         {
             buffer[bufPos++] = tag;
             bufPos = BerEncoder_encodeLength(length, buffer, bufPos);
@@ -37,7 +34,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public static int BerEncoder_determineLengthSize(uint length)
+        internal static int BerEncoder_determineLengthSize(uint length)
         {
             if (length < 128)
                 return 1;
@@ -47,7 +44,7 @@ namespace IEDExplorer
                 return 3;
         }
 
-        public static int BerDecoder_decodeLength(byte[] buffer, ref int length, int bufPos, int maxBufPos)
+        internal static int BerDecoder_decodeLength(byte[] buffer, ref int length, int bufPos, int maxBufPos)
         {
             if (bufPos >= maxBufPos)
                 return -1;
@@ -86,7 +83,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public static uint BerDecoder_decodeUint32(byte[] buffer, int intlen, int bufPos)
+        internal static uint BerDecoder_decodeUint32(byte[] buffer, int intlen, int bufPos)
         {
             uint value = 0;
 
@@ -100,7 +97,7 @@ namespace IEDExplorer
             return value;
         }
 
-        public static int BerEncoder_encodeUInt32(uint value, byte[] buffer, int bufPos)
+        internal static int BerEncoder_encodeUInt32(uint value, byte[] buffer, int bufPos)
         {
             byte[] valueArray = BitConverter.GetBytes(value);
             byte[] valueBuffer = new byte[5];
@@ -124,7 +121,7 @@ namespace IEDExplorer
             return bufPos;
         }
 
-        public static int BerEncoder_UInt32determineEncodedSize(uint value)
+        internal static int BerEncoder_UInt32determineEncodedSize(uint value)
         {
             byte[] valueArray = BitConverter.GetBytes(value);
             byte[] valueBuffer = new byte[5];
@@ -199,7 +196,7 @@ namespace IEDExplorer
             }
         }
 
-        public static int BerEncoder_encodeOIDToBuffer(string oidString, byte[] buffer, int maxBufLen)
+        internal static int BerEncoder_encodeOIDToBuffer(string oidString, byte[] buffer, int maxBufLen)
         {
             int encodedBytes = 0;
 

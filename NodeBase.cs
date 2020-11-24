@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal enum NodeState
     {

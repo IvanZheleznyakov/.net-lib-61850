@@ -17,7 +17,7 @@
  *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace IEDExplorer
+namespace lib61850net
 {
         public enum TcpProtocolState
         {

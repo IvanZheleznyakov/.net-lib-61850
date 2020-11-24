@@ -28,7 +28,7 @@ using MMS_ASN1_Model;
 using System.IO;
 using System.Text;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class Scsm_MMS
     {

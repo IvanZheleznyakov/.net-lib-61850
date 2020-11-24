@@ -23,7 +23,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class TcpRw
     {

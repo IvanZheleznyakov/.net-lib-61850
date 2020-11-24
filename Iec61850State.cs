@@ -25,7 +25,7 @@ using System.Threading;
 using MMS_ASN1_Model;
 using System.Collections.Concurrent;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class Iec61850State: TcpState
     {

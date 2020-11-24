@@ -13,7 +13,7 @@ using System.Threading;
 using org.mkulu.config;
 using System.IO;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     class LVToCSV
     {

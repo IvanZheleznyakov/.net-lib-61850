@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     public class Report
     {

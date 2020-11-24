@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     public enum  NodeTypeEnum
     {

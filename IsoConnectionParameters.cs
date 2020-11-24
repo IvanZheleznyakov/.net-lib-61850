@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections.Specialized;
 using org.bn.metadata;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class IsoConnectionParameters
     {

@@ -5,7 +5,7 @@ using System.Text;
 using GOOSE_ASN1_Model;
 using org.bn.types;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     class StringToDataConverter
     {        

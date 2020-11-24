@@ -6,11 +6,11 @@ using MMS_ASN1_Model;
 using System.IO;
 using org.bn;
 
-namespace IEDExplorer
+namespace lib61850net
 {
-    public class MMSCapture
+    internal class MMSCapture
     {
-        public enum CaptureDirection
+        internal enum CaptureDirection
         {
             In,
             Out
@@ -20,9 +20,9 @@ namespace IEDExplorer
         MMSpdu pdu;
         CaptureDirection direction;
         DateTime time;
-        public int PacketNr { get; set; }
+        internal int PacketNr { get; set; }
 
-        public MMSCapture(byte[] pkt, long pos, long len, CaptureDirection dir)
+        internal MMSCapture(byte[] pkt, long pos, long len, CaptureDirection dir)
         {
             encodedPacket = new Byte[len - pos];
             Array.Copy(pkt, pos, encodedPacket, 0, len - pos);
@@ -30,19 +30,19 @@ namespace IEDExplorer
             time = DateTime.Now;
         }
 
-        public MMSpdu MMSPdu { get { return pdu; } set { pdu = value; } }
+        internal MMSpdu MMSPdu { get { return pdu; } set { pdu = value; } }
 
-        public DateTime Time { get { return time; } }
+        internal DateTime Time { get { return time; } }
 
-        public CaptureDirection Direction { get { return direction; } }
+        internal CaptureDirection Direction { get { return direction; } }
 
-        public string XMLPdu
+        internal string XMLPdu
         {
             get
             {
                 if (pdu != null)
                 {
-                    IEncoder xmlencoder = new IEDExplorer.BNExtension.XMLEncoder();
+                    IEncoder xmlencoder = new lib61850net.BNExtension.XMLEncoder();
 
                     MemoryStream ms = new MemoryStream();
                     xmlencoder.encode<MMSpdu>(pdu, ms);
@@ -55,7 +55,7 @@ namespace IEDExplorer
             }
         }
 
-        public string MMSPduType
+        internal string MMSPduType
         {
             get
             {
@@ -96,7 +96,7 @@ namespace IEDExplorer
             }
         }
 
-        public string MMSPduService
+        internal string MMSPduService
         {
             get
             {
@@ -477,7 +477,7 @@ namespace IEDExplorer
             }
         }
 
-        /*public string Packet
+        /*internal string Packet
         {
             get
             {
@@ -491,6 +491,6 @@ namespace IEDExplorer
             }
         }*/
 
-        public byte[] EncodedPacket { get { return encodedPacket; } }
+        internal byte[] EncodedPacket { get { return encodedPacket; } }
     }
 }

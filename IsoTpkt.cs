@@ -1,48 +1,28 @@
-﻿/*
- *  Copyright (C) 2013 Pavel Charvat
- * 
- *  This file is part of IEDExplorer.
- *
- *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  IEDExplorer is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     /// <summary>
     /// TPKT Header parsing according to RFC1006 / OSI (COTP) mapping to TCP/IP
     /// </summary>
     class IsoTpkt
     {
-        public const byte TPKT_START = 0x03;
-        public const byte TPKT_RES = 0x00;
-        public const int TPKT_MAXLEN = 2048;
+        internal const byte TPKT_START = 0x03;
+        internal const byte TPKT_RES = 0x00;
+        internal const int TPKT_MAXLEN = 2048;
 
-        public const int TPKT_IDX_START = 0;
-        public const int TPKT_IDX_RES = 1;
-        public const int TPKT_IDX_LEN = 2;
+        internal const int TPKT_IDX_START = 0;
+        internal const int TPKT_IDX_RES = 1;
+        internal const int TPKT_IDX_LEN = 2;
 
-        public const int TPKT_SIZEOF = 4;
+        internal const int TPKT_SIZEOF = 4;
 
         /// <summary>
         /// Parsing of data from socket into TPKT datagrams
         /// </summary>
         /// <param name="iecs">Global protocol state structure</param>
-        public static void Parse(TcpState tcps)
+        internal static void Parse(TcpState tcps)
         {
             Iec61850State iecs = (Iec61850State)tcps;
 
@@ -118,7 +98,7 @@ namespace IEDExplorer
             }	// for
         }
 
-        public static void Send(TcpState tcps)
+        internal static void Send(TcpState tcps)
         {
             // TPKT
             tcps.sendBuffer[IsoTpkt.TPKT_IDX_START] = IsoTpkt.TPKT_START;

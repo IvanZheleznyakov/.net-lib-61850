@@ -26,7 +26,7 @@ using org.bn.types;
 using org.bn.coders;
 using System.IO;
 
-namespace IEDExplorer.BNExtension
+namespace lib61850net.BNExtension
 {
 	
 	public class XMLEncoder: Encoder

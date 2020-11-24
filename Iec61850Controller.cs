@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class Iec61850Controller
     {

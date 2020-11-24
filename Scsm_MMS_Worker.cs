@@ -29,7 +29,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class Scsm_MMS_Worker
     {

@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     public class NodeGData : NodeBase
     {

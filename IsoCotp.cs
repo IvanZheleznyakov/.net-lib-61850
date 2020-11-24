@@ -5,7 +5,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class IsoCotp
     {

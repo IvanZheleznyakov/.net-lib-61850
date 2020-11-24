@@ -24,7 +24,7 @@ using System.Text;
 using System.Windows.Forms;
 //using IEDExplorer.Views;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class Env
     {

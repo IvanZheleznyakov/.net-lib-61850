@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal enum CommandType
     {
@@ -18,19 +18,19 @@ namespace IEDExplorer
 
     internal class CommandParams
     {
-        public CommandType CommType;
-        public MmsTypeEnum DataType;
-        public ControlModelEnum CommandFlowFlag;
-        public object ctlVal;
-        public OriginatorCategoryEnum orCat;
-        public string orIdent;
-        public DateTime T;
-        public bool Test;
-        public bool interlockCheck;
-        public bool synchroCheck;
-        public string Address;
-        public bool SBOrun;
-        public bool SBOdiffTime;
-        public int SBOtimeout;
+        internal CommandType CommType;
+        internal MmsTypeEnum DataType;
+        internal ControlModelEnum CommandFlowFlag;
+        internal object ctlVal;
+        internal OriginatorCategoryEnum orCat;
+        internal string orIdent;
+        internal DateTime T;
+        internal bool Test;
+        internal bool interlockCheck;
+        internal bool synchroCheck;
+        internal string Address;
+        internal bool SBOrun;
+        internal bool SBOdiffTime;
+        internal int SBOtimeout;
     }
 }

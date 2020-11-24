@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     internal class IsoLayers
     {

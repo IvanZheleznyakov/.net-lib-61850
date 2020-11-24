@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IEDExplorer
+namespace lib61850net
 {
     /// <summary>
     /// Основной пользовательский класс для работы с библиотекой.
@@ -90,12 +90,20 @@ namespace IEDExplorer
         /// <returns>Список строк с названиями всех логических устройств.</returns>
         public List<string> GetLogicalDevicesList()
         {
-            if (worker.iecs.DataModel.iec == null || worker.iecs.DataModel.iec.GetChildCount() == 0)
+            try
             {
+                if (worker.iecs.DataModel.iec == null || worker.iecs.DataModel.iec.GetChildCount() == 0)
+                {
+                    return null;
+                }
+
+                return worker.iecs.DataModel.iec.GetChildNodeNames(false, false);
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
-
-            return worker.iecs.DataModel.iec.GetChildNodeNames(false, false);
         }
 
         /// <summary>
@@ -105,13 +113,21 @@ namespace IEDExplorer
         /// <returns>Список строк с названиями всех логических узлов устройства.</returns>
         public List<string> GetLogicalDeviceDirectory(string ldName)
         {
-            var node = worker.iecs.DataModel.iec.FindChildNode(ldName);
-            if (node == null)
+            try
             {
+                var node = worker.iecs.DataModel.iec.FindChildNode(ldName);
+                if (node == null)
+                {
+                    return null;
+                }
+
+                return node.GetChildNodeNames(false, false);
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
-
-            return node.GetChildNodeNames(false, false);
         }
 
         /// <summary>
@@ -121,49 +137,110 @@ namespace IEDExplorer
         /// <returns>Список строк с названиями данных логического узла.</returns>
         public List<string> GetLogicalNodeDirectory(string lnReference)
         {
-            var node = new NodeBase("");
-            worker.iecs.DataModel.addressNodesPairs.TryGetValue(lnReference, out node);
-            if (node == null)
+            try
             {
+                var node = new NodeBase("");
+                worker.iecs.DataModel.addressNodesPairs.TryGetValue(lnReference, out node);
+                if (node == null)
+                {
+                    return null;
+                }
+
+                return node.GetChildNodeNames(false, false);
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
-
-            return node.GetChildNodeNames(false, false);
         }
 
+        /// <summary>
+        /// Получение данных из переменной.
+        /// </summary>
+        /// <param name="variableReference">Ссылка (полное имя) переменной.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <returns>Список MmsVariableSpecification, которые описывают данные в переменной.</returns>
         public List<MmsVariableSpecification> GetDataValues(string variableReference, FunctionalConstraintEnum FC)
         {
-            var result = new List<MmsVariableSpecification>();
-            var node = new NodeBase("");
-            worker.iecs.DataModel.addressNodesPairs.TryGetValue(variableReference, out node);
-            var childs = node.GetChildNodes();
-            foreach (var ch in childs)
+            try
             {
-                if (ch is NodeData data && (data).FC == FC)
+                var result = new List<MmsVariableSpecification>();
+                var node = new NodeBase("");
+                worker.iecs.DataModel.addressNodesPairs.TryGetValue(variableReference, out node);
+                var childs = node.GetChildNodes();
+                foreach (var ch in childs)
                 {
-                    result.Add(new MmsVariableSpecification(data));
+                    if (ch is NodeData data && (data).FC == FC)
+                    {
+                        result.Add(new MmsVariableSpecification(data));
+                    }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
         }
 
+        /// <summary>
+        /// Получение списка датасетов.
+        /// </summary>
+        /// <param name="ldName">Имя логического устройства.</param>
+        /// <returns>Список строк с названиями датасетов.</returns>
         public List<string> GetDatasets(string ldName)
         {
-            NodeBase ldDir = worker.iecs.DataModel.datasets.FindChildNode(ldName);
-            return ldDir.GetChildNodeNames(false, true);
+            try
+            {
+                NodeBase ldDir = worker.iecs.DataModel.datasets.FindChildNode(ldName);
+                return ldDir.GetChildNodeNames(false, true);
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
         }
 
+        /// <summary>
+        /// Получение списка буферизированных отчётов.
+        /// </summary>
+        /// <param name="ldName">Имя логического устройства.</param>
+        /// <returns>Список строк с названиями буферизированных отчётов.</returns>
         public List<string> GetBufferedReports(string ldName)
         {
-            NodeBase brDir = worker.iecs.DataModel.brcbs.FindChildNode(ldName);
-            return brDir.GetChildNodeNames(true, false);
+            try
+            {
+                NodeBase brDir = worker.iecs.DataModel.brcbs.FindChildNode(ldName);
+                return brDir.GetChildNodeNames(true, false);
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
         }
 
+        /// <summary>
+        /// Получение списка небуферизированных отчётов.
+        /// </summary>
+        /// <param name="ldName">Имя логического устройства.</param>
+        /// <returns>Список строк с названиями небуферизированных отчётов.</returns>
         public List<string> GetUnbufferedReports(string ldName)
         {
-            NodeBase urDir = worker.iecs.DataModel.urcbs.FindChildNode(ldName);
-            return urDir.GetChildNodeNames(true, false);
+            try
+            {
+                NodeBase urDir = worker.iecs.DataModel.urcbs.FindChildNode(ldName);
+                return urDir.GetChildNodeNames(true, false);
+            }
+            catch (Exception ex) 
+            { 
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name); 
+                return null; 
+            }
         }
 
         /// <summary>
@@ -218,12 +295,20 @@ namespace IEDExplorer
         /// <returns>Экземпляр ReportControlBlock с текущими параметрами данного отчёта.</returns>
         public ReportControlBlock CreateReportControlBlock(string name)
         {
-            ReportControlBlock resultRcb = new ReportControlBlock();
-            NodeBase outNode = new NodeBase("");
-            worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
-            resultRcb.self = (NodeRCB)outNode;
+            try
+            {
+                ReportControlBlock resultRcb = new ReportControlBlock();
+                NodeBase outNode = new NodeBase("");
+                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+                resultRcb.self = (NodeRCB)outNode;
 
-            return resultRcb;
+                return resultRcb;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
         }
 
         /// <summary>
@@ -231,9 +316,18 @@ namespace IEDExplorer
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, для которого хотим обновить параметры.</param>
         /// <param name="receivedHandler">Обработчик получения ответа с IED.</param>
-        public void UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
+        public bool UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
         {
-            ReadData(rcb.self.IecAddress, receivedHandler);
+            try
+            {
+                ReadData(rcb.self.IecAddress, receivedHandler);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
         }
 
         /// <summary>
@@ -255,24 +349,33 @@ namespace IEDExplorer
             return true;
         }
 
-        public void GetFileDirectory(string name, LibraryManager.responseReceivedHandler receivedHandler)
+        public bool GetFileDirectory(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
-            var node = new NodeBase("");
-            if (name == "/")
+            try
             {
-                node = worker.iecs.DataModel.files;
-            }
-            else
-            {
-                node = worker.iecs.DataModel.files.FindFileByName(name);
-            }
+                var node = new NodeBase("");
+                if (name == "/")
+                {
+                    node = worker.iecs.DataModel.files;
+                }
+                else
+                {
+                    node = worker.iecs.DataModel.files.FindFileByName(name);
+                }
 
-            worker.iecs.Controller.GetFileList(node, receivedHandler);
+                worker.iecs.Controller.GetFileList(node, receivedHandler);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
         }
 
         public bool GetFile(string name, LibraryManager.responseReceivedHandler receivedHandler)
         {
-            Console.WriteLine("FILE STATE: " + worker.IsFileReadingNow + " ||| " + worker.iecs.fstate.ToString());
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
                 Console.WriteLine("file is reading now");
@@ -295,9 +398,18 @@ namespace IEDExplorer
             return true;
         }
 
-        public void Select(ControlObject cntrlObj)
+        public bool Select(ControlObject cntrlObj)
         {
-            worker.iecs.Controller.ReadData(cntrlObj.self.FindChildNode("SBO"));
+            try
+            {
+                worker.iecs.Controller.ReadData(cntrlObj.self.FindChildNode("SBO"));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
         }
 
         /// <summary>
