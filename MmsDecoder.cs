@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace lib61850net
 {
-    public static class TestDecoder
+    internal static class MmsDecoder
     {
-        public static bool GetBitStringFromMmsValue(byte[] buf, int size, int bitPos)
+        internal static bool GetBitStringFromMmsValue(byte[] buf, int size, int bitPos)
         {
             if (bitPos < size)
             {
@@ -28,7 +28,7 @@ namespace lib61850net
                 return false;
         }
 
-        public static DateTime DecodeMmsBinaryTime(byte[] binTimeBuf)
+        internal static DateTime DecodeMmsBinaryTime(byte[] binTimeBuf)
         {
             ulong millis;
             ulong days = 0;
@@ -55,7 +55,7 @@ namespace lib61850net
             return origin.ToLocalTime();
         }
 
-        public static float DecodeMmsFloat(byte[] floatBuf)
+        internal static float DecodeMmsFloat(byte[] floatBuf)
         {
             byte[] tmp = new byte[4];
             tmp[0] = floatBuf[4];
@@ -65,7 +65,7 @@ namespace lib61850net
             return BitConverter.ToSingle(tmp, 0);
         }
 
-        public static double DecodeMmsDouble(byte[] doubleBuf)
+        internal static double DecodeMmsDouble(byte[] doubleBuf)
         {
             byte[] tmp = new byte[8];
             tmp[0] = doubleBuf[8];

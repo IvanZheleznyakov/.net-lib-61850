@@ -620,7 +620,7 @@ namespace lib61850net
                         if (!nf.isDir)
                         {
                             nf.ReportedSize = de.FileAttributes.SizeOfFile.Value;
-                            nf.ReportedTime = TestDecoder.DecodeAsn1Time(de.FileAttributes.LastModified);
+                            nf.ReportedTime = MmsDecoder.DecodeAsn1Time(de.FileAttributes.LastModified);
 
                             fileDirectory.Size = de.FileAttributes.SizeOfFile.Value;
                             fileDirectory.TimeOfLastModification = nf.ReportedTime;
@@ -1063,23 +1063,23 @@ namespace lib61850net
                                     {
                                         byte[] bitStringValue = list[i].Success.Bit_string.Value;
                                         int size = list[i].Success.Bit_string.getLengthInBits();
-                                        if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
+                                        if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_CHANGE;
                                         }
-                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
+                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.QUALITY_CHANGE;
                                         }
-                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
+                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_UPDATE;
                                         }
-                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
+                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.INTEGRITY;
                                         }
-                                        else if (TestDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
+                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.GI;
                                         }

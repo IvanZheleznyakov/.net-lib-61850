@@ -118,7 +118,7 @@ namespace lib61850net
 
         public DateTime GetBinaryTime()
         {
-            return TestDecoder.DecodeMmsBinaryTime(asn1Data.Binary_time.Value);
+            return MmsDecoder.DecodeMmsBinaryTime(asn1Data.Binary_time.Value);
         }
 
         public byte[] GetBitString()
@@ -133,12 +133,12 @@ namespace lib61850net
 
         public float GetFloat()
         {
-            return TestDecoder.DecodeMmsFloat(asn1Data.Floating_point.Value);
+            return MmsDecoder.DecodeMmsFloat(asn1Data.Floating_point.Value);
         }
 
         public double GetDouble()
         {
-            return TestDecoder.DecodeMmsDouble(asn1Data.Floating_point.Value);
+            return MmsDecoder.DecodeMmsDouble(asn1Data.Floating_point.Value);
         }
 
         public string GetGeneralizedTime()
