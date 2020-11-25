@@ -28,6 +28,10 @@
         EX = 11,
         /** Control */
         CO = 12,
+        /** Buffered reports */
+        BR = 13,
+        /** Unbuffered reports */
+        RP = 14,
         ALL = 99,
         NONE = -1
     }

@@ -88,7 +88,7 @@ namespace lib61850net
         internal void Stop()
         {
             if (iecs != null)
-            {
+            { 
                 iecs.mms.SendConclude(iecs);
                 iecs.iso.SendReleaseAcse(iecs);
                 iecs.receiveDone.WaitOne(500);
@@ -333,17 +333,23 @@ namespace lib61850net
                                     break;
                                 case ActionRequested.Read:
                                     if (el.Data[0] is NodeVL)
+                                    {
                                         iecs.mms.SendReadVL(iecs, el);
+                                    }
                                     else
+                                    {
                                         iecs.mms.SendRead(iecs, el, el.Handler);
+                                    }
                                     break;
                                 case ActionRequested.DefineNVL:
                                     iecs.mms.SendDefineNVL(iecs, el);
                                     break;
                                 case ActionRequested.DeleteNVL:
+
                                     iecs.mms.SendDeleteNVL(iecs, el);
                                     break;
                                 case ActionRequested.GetDirectory:
+
                                     iecs.mms.SendFileDirectory(iecs, el);
                                     break;
                                 case ActionRequested.OpenFile:

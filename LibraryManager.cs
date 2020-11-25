@@ -92,12 +92,12 @@ namespace lib61850net
         {
             try
             {
-                if (worker.iecs.DataModel.iec == null || worker.iecs.DataModel.iec.GetChildCount() == 0)
+                if (worker.iecs.DataModel.ied == null || worker.iecs.DataModel.ied.GetChildCount() == 0)
                 {
                     return null;
                 }
 
-                return worker.iecs.DataModel.iec.GetChildNodeNames(false, false);
+                return worker.iecs.DataModel.ied.GetChildNodeNames(false, false);
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace lib61850net
         {
             try
             {
-                var node = worker.iecs.DataModel.iec.FindChildNode(ldName);
+                var node = worker.iecs.DataModel.ied.FindChildNode(ldName);
                 if (node == null)
                 {
                     return null;
@@ -135,12 +135,12 @@ namespace lib61850net
         /// </summary>
         /// <param name="lnReference">Ссылка (полное имя) логического узла.</param>
         /// <returns>Список строк с названиями данных логического узла.</returns>
-        public List<string> GetLogicalNodeDirectory(string lnReference)
+        public List<string> GetLogicalNodeDirectory(string lnReference, FunctionalConstraintEnum FC)
         {
             try
             {
-                var node = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(lnReference, out node);
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(lnReference, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 if (node == null)
                 {
                     return null;
@@ -166,15 +166,12 @@ namespace lib61850net
             try
             {
                 var result = new List<MmsVariableSpecification>();
-                var node = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(variableReference, out node);
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(variableReference, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 var childs = node.GetChildNodes();
                 foreach (var ch in childs)
                 {
-                    if (ch is NodeData data && (data).FC == FC)
-                    {
-                        result.Add(new MmsVariableSpecification(data));
-                    }
+                    result.Add(new MmsVariableSpecification((NodeData)ch));
                 }
 
                 return result;
@@ -249,12 +246,12 @@ namespace lib61850net
         /// <param name="name">Имя узла в дереве объектов устройства.</param>
         /// <param name="value">Записываемое значение.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла запись.</returns>
-        public bool WriteData(string name, object value)
+        public bool WriteData(string name, FunctionalConstraintEnum FC, object value)
         {
             try
             {
-                var node = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out node);
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 (node as NodeData).DataValue = value;
                 worker.iecs.Controller.WriteData((node as NodeData), true);
             }
@@ -271,13 +268,13 @@ namespace lib61850net
         /// Чтение данных.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public bool ReadData(string name, responseReceivedHandler receivedHandler)
+        public bool ReadData(string name, FunctionalConstraintEnum FC, responseReceivedHandler receivedHandler)
         {
             try
             {
-                NodeBase outNode = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
-                worker.iecs.Controller.ReadData(outNode, receivedHandler);
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                worker.iecs.Controller.ReadData(node, receivedHandler);
             }
             catch (Exception ex)
             {
@@ -320,7 +317,7 @@ namespace lib61850net
         {
             try
             {
-                ReadData(rcb.self.IecAddress, receivedHandler);
+                ReadData(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP, receivedHandler);
                 return true;
             }
             catch (Exception ex)
