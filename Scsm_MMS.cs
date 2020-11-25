@@ -1360,15 +1360,27 @@ namespace lib61850net
                                         MmsValue = new MmsValue(ar.Success)
                                     };
                                     ReportControlBlock rcb = null;
-                                    if (lastOperationData[i] is NodeRCB)
+                                    if (lastOperationData[i] is NodeDO)
                                     {
-                                        rcb = new ReportControlBlock()
+                                        if ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR)
                                         {
-                                            self = (NodeRCB)lastOperationData[i]
-                                        };
+                                            string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(lastOperationData[i].IecAddress, FunctionalConstraintEnum.BR);
+                                            rcb = new ReportControlBlock()
+                                            {
+                                                self = (NodeRCB)iecs.DataModel.brcbs.FindNodeByAddress(mmsRef)
+                                            };
+                                        }
+                                        else if ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.RP)
+                                        {
+                                            string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(lastOperationData[i].IecAddress, FunctionalConstraintEnum.RP);
+                                            rcb = new ReportControlBlock()
+                                            {
+                                                self = (NodeRCB)iecs.DataModel.urcbs.FindNodeByAddress(mmsRef)
+                                            };
+                                        }
+                                        waitingMmsPdu[receivedInvokeId]?.Invoke(response, rcb);
+                                        waitingMmsPdu.Remove(receivedInvokeId);
                                     }
-                                    waitingMmsPdu[receivedInvokeId]?.Invoke(response, rcb);
-                                    waitingMmsPdu.Remove(receivedInvokeId);
                                 }
                             }
                         }

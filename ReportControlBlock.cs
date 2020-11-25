@@ -43,76 +43,160 @@ namespace lib61850net
         public bool IsResvTmsPresent { get { return self.ResvTms_present; } internal set { IsResvTmsPresent = value; } }
         public bool IsEntryIDPresent { get { return self.EntryID_present; } internal set { IsEntryIDPresent = value; } }
 
-        public void SetRptId(string rptId)
+        public string RptId
         {
-            self.RptID = rptId;
-            sendRptID = true;
+            get
+            {
+                return self.RptID;
+            }
+            set
+            {
+                self.RptID = value;
+                sendRptID = true;
+            }
         }
 
-        public void SetRptEna(bool rptEna)
+        public bool RptEna
         {
-            self.RptEna = rptEna;
-            sendRptEna = true;
+            get
+            {
+                return self.RptEna;
+            }
+            set
+            {
+                self.RptEna = value;
+                sendRptEna = true;
+            }
         }
 
-        public void SetResv(bool resv)
+        public bool Resv
         {
-            self.Resv = resv;
-            sendResv = true;
+            get
+            {
+                return self.Resv;
+            }
+            set
+            {
+                self.Resv = value;
+                sendResv = true;
+            }
         }
 
-        public void SetDatSet(string datSet)
+        public string DatSet
         {
-            self.DatSet = datSet;
-            sendDatSet = true;
+            get
+            {
+                return self.DatSet;
+            }
+            set
+            {
+                self.DatSet = value;
+                sendDatSet = true;
+            }
         }
 
-        public void SetOptFlds(ReportOptionsEnum optFlds)
+        public ReportOptionsEnum OptFlds
         {
-            self.OptFlds = optFlds;
-            sendOptFlds = true;
+            get
+            {
+                return self.OptFlds;
+            }
+            set
+            {
+                self.OptFlds = value;
+                sendOptFlds = true;
+            }
         }
 
-        public void SetBufTm(uint bufTm)
+        public uint BufTm
         {
-            self.BufTm = bufTm;
-            sendBufTm = true;
+            get
+            {
+                return self.BufTm;
+            }
+            set
+            {
+                self.BufTm = value;
+                sendBufTm = true;
+            }
         }
 
-        public void SetTrgOps(ReportTriggerOptionsEnum trgOps)
+        public ReportTriggerOptionsEnum TrgOps
         {
-            self.TrgOps = trgOps;
-            sendTrgOps = true;
+            get
+            {
+                return self.TrgOps;
+            }
+            set
+            {
+                self.TrgOps = value;
+                sendTrgOps = true;
+            }
         }
 
-        public void SetIntgPd(uint intgPg)
+        public uint IntgPd
         {
-            self.IntgPd = intgPg;
-            sendIntgPd = true;
+            get
+            {
+                return self.IntgPd;
+            }
+            set
+            {
+                self.IntgPd = value;
+                sendIntgPd = true;
+            }
         }
 
-        public void SetGI(bool gi)
-        {
-            self.GI = gi;
-            sendGI = true;
+        public bool GI
+        { 
+            get
+            {
+                return self.GI;
+            }
+            set
+            {
+                self.GI = value;
+                sendGI = true;
+            }
         }
 
-        public void SetPurgeBuf(bool purgeBuf)
+        public bool PurgeBuf
         {
-            self.PurgeBuf = purgeBuf;
-            sendPurgeBuf = true;
+            get
+            {
+                return self.PurgeBuf;
+            }
+            set
+            {
+                self.PurgeBuf = value;
+                sendPurgeBuf = true;
+            }
         }
 
-        public void SetResvTms(uint resvtms)
+        public uint ResvTms
         {
-            self.ResvTms = resvtms;
-            sendResvTms = true;
+            get
+            {
+                return self.ResvTms;
+            }
+            set
+            {
+                self.ResvTms = value;
+                sendResvTms = true;
+            }
         }
 
-        public void SetEntryID(string entryID)
+        public string EntryID
         {
-            self.EntryID = entryID;
-            sendEntryID = true;
+            get
+            {
+                return self.EntryID;
+            }
+            set
+            {
+                self.EntryID = value;
+                sendEntryID = true;
+            }
         }
 
         internal void ResetFlags()

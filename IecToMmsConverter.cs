@@ -10,13 +10,16 @@ namespace lib61850net
         {
             string result = iecAddress.Replace('.', '$');
             int index = result.IndexOf('$');
-            if (index != -1)
+            if (FC != FunctionalConstraintEnum.NONE)
             {
-                return result.Insert(index, "$" + ConvertFCToString(FC));
-            }
-            else if (FC != FunctionalConstraintEnum.NONE)
-            {
-                return result + "$" + ConvertFCToString(FC) + "$";
+                if (index != -1)
+                {
+                    return result.Insert(index, "$" + ConvertFCToString(FC));
+                }
+                else
+                {
+                    return result + "$" + ConvertFCToString(FC) + "$";
+                }
             }
             else
             {
@@ -41,6 +44,8 @@ namespace lib61850net
                 FunctionalConstraintEnum.SR => "SR",
                 FunctionalConstraintEnum.ST => "ST",
                 FunctionalConstraintEnum.SV => "SV",
+                FunctionalConstraintEnum.BR => "BR",
+                FunctionalConstraintEnum.RP => "RP",
                 _ => "",
             };
         }

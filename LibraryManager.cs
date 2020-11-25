@@ -290,14 +290,21 @@ namespace lib61850net
         /// </summary>
         /// <param name="name">Ссылка (полное имя) отчёта.</param>
         /// <returns>Экземпляр ReportControlBlock с текущими параметрами данного отчёта.</returns>
-        public ReportControlBlock CreateReportControlBlock(string name)
+        public ReportControlBlock CreateReportControlBlock(string name, bool isBuffered)
         {
             try
             {
+                FunctionalConstraintEnum repFC = isBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP;
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, repFC);
                 ReportControlBlock resultRcb = new ReportControlBlock();
-                NodeBase outNode = new NodeBase("");
-                worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
-                resultRcb.self = (NodeRCB)outNode;
+                var repNode = new NodeBase("");
+                if (isBuffered)
+                {
+                    repNode = worker.iecs.DataModel.brcbs.FindNodeByAddress(mmsReference);
+                }
+                //NodeBase outNode = new NodeBase("");
+                //worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+                resultRcb.self = (NodeRCB)repNode;
 
                 return resultRcb;
             }
