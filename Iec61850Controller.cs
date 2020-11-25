@@ -351,13 +351,13 @@ namespace lib61850net
             return nd;
         }
 
-        internal void WriteData(NodeData data, bool reRead)
+        internal void WriteData(NodeData data, bool reRead, LibraryManager.responseReceivedHandler receivedHandler = null)
         {
             if (data != null && data.DataValue != null)
             {
                 NodeData[] ndarr = new NodeData[1];
                 ndarr[0] = data;
-                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write);
+                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, receivedHandler);
 
                 if (reRead)
                 {

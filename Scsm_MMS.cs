@@ -1,23 +1,4 @@
-﻿/*
- *  Copyright (C) 2013 Pavel Charvat
- * 
- *  This file is part of IEDExplorer.
- *
- *  IEDExplorer is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General internal License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  IEDExplorer is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General internal License for more details.
- *
- *  You should have received a copy of the GNU General internal License
- *  along with IEDExplorer.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using org.bn.attributes;
 using org.bn.attributes.constraints;
@@ -470,7 +451,7 @@ namespace lib61850net
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.Write != null)
                 {
-                    ReceiveWrite(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Write, operData);
+                    ReceiveWrite(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Write, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                     //iecs.logger.LogError("Not implemented PDU Write response received!!");
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU.Service.DefineNamedVariableList != null)
@@ -730,18 +711,50 @@ namespace lib61850net
                 Logger.getLogger().LogWarning("NVL Not deleted on server: " + nvl.Name);
         }
 
-        private void ReceiveWrite(Iec61850State iecs, Write_Response write, NodeBase[] lastOperationData)
+        private void ReceiveWrite(Iec61850State iecs, Write_Response write, NodeBase[] lastOperationData, int invokeId)
         {
             int i = 0;
             try
             {
+                Response response = null;
+                bool isInvokeIdContains = waitingMmsPdu.ContainsKey(invokeId);
+                if (isInvokeIdContains)
+                {
+                    response = new Response();
+                    response.TypeOfResponse = TypeOfResponseEnum.WRITE_RESPONSE;
+                    response.WriteResponse = new WriteResponse()
+                    {
+                        TypeOfErrors = new List<DataAccessErrorEnum>(),
+                        Names = new List<string>()
+                    };
+                }
                 foreach (Write_Response.Write_ResponseChoiceType wrc in write.Value)
                 {
                     if (wrc.isFailureSelected())
+                    {
+                        if (isInvokeIdContains)
+                        {
+                            response.WriteResponse.Names.Add(lastOperationData[i].IecAddress);
+                            response.WriteResponse.TypeOfErrors.Add((DataAccessErrorEnum)wrc.Failure.Value);
+                        }
                         Logger.getLogger().LogWarning("Write failed for " + lastOperationData[i++].IecAddress + ", failure: " + wrc.Failure.Value.ToString()
                             + ", (" + Enum.GetName(typeof(DataAccessErrorEnum), ((DataAccessErrorEnum)wrc.Failure.Value)) + ")");
+                    }
                     if (wrc.isSuccessSelected())
+                    {
+                        if (isInvokeIdContains)
+                        {
+                            response.WriteResponse.Names.Add(lastOperationData[i++].IecAddress);
+                            response.WriteResponse.TypeOfErrors.Add(DataAccessErrorEnum.none);
+                        }
                         Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i++].IecAddress);
+                    }
+                }
+
+                if (isInvokeIdContains)
+                {
+                    waitingMmsPdu[invokeId]?.Invoke(response, null);
+                    waitingMmsPdu.Remove(invokeId);
                 }
             }
             catch { }
@@ -2279,7 +2292,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendWrite(Iec61850State iecs, WriteQueueElement el)
+        internal int SendWrite(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
         {
 
             MMSpdu mymmspdu = new MMSpdu();
@@ -2380,6 +2393,11 @@ namespace lib61850net
             wreq.ListOfData = datl;
 
             csrreq.selectWrite(wreq);
+
+            if (receiveHandler != null)
+            {
+                waitingMmsPdu.Add(InvokeID, receiveHandler);
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 

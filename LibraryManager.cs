@@ -246,14 +246,14 @@ namespace lib61850net
         /// <param name="name">Имя узла в дереве объектов устройства.</param>
         /// <param name="value">Записываемое значение.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла запись.</returns>
-        public bool WriteData(string name, FunctionalConstraintEnum FC, object value)
+        public bool WriteData(string name, FunctionalConstraintEnum FC, object value, responseReceivedHandler receivedHandler)
         {
             try
             {
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 (node as NodeData).DataValue = value;
-                worker.iecs.Controller.WriteData((node as NodeData), true);
+                worker.iecs.Controller.WriteData((node as NodeData), true, receivedHandler);
             }
             catch (Exception ex)
             {
@@ -302,8 +302,10 @@ namespace lib61850net
                 {
                     repNode = worker.iecs.DataModel.brcbs.FindNodeByAddress(mmsReference);
                 }
-                //NodeBase outNode = new NodeBase("");
-                //worker.iecs.DataModel.addressNodesPairs.TryGetValue(name, out outNode);
+                else
+                {
+                    repNode = worker.iecs.DataModel.urcbs.FindNodeByAddress(mmsReference);
+                }
                 resultRcb.self = (NodeRCB)repNode;
 
                 return resultRcb;
@@ -320,7 +322,7 @@ namespace lib61850net
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, для которого хотим обновить параметры.</param>
         /// <param name="receivedHandler">Обработчик получения ответа с IED.</param>
-        public bool UpdateReportControlBlock(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
+        public bool UpdateReportControlBlockAsync(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
         {
             try
             {
@@ -332,6 +334,16 @@ namespace lib61850net
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return false;
             }
+        }
+
+        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb)
+        {
+            return null;
+        }
+
+        private void ReceiveUpdatedRCBHandler(Response response, object param)
+        {
+
         }
 
         /// <summary>
@@ -353,7 +365,7 @@ namespace lib61850net
             return true;
         }
 
-        public bool GetFileDirectory(string name, LibraryManager.responseReceivedHandler receivedHandler)
+        public bool GetFileDirectory(string name, responseReceivedHandler receivedHandler)
         {
             try
             {
@@ -378,7 +390,7 @@ namespace lib61850net
             }
         }
 
-        public bool GetFile(string name, LibraryManager.responseReceivedHandler receivedHandler)
+        public bool GetFile(string name, responseReceivedHandler receivedHandler)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
@@ -400,20 +412,6 @@ namespace lib61850net
                 return false;
             }
             return true;
-        }
-
-        public bool Select(ControlObject cntrlObj)
-        {
-            try
-            {
-                worker.iecs.Controller.ReadData(cntrlObj.self.FindChildNode("SBO"));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
-            }
         }
 
         /// <summary>

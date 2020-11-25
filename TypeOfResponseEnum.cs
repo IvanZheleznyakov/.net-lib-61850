@@ -9,6 +9,7 @@ namespace lib61850net
     public enum TypeOfResponseEnum
     {
         ERROR,
+        WRITE_RESPONSE,
         MMS_VALUE,
         FILE_DIRECTORY,
         FILE
