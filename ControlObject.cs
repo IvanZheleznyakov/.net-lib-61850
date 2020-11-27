@@ -75,13 +75,16 @@ namespace lib61850net
         public ControlModelEnum ControlModel { get; internal set; }
         public string ObjectReference { get; internal set; }
         
-        public ControlObject(string objectReference, LibraryManager manager)
+        public ControlObject(string objectReference, FunctionalConstraintEnum FC, LibraryManager manager)
         {
             libraryManager = manager;
+            string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(objectReference, FC);
             this.ObjectReference = objectReference;
-            manager.worker.iecs.DataModel.addressNodesPairs.TryGetValue(objectReference, out var outNode);
-            self = (NodeDO)outNode;
-            commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(outNode.FindChildNode("Oper").FindChildNode("ctlVal"));
+            var node = manager.worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+            self = (NodeDO)node;
+            //manager.worker.iecs.DataModel.addressNodesPairs.TryGetValue(objectReference, out var outNode);
+            //self = (NodeDO)outNode;
+            commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(node.FindChildNode("Oper").FindChildNode("ctlVal"));
             ControlModel = commandParams.CommandFlowFlag;
         }
 

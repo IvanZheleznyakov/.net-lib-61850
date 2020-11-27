@@ -30,6 +30,8 @@ namespace lib61850net
         internal delegate void modelHasBeenCreatedEventHandler();
         internal event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
+        public bool modelCreated = false;
+
         internal Scsm_MMS_Worker()
         {
             _env = Env.getEnv();
@@ -90,19 +92,12 @@ namespace lib61850net
             }
 
             TcpRw.StopClient(iecs);
-
-            //_env.winMgr.mainWindow.BeginInvoke((Action)delegate
-            //{
-            //    _env.winMgr.mainWindow.Stop();
-            //});
         }
 
         internal void SendCommand(Iec61850lStateEnum c)
         {
             this.iecs.istate = c;
         }
-
-        private Dictionary<string, NodeBase> testdict;
 
         private void WorkerThreadProc(object obj)
         {
@@ -239,8 +234,8 @@ namespace lib61850net
                                         break;
                                     case Iec61850lStateEnum.IEC61850_MAKEGUI:
                                         iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
-                                        iecs.DataModel.BuildIECModelFromMMSModel();
-                                        ModelHasBeenCreated?.Invoke();
+                                        // ModelHasBeenCreated?.Invoke();
+                                        modelCreated = true;
                                         //self._env.winMgr.MakeIedTree(iecs);
                                         //self._env.winMgr.MakeIecTree(iecs);
                                         //self._env.winMgr.mainWindow.Set_iecf(iecs);
@@ -319,7 +314,7 @@ namespace lib61850net
                                     }
                                     else
                                     {
-                                        iecs.mms.SendRead(iecs, el, el.Handler);
+                                        iecs.mms.SendRead(iecs, el, el.Handler, el.Param);
                                     }
                                     break;
                                 case ActionRequested.DefineNVL:

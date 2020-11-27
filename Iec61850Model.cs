@@ -35,8 +35,6 @@ namespace lib61850net
         /// </summary>
         internal NodeIed enums;
 
-        internal Dictionary<string, NodeBase> addressNodesPairs;
-
         internal Iec61850Model(Iec61850State iecs)
         {
             ied = new NodeIed("ied", this);
@@ -54,154 +52,11 @@ namespace lib61850net
             urcbs.iecs = iecs;
             brcbs.iecs = iecs;
             enums.iecs = iecs;
-
-            addressNodesPairs = new Dictionary<string, NodeBase>();
-        }
-
-        internal void BuildIECModelFromMMSModel()
-        {
-            iec.DefineNVL = ied.DefineNVL;
-            iec.Revision = ied.Revision;
-            iec.VendorName = ied.VendorName;
-            iec.ModelName = ied.ModelName;
-
-            string iecAddress = iec.IecAddress;
-
-            if (iecAddress.Substring(0, 3) == "iec")
-            {
-                iecAddress = iecAddress.Remove(0, 3);
-            }
-            if (!addressNodesPairs.ContainsKey(iecAddress))
-            {
-                addressNodesPairs.Add(iecAddress, iec);
-            }
-
-            foreach (NodeLD ld in ied.GetChildNodes())      // LD level
-            {
-                NodeLD ild = new NodeLD(ld.Name);
-                ild.IsIecModel = true;
-                ild = (NodeLD)iec.AddChildNode(ild);
-                iecAddress = ild.IecAddress;
-                if (iecAddress.Substring(0, 3) == "iec")
-                {
-                    iecAddress = iecAddress.Remove(0, 3);
-                }
-                if (!addressNodesPairs.ContainsKey(iecAddress))
-                {
-                    addressNodesPairs.Add(iecAddress, ild);
-                }
-
-                foreach (NodeLN ln in ld.GetChildNodes())   // LN level
-                {
-                    NodeLN iln = new NodeLN(ln.Name);
-                    iln.IsIecModel = true;
-
-                    iln = (NodeLN)ild.AddChildNode(iln);
-                    iecAddress = iln.IecAddress;
-                    if (iecAddress.Substring(0, 3) == "iec")
-                    {
-                        iecAddress = iecAddress.Remove(0, 3);
-                    }
-                    if (!addressNodesPairs.ContainsKey(iecAddress))
-                    {
-                        addressNodesPairs.Add(iecAddress, iln);
-                    }
-                    foreach (NodeFC fc in ln.GetChildNodes())   // FC level - skipping
-                    {
-                        if (fc.Name == "RP" || fc.Name == "BR")
-                            continue;
-                        // keep knowing FC for DA
-                        foreach (NodeDO dO in fc.GetChildNodes())   // DO level
-                        {
-                            NodeDO ido = new NodeDO(dO.Name);
-                            ido.IsIecModel = true;
-
-                            // AddChildNode returns original object if the same name found (new object is forgotten)
-                            ido = (NodeDO)iln.AddChildNode(ido);
-                            // At this point, it can happen that we get DO more than once (same DO in several FC)
-                            // For DOs, this is ok, FC is not relevant for DOs
-                            // Next level is peculiar: can be DO (subDataObject) or a DA
-                            // At this point, we will distinguish between DO and DA as follows:
-                            // At the first guess, we suppose DA
-                            // We will LINK the corresponding DA from MMS tree, and record the FC
-                            // If another object with the same name comes in (from another FC branch in MMS tree)
-                            // That means that we are not DA but DO (multiple FCs)
-                            // And this all has to be done recursively
-                            foreach (NodeBase da in dO.GetChildNodes())
-                            {
-                                recursiveLinkDA(da, ido, fc);
-                            }
-                            iecAddress = ido.IecAddress;
-                            if (iecAddress.Substring(0, 3) == "iec")
-                            {
-                                iecAddress = iecAddress.Remove(0, 3);
-                            }
-                            if (!addressNodesPairs.ContainsKey(iecAddress))
-                            {
-                                addressNodesPairs.Add(iecAddress, ido);
-                            }
-                            ido.FC = dO.FC;
-                        }
-                    }
-                }
-            }
-            // Add rcbs to LNs
-            foreach (NodeLD ld in urcbs.GetChildNodes())      // LD level
-            {
-                foreach (NodeRCB urcb in ld.GetChildNodes())
-                {
-                    NodeBase ln = iec.FindNodeByAddress(ld.Name, urcb.Name.Remove(urcb.Name.IndexOf("$")));
-                    if (ln != null)
-                    {
-                        var tempNode = (NodeRCB)ln.LinkChildNodeByName(urcb);
-                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
-                        {
-                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
-                        }
-                    }
-                }
-            }
-            foreach (NodeLD ld in brcbs.GetChildNodes())      // LD level
-            {
-                foreach (NodeRCB brcb in ld.GetChildNodes())
-                {
-                    NodeBase ln = iec.FindNodeByAddress(ld.Name, brcb.Name.Remove(brcb.Name.IndexOf("$")));
-                    if (ln != null)
-                    {
-                        var tempNode = (NodeRCB)ln.LinkChildNodeByName(brcb);
-                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
-                        {
-                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
-                        }
-                    }
-                }
-            }
-            // Add datasets to LNs
-            foreach (NodeLD ld in datasets.GetChildNodes())      // LD level
-            {
-                foreach (NodeVL vl in ld.GetChildNodes())
-                {
-                    NodeBase ln = iec.FindNodeByAddress(ld.Name, vl.Name.Remove(vl.Name.IndexOf("$")));
-                    if (ln != null)
-                    {
-                        var tempNode = ln.LinkChildNodeByName(vl);
-                        if (!addressNodesPairs.ContainsKey(tempNode.IecAddress))
-                        {
-                            addressNodesPairs.Add(tempNode.IecAddress, tempNode);
-                        }
-                    }
-                }
-            }
-
         }
 
         private void recursiveLinkDA(NodeBase source, NodeBase target, NodeFC fc)
         {
             NodeBase linkedDa = target.LinkChildNodeByName(source);
-            if (!addressNodesPairs.ContainsKey(linkedDa.IecAddress))
-            {
-                addressNodesPairs.Add(linkedDa.IecAddress, linkedDa);
-            }
             // Set FC
             if (linkedDa is NodeData && !(linkedDa is NodeDO))
             {

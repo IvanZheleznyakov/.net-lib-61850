@@ -268,7 +268,7 @@ namespace lib61850net
         /// Чтение данных.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public bool ReadData(string name, FunctionalConstraintEnum FC, responseReceivedHandler receivedHandler)
+        public bool ReadData(string name, FunctionalConstraintEnum FC, responseReceivedHandler receivedHandler, object param = null)
         {
             try
             {
@@ -338,12 +338,34 @@ namespace lib61850net
 
         public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb)
         {
+            //Thread thread = new Thread(delegate() { UpdateReportControlBlockAsync(rcb, ReceiveUpdatedRCBHandler); });
+            //thread.Start();
+            if (!UpdateReportControlBlockAsync(rcb, ReceiveUpdatedRCBHandler))
+            {
+                return null;
+            }
+            waitHandler.WaitOne();
+            int b = "no".Length;
             return null;
         }
 
+        public bool ModelCreated
+        {
+            get
+            {
+                return worker.modelCreated;
+            }
+            internal set
+            {
+                ModelCreated = value;
+            }
+        }
+
+        private AutoResetEvent waitHandler = new AutoResetEvent(false);
+
         private void ReceiveUpdatedRCBHandler(Response response, object param)
         {
-
+            waitHandler.Set();
         }
 
         /// <summary>

@@ -79,10 +79,6 @@ namespace lib61850net
         int InvokeID = 0;
         int MaxCalls = 10;
 
-        private LibraryManager.responseReceivedHandler holdHandlerUntilFileIsRead = null;
-
-        private Dictionary<int, LibraryManager.responseReceivedHandler> waitingMmsPdu;
-
         bool[] ServiceSupportOptions = new bool[96];
         enum ServiceSupportOptionsEnum
         {
@@ -354,11 +350,17 @@ namespace lib61850net
 
         static Env _env = Env.getEnv();
 
+        private LibraryManager.responseReceivedHandler holdHandlerUntilFileIsRead = null;
+
+        private Dictionary<int, (LibraryManager.responseReceivedHandler, object param)> waitingMmsPdu;
+
         internal delegate void newReportReceivedEventhandler(Report report);
         internal event newReportReceivedEventhandler NewReportReceived;
 
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
+
+        internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
 
         internal int ReceiveData(Iec61850State iecs)
         {
@@ -632,7 +634,9 @@ namespace lib61850net
                         FileDirectories = listOfFileDirectory
                     };
 
-                    waitingMmsPdu[invokeId]?.Invoke(response, null);
+                    waitingMmsPdu.TryGetValue(invokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
+                    handlerWithParam.Item1?.Invoke(response, null);
+               //     waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
             }
@@ -753,7 +757,9 @@ namespace lib61850net
 
                 if (isInvokeIdContains)
                 {
-                    waitingMmsPdu[invokeId]?.Invoke(response, null);
+                    waitingMmsPdu.TryGetValue(invokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
+                    handlerWithParam.Item1?.Invoke(response, null);
+                  //  waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
             }
@@ -1391,7 +1397,16 @@ namespace lib61850net
                                                 self = (NodeRCB)iecs.DataModel.urcbs.FindNodeByAddress(mmsRef)
                                             };
                                         }
-                                        waitingMmsPdu[receivedInvokeId]?.Invoke(response, rcb);
+                                        waitingMmsPdu.TryGetValue(receivedInvokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
+                                        if (handlerWithParam.Item2 != null)
+                                        {
+                                            handlerWithParam.Item2 = rcb;
+                                            handlerWithParam.Item1?.Invoke(response, handlerWithParam.Item2);
+                                        }
+                                        else
+                                        {
+                                            handlerWithParam.Item1?.Invoke(response, rcb);
+                                        }
                                         waitingMmsPdu.Remove(receivedInvokeId);
                                     }
                                 }
@@ -1406,7 +1421,9 @@ namespace lib61850net
                                     TypeOfResponse = TypeOfResponseEnum.ERROR,
                                     TypeOfError = (DataAccessErrorEnum)ar.Failure.Value
                                 };
-                                waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
+                                waitingMmsPdu.TryGetValue(receivedInvokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
+                                handlerWithParam.Item1?.Invoke(response, null);
+                           //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
                                 waitingMmsPdu.Remove(receivedInvokeId);
                             }
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
@@ -1736,6 +1753,11 @@ namespace lib61850net
 
         void RecursiveReadTypeDescription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
         {
+            string address = actualNode.CommAddress.Domain + "/" + actualNode.CommAddress.Variable;
+            if (!addressNodesPairs.ContainsKey(address))
+            {
+                addressNodesPairs.Add(address, actualNode);
+            }
             if (t == null) return;
             if (t.Structure != null)
             {
@@ -1931,7 +1953,7 @@ namespace lib61850net
         {
             
 
-            waitingMmsPdu = new Dictionary<int, LibraryManager.responseReceivedHandler>();
+            waitingMmsPdu = new Dictionary<int, (LibraryManager.responseReceivedHandler, object)>();
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2178,7 +2200,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
+        internal int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null, object param = null)
         {
             
 
@@ -2220,7 +2242,7 @@ namespace lib61850net
 
             if (receiveHandler != null)
             {
-                waitingMmsPdu.Add(InvokeID, receiveHandler);
+                waitingMmsPdu.Add(InvokeID, (receiveHandler, param));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
@@ -2396,7 +2418,7 @@ namespace lib61850net
 
             if (receiveHandler != null)
             {
-                waitingMmsPdu.Add(InvokeID, receiveHandler);
+                waitingMmsPdu.Add(InvokeID, (receiveHandler, null));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
@@ -2664,7 +2686,7 @@ namespace lib61850net
 
             if (el.Handler != null)
             {
-                waitingMmsPdu.Add(InvokeID, el.Handler);
+                waitingMmsPdu.Add(InvokeID, (el.Handler, null));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);

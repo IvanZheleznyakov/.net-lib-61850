@@ -385,7 +385,7 @@ namespace lib61850net
             }
         }
 
-        internal void ReadData(NodeBase data, LibraryManager.responseReceivedHandler receivehandler = null)
+        internal void ReadData(NodeBase data, LibraryManager.responseReceivedHandler receivehandler = null, object param = null)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = data;
