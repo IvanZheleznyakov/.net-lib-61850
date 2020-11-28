@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 //using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace lib61850net
@@ -351,13 +352,13 @@ namespace lib61850net
             return nd;
         }
 
-        internal void WriteData(NodeData data, bool reRead, LibraryManager.responseReceivedHandler receivedHandler = null)
+        internal void WriteData(NodeData data, bool reRead, AutoResetEvent responseReceived = null, WriteResponse response = null)
         {
             if (data != null && data.DataValue != null)
             {
                 NodeData[] ndarr = new NodeData[1];
                 ndarr[0] = data;
-                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, receivedHandler);
+                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, responseReceived, response);
 
                 if (reRead)
                 {
@@ -385,11 +386,11 @@ namespace lib61850net
             }
         }
 
-        internal void ReadData(NodeBase data, LibraryManager.responseReceivedHandler receivehandler = null, object param = null)
+        internal void ReadData(NodeBase data, AutoResetEvent responseEvent = null, object param = null)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = data;
-            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, receivehandler);
+            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, responseEvent, param);
         }
 
         internal void ActivateNVL(NodeVL vl)

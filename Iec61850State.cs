@@ -102,9 +102,9 @@ namespace lib61850net
         {
         }
 
-        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, LibraryManager.responseReceivedHandler receiveHandler = null, object param = null)
+        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, AutoResetEvent responseEvent = null, object param = null)
         {
-            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, receiveHandler);
+            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, responseEvent, param);
             SendQueue.Enqueue(el);
             sendQueueWritten.Set();
         }

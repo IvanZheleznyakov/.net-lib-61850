@@ -8,6 +8,7 @@ using org.bn;
 using MMS_ASN1_Model;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace lib61850net
 {
@@ -352,7 +353,7 @@ namespace lib61850net
 
         private LibraryManager.responseReceivedHandler holdHandlerUntilFileIsRead = null;
 
-        private Dictionary<int, (LibraryManager.responseReceivedHandler, object param)> waitingMmsPdu;
+        private Dictionary<int, (AutoResetEvent, object)> waitingMmsPdu;
 
         internal delegate void newReportReceivedEventhandler(Report report);
         internal event newReportReceivedEventhandler NewReportReceived;
@@ -627,7 +628,7 @@ namespace lib61850net
                 iecs.fstate = FileTransferState.FILE_DIRECTORY;
                 if (waitingMmsPdu.ContainsKey(invokeId))
                 {
-                    Response response = new Response()
+                    ReadResponse response = new ReadResponse()
                     {
                         TypeOfResponse = TypeOfResponseEnum.FILE_DIRECTORY,
                         TypeOfError = DataAccessErrorEnum.none,
@@ -670,7 +671,7 @@ namespace lib61850net
                 }
                 else
                 {
-                    Response response = new Response()
+                    ReadResponse response = new ReadResponse()
                     {
                         TypeOfResponse = TypeOfResponseEnum.FILE,
                         TypeOfError = DataAccessErrorEnum.none,
@@ -720,13 +721,11 @@ namespace lib61850net
             int i = 0;
             try
             {
-                Response response = null;
+                WriteResponse response = null;
                 bool isInvokeIdContains = waitingMmsPdu.ContainsKey(invokeId);
                 if (isInvokeIdContains)
                 {
-                    response = new Response();
-                    response.TypeOfResponse = TypeOfResponseEnum.WRITE_RESPONSE;
-                    response.WriteResponse = new WriteResponse()
+                    response = new WriteResponse()
                     {
                         TypeOfErrors = new List<DataAccessErrorEnum>(),
                         Names = new List<string>()
@@ -738,8 +737,8 @@ namespace lib61850net
                     {
                         if (isInvokeIdContains)
                         {
-                            response.WriteResponse.Names.Add(lastOperationData[i].IecAddress);
-                            response.WriteResponse.TypeOfErrors.Add((DataAccessErrorEnum)wrc.Failure.Value);
+                            response.Names.Add(lastOperationData[i].IecAddress);
+                            response.TypeOfErrors.Add((DataAccessErrorEnum)wrc.Failure.Value);
                         }
                         Logger.getLogger().LogWarning("Write failed for " + lastOperationData[i++].IecAddress + ", failure: " + wrc.Failure.Value.ToString()
                             + ", (" + Enum.GetName(typeof(DataAccessErrorEnum), ((DataAccessErrorEnum)wrc.Failure.Value)) + ")");
@@ -748,8 +747,8 @@ namespace lib61850net
                     {
                         if (isInvokeIdContains)
                         {
-                            response.WriteResponse.Names.Add(lastOperationData[i++].IecAddress);
-                            response.WriteResponse.TypeOfErrors.Add(DataAccessErrorEnum.none);
+                            response.Names.Add(lastOperationData[i++].IecAddress);
+                            response.TypeOfErrors.Add(DataAccessErrorEnum.none);
                         }
                         Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i++].IecAddress);
                     }
@@ -757,8 +756,10 @@ namespace lib61850net
 
                 if (isInvokeIdContains)
                 {
-                    waitingMmsPdu.TryGetValue(invokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
-                    handlerWithParam.Item1?.Invoke(response, null);
+                    waitingMmsPdu.TryGetValue(invokeId, out (AutoResetEvent, object) responseEventWithArgs);
+                    responseEventWithArgs.Item2 = response;
+                    responseEventWithArgs.Item1?.Set();
+                  //  handlerWithParam.Item1?.Invoke(response, null);
                   //  waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
@@ -1372,41 +1373,35 @@ namespace lib61850net
                                 recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                                 if (waitingMmsPdu.ContainsKey(receivedInvokeId))
                                 {
-                                    Response response = new Response()
+                                    MmsValue mmsValue = new MmsValue(ar.Success)
                                     {
-                                        TypeOfResponse = TypeOfResponseEnum.MMS_VALUE,
                                         TypeOfError = DataAccessErrorEnum.none,
-                                        MmsValue = new MmsValue(ar.Success)
                                     };
                                     ReportControlBlock rcb = null;
+                                    waitingMmsPdu.TryGetValue(receivedInvokeId, out (AutoResetEvent, object) responseEventWithArg);
+                                    bool isRcbRequested = responseEventWithArg.Item2 is ReportControlBlock;
                                     if (lastOperationData[i] is NodeDO)
                                     {
-                                        if ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR)
+                                        if (isRcbRequested && ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR))
                                         {
                                             string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(lastOperationData[i].IecAddress, FunctionalConstraintEnum.BR);
                                             rcb = new ReportControlBlock()
                                             {
-                                                self = (NodeRCB)iecs.DataModel.brcbs.FindNodeByAddress(mmsRef)
+                                                self = (NodeRCB)iecs.DataModel.brcbs.FindNodeByAddress(mmsRef),
+                                                TypeOfError = DataAccessErrorEnum.none
                                             };
                                         }
-                                        else if ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.RP)
+                                        else if (isRcbRequested && ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.RP))
                                         {
                                             string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(lastOperationData[i].IecAddress, FunctionalConstraintEnum.RP);
                                             rcb = new ReportControlBlock()
                                             {
-                                                self = (NodeRCB)iecs.DataModel.urcbs.FindNodeByAddress(mmsRef)
+                                                self = (NodeRCB)iecs.DataModel.urcbs.FindNodeByAddress(mmsRef),
+                                                TypeOfError = DataAccessErrorEnum.none
                                             };
                                         }
-                                        waitingMmsPdu.TryGetValue(receivedInvokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
-                                        if (handlerWithParam.Item2 != null)
-                                        {
-                                            handlerWithParam.Item2 = rcb;
-                                            handlerWithParam.Item1?.Invoke(response, handlerWithParam.Item2);
-                                        }
-                                        else
-                                        {
-                                            handlerWithParam.Item1?.Invoke(response, rcb);
-                                        }
+                                        responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
+                                        responseEventWithArg.Item1?.Set();
                                         waitingMmsPdu.Remove(receivedInvokeId);
                                     }
                                 }
@@ -1416,13 +1411,20 @@ namespace lib61850net
                         {
                             if (waitingMmsPdu.ContainsKey(receivedInvokeId))
                             {
-                                Response response = new Response()
+                                waitingMmsPdu.TryGetValue(receivedInvokeId, out (AutoResetEvent, object) responseEventWithArg);
+                                if (responseEventWithArg.Item2 is ReportControlBlock)
                                 {
-                                    TypeOfResponse = TypeOfResponseEnum.ERROR,
-                                    TypeOfError = (DataAccessErrorEnum)ar.Failure.Value
-                                };
-                                waitingMmsPdu.TryGetValue(receivedInvokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
-                                handlerWithParam.Item1?.Invoke(response, null);
+                                    (responseEventWithArg.Item2 as ReportControlBlock).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
+                                }
+                                else
+                                {
+                                    MmsValue mmsValue = new MmsValue()
+                                    {
+                                        TypeOfError = (DataAccessErrorEnum)ar.Failure.Value
+                                    };
+                                    responseEventWithArg.Item2 = mmsValue;
+                                }
+                                responseEventWithArg.Item1?.Set();
                            //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
                                 waitingMmsPdu.Remove(receivedInvokeId);
                             }
@@ -1953,7 +1955,7 @@ namespace lib61850net
         {
             
 
-            waitingMmsPdu = new Dictionary<int, (LibraryManager.responseReceivedHandler, object)>();
+            waitingMmsPdu = new Dictionary<int, (AutoResetEvent, object)>();
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2200,7 +2202,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendRead(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null, object param = null)
+        internal int SendRead(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
             
 
@@ -2240,9 +2242,9 @@ namespace lib61850net
 
             csrreq.selectRead(rreq);
 
-            if (receiveHandler != null)
+            if (responseEvent != null)
             {
-                waitingMmsPdu.Add(InvokeID, (receiveHandler, param));
+                waitingMmsPdu.Add(InvokeID, (responseEvent, param));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
@@ -2314,7 +2316,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendWrite(Iec61850State iecs, WriteQueueElement el, LibraryManager.responseReceivedHandler receiveHandler = null)
+        internal int SendWrite(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
 
             MMSpdu mymmspdu = new MMSpdu();
@@ -2416,9 +2418,9 @@ namespace lib61850net
 
             csrreq.selectWrite(wreq);
 
-            if (receiveHandler != null)
+            if (responseEvent != null)
             {
-                waitingMmsPdu.Add(InvokeID, (receiveHandler, null));
+                waitingMmsPdu.Add(InvokeID, (responseEvent, param));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);

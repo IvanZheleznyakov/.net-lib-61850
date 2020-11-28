@@ -25,6 +25,9 @@ namespace lib61850net
         internal Scsm_MMS_Worker worker;
         protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
 
+        public delegate void connectionOpenedEventHandler();
+        public event connectionOpenedEventHandler ConnectionOpened;
+
         public delegate void connectionClosedEventHandler();
         public event connectionClosedEventHandler ConnectionClosed;
 
@@ -34,7 +37,7 @@ namespace lib61850net
         public delegate void modelHasBeenCreatedEventHandler();
         public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        public delegate void responseReceivedHandler(Response response, object param);
+        public delegate void responseReceivedHandler(ReadResponse response, object param);
 
         /// <summary>
         /// Конструктор класса, инициализирующий необходимые поля.
@@ -45,6 +48,7 @@ namespace lib61850net
             worker.ConnectShutDownedEvent += Worker_ConnectShutDownedEvent;
             worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
             worker.ModelHasBeenCreated += Worker_ModelHasBeenCreated;
+            worker.ConnectionOpened += Worker_ConnectionOpened;
         }
 
         /// <summary>
@@ -53,11 +57,31 @@ namespace lib61850net
         /// <param name="hostName">IP адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
         /// <returns>Булева переменная, указывающая, успешно ли создалось соединение.</returns>
-        public bool Start(string hostName, int port)
+        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned)
         {
             try
             {
-                return worker.Start(hostName, port);
+
+                AutoResetEvent connectionStarted = new AutoResetEvent(false);
+                if (!StartAsync(hostName, port, connectionShutDowned, connectionStarted))
+                {
+                    return false;
+                }
+                bool isReceive = connectionStarted.WaitOne(10000);
+                return isReceive;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
+        }
+
+        public bool StartAsync(string hostName, int port, AutoResetEvent connectionShutDowned, AutoResetEvent connectionStarted)
+        {
+            try
+            {
+                return worker.Start(hostName, port, connectionShutDowned, connectionStarted);
             }
             catch (Exception ex)
             {
@@ -240,20 +264,41 @@ namespace lib61850net
             }
         }
 
+        public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, object value)
+        {
+            try
+            {
+                WriteResponse resultResponse = null;
+                AutoResetEvent responseReceived = new AutoResetEvent(false);
+                if (!WriteDataAsync(name, FC, value, responseReceived, resultResponse))
+                {
+                    return null;
+                }
+                responseReceived.WaitOne(10000);
+
+                return resultResponse;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Запись данных.
         /// </summary>
         /// <param name="name">Имя узла в дереве объектов устройства.</param>
         /// <param name="value">Записываемое значение.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла запись.</returns>
-        public bool WriteData(string name, FunctionalConstraintEnum FC, object value, responseReceivedHandler receivedHandler)
+        public bool WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, AutoResetEvent responseReceived, WriteResponse response)
         {
             try
             {
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 (node as NodeData).DataValue = value;
-                worker.iecs.Controller.WriteData((node as NodeData), true, receivedHandler);
+                worker.iecs.Controller.WriteData((node as NodeData), true, responseReceived, response);
             }
             catch (Exception ex)
             {
@@ -264,17 +309,38 @@ namespace lib61850net
             return true;
         }
 
+        public MmsValue ReadData(string name, FunctionalConstraintEnum FC)
+        {
+            try
+            {
+                MmsValue resultMmsValue = null;
+                AutoResetEvent responseEvent = new AutoResetEvent(false);
+                if (!ReadDataAsync(name, FC, responseEvent, resultMmsValue))
+                {
+                    return null;
+                }
+                responseEvent.WaitOne(10000);
+
+                return resultMmsValue;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Чтение данных.
         /// </summary>
         /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
-        public bool ReadData(string name, FunctionalConstraintEnum FC, responseReceivedHandler receivedHandler, object param = null)
+        public bool ReadDataAsync(string name, FunctionalConstraintEnum FC, AutoResetEvent responseEvent, object value)
         {
             try
             {
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                worker.iecs.Controller.ReadData(node, receivedHandler);
+                worker.iecs.Controller.ReadData(node, responseEvent, value);
             }
             catch (Exception ex)
             {
@@ -317,16 +383,32 @@ namespace lib61850net
             }
         }
 
+        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb)
+        {
+            try
+            {
+                AutoResetEvent responseEvent = new AutoResetEvent(false);
+                if (!UpdateReportControlBlockAsync(rcb, responseEvent))
+                {
+                    return null;
+                }
+
+                responseEvent.WaitOne(10000);
+
+                return rcb;
+            }
+        }
+
         /// <summary>
         /// Получить актуальные параметры отчёта с IED.
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, для которого хотим обновить параметры.</param>
         /// <param name="receivedHandler">Обработчик получения ответа с IED.</param>
-        public bool UpdateReportControlBlockAsync(ReportControlBlock rcb, responseReceivedHandler receivedHandler)
+        public bool UpdateReportControlBlockAsync(ReportControlBlock rcb, AutoResetEvent responseEvent)
         {
             try
             {
-                ReadData(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP, receivedHandler);
+                ReadDataAsync(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP, responseEvent, rcb);
                 return true;
             }
             catch (Exception ex)
@@ -336,34 +418,9 @@ namespace lib61850net
             }
         }
 
-        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb)
-        {
-            //Thread thread = new Thread(delegate() { UpdateReportControlBlockAsync(rcb, ReceiveUpdatedRCBHandler); });
-            //thread.Start();
-            if (!UpdateReportControlBlockAsync(rcb, ReceiveUpdatedRCBHandler))
-            {
-                return null;
-            }
-            waitHandler.WaitOne();
-            int b = "no".Length;
-            return null;
-        }
-
-        public bool ModelCreated
-        {
-            get
-            {
-                return worker.modelCreated;
-            }
-            internal set
-            {
-                ModelCreated = value;
-            }
-        }
-
         private AutoResetEvent waitHandler = new AutoResetEvent(false);
 
-        private void ReceiveUpdatedRCBHandler(Response response, object param)
+        private void ReceiveUpdatedRCBHandler(ReadResponse response, object param)
         {
             waitHandler.Set();
         }
@@ -469,6 +526,11 @@ namespace lib61850net
         protected void Worker_ModelHasBeenCreated()
         {
             ModelHasBeenCreated?.Invoke();
+        }
+
+        private void Worker_ConnectionOpened()
+        {
+            ConnectionOpened?.Invoke();
         }
     }
 }

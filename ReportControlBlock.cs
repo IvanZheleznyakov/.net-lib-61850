@@ -27,6 +27,8 @@ namespace lib61850net
         internal bool sendResvTms = false;
         internal bool sendEntryID = false;
 
+        public DataAccessErrorEnum TypeOfError { get; internal set; }
+
         public bool IsBuffered { get { return self.isBuffered; } internal set { IsBuffered = value; } }
         public string Name { get { return self.IecAddress; } internal set { Name = value; } }
 

@@ -9,7 +9,12 @@ namespace lib61850net
 {
     public class MmsValue
     {
-        public MmsValue(Data data)
+        internal MmsValue()
+        {
+
+        }
+
+        internal MmsValue(Data data)
         {
             asn1Data = data;
             if (asn1Data.isArraySelected())
@@ -87,6 +92,7 @@ namespace lib61850net
 
         private Data asn1Data;
 
+        public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
 
         public List<MmsValue> GetMmsArray()

@@ -30,7 +30,12 @@ namespace lib61850net
         internal delegate void modelHasBeenCreatedEventHandler();
         internal event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        public bool modelCreated = false;
+        internal event LibraryManager.connectionOpenedEventHandler ConnectionOpened;
+
+        AutoResetEvent stateOfStartConnection;
+        AutoResetEvent connectionShutDownedForClient;
+
+        internal bool modelCreated = false;
 
         internal Scsm_MMS_Worker()
         {
@@ -44,10 +49,12 @@ namespace lib61850net
             IsFileReadingNow = isReading;
         }
 
-        internal bool Start(string hostName, int port)
+        internal bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, AutoResetEvent stateOfConnection = null)
         {
             isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
+            stateOfStartConnection = stateOfConnection;
+            connectionShutDownedForClient = connectionShutDowned;
             return Start();
         }
 
@@ -135,8 +142,9 @@ namespace lib61850net
                     case TcpProtocolState.TCP_STATE_SHUTDOWN:
                         iecs.logger.LogInfo("[TCP_STATE_SHUTDOWN]");
                         ConnectShutDownedEvent?.Invoke();
+                        connectionShutDownedForClient?.Set();
                         Stop();
-                        Thread.Sleep(10000);
+                        Thread.Sleep(5000);
                         //      iecs.tstate = TcpProtocolState.TCP_STATE_START;
                         iecs.tstate = TcpProtocolState.TCP_CONNECT_WAIT;
                         break;
@@ -236,9 +244,7 @@ namespace lib61850net
                                         iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
                                         // ModelHasBeenCreated?.Invoke();
                                         modelCreated = true;
-                                        //self._env.winMgr.MakeIedTree(iecs);
-                                        //self._env.winMgr.MakeIecTree(iecs);
-                                        //self._env.winMgr.mainWindow.Set_iecf(iecs);
+                                        stateOfStartConnection?.Set();
                                         iecs.istate = Iec61850lStateEnum.IEC61850_FREILAUF;
                                         break;
                                     case Iec61850lStateEnum.IEC61850_FREILAUF:
@@ -246,8 +252,6 @@ namespace lib61850net
                                         switch (iecs.fstate)
                                         {
                                             case FileTransferState.FILE_DIRECTORY:
-                                                //if (iecs.lastFileOperationData[0] is NodeIed)
-                                                //    self._env.winMgr.MakeFileTree(iecs);
                                                 iecs.fstate = FileTransferState.FILE_NO_ACTION;
                                                 break;
                                             case FileTransferState.FILE_OPENED:
@@ -302,7 +306,7 @@ namespace lib61850net
                             switch (el.Action)
                             {
                                 case ActionRequested.Write:
-                                    iecs.mms.SendWrite(iecs, el, el.Handler);
+                                    iecs.mms.SendWrite(iecs, el, el.ResponseEvent, el.Param);
                                     break;
                                 case ActionRequested.WriteAsStructure:
                                     iecs.mms.SendWriteAsStructure(iecs, el);
@@ -314,18 +318,16 @@ namespace lib61850net
                                     }
                                     else
                                     {
-                                        iecs.mms.SendRead(iecs, el, el.Handler, el.Param);
+                                        iecs.mms.SendRead(iecs, el, el.ResponseEvent, el.Param);
                                     }
                                     break;
                                 case ActionRequested.DefineNVL:
                                     iecs.mms.SendDefineNVL(iecs, el);
                                     break;
                                 case ActionRequested.DeleteNVL:
-
                                     iecs.mms.SendDeleteNVL(iecs, el);
                                     break;
                                 case ActionRequested.GetDirectory:
-
                                     iecs.mms.SendFileDirectory(iecs, el);
                                     break;
                                 case ActionRequested.OpenFile:
@@ -348,15 +350,11 @@ namespace lib61850net
                 }
             }
             TcpRw.StopClient(iecs);
-            //_env.winMgr.UnBindFromCapture(iecs);
             if(restart_allowed) {
                 Start();
                 try
                 {
-                    //_env.winMgr.mainWindow.BeginInvoke((Action)delegate
-                    //{
-                    //    _env.winMgr.mainWindow.Restart();
-                    //});
+
                 }
                 catch { }
             }
