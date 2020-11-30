@@ -26,20 +26,9 @@ namespace lib61850net
         internal Scsm_MMS_Worker worker;
         protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
 
-        public delegate void connectionOpenedEventHandler();
-        public event connectionOpenedEventHandler ConnectionOpened;
-
-        public delegate void connectionClosedEventHandler();
-        public event connectionClosedEventHandler ConnectionClosed;
-
-        public delegate void newReportReceivedEventhandler(Report report);
-        public event newReportReceivedEventhandler NewReportReceived;
-
-        public delegate void modelHasBeenCreatedEventHandler();
-        public event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
-
-        public delegate void responseReceivedHandler(ReadResponse response, object param);
-
+        /// <summary>
+        /// Очередь из поступивших отчётов.
+        /// </summary>
         public ConcurrentQueue<Report> QueueOfReports
         {
             get
@@ -49,7 +38,7 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Конструктор класса, инициализирующий необходимые поля.
+        /// Конструктор класса, инициализирующий необходимые внутренние поля.
         /// </summary>
         public LibraryManager()
         {
@@ -57,16 +46,17 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Установка соединения с утройством.
+        /// Синхронная установка соединения и построение программной модели.
         /// </summary>
-        /// <param name="hostName">IP адрес устройства.</param>
+        /// <param name="hostName">IP-адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли создалось соединение.</returns>
+        /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
+        /// <param name="waitingTime">Время ожидания установки соединения и построения программной модели (в миллисекундах).</param>
+        /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
         public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, int waitingTime = 7000)
         {
             try
             {
-
                 AutoResetEvent connectionStarted = new AutoResetEvent(false);
                 if (!StartAsync(hostName, port, connectionShutDowned, connectionStarted))
                 {
@@ -82,6 +72,14 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Асинхронная установка соединения и построение программной модели.
+        /// </summary>
+        /// <param name="hostName">IP-адрес устройства.</param>
+        /// <param name="port">Номер порта.</param>
+        /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
+        /// <param name="connectionStarted">Пользовательское событие, которое перейдет в сигнальное состояние при успешной установке соединения.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
         public bool StartAsync(string hostName, int port, AutoResetEvent connectionShutDowned, AutoResetEvent connectionStarted)
         {
             try
@@ -96,8 +94,9 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Закрытие соединения с устройством.
+        /// Закрытие текущего соединения.
         /// </summary>
+        /// <returns>Булева переменная, указывающая, успешно ли закрылось соединение.</returns>
         public bool Stop()
         {
             try
@@ -113,6 +112,10 @@ namespace lib61850net
             return true;
         }
 
+        /// <summary>
+        /// Установка события для получения отчётов.
+        /// </summary>
+        /// <param name="reportReceivedEvent">Пользовательское событие, которое перейдёт в сигнальное состояние, когда придёт новый отчёт.</param>
         public void SetNewReportReceivedEvent(AutoResetEvent reportReceivedEvent)
         {
             worker.iecs.mms.newReportReceivedEvent = reportReceivedEvent;
@@ -143,7 +146,7 @@ namespace lib61850net
         /// <summary>
         /// Получение списка логических узлов устройства.
         /// </summary>
-        /// <param name="serverName">Имя логического устройства.</param>
+        /// <param name="ldName">Имя логического устройства.</param>
         /// <returns>Список строк с названиями всех логических узлов устройства.</returns>
         public List<string> GetLogicalDeviceDirectory(string ldName)
         {
@@ -221,7 +224,7 @@ namespace lib61850net
         /// Получение списка датасетов.
         /// </summary>
         /// <param name="ldName">Имя логического устройства.</param>
-        /// <returns>Список строк с названиями датасетов.</returns>
+        /// <returns>Список строк с названиями датасетов на указанном устройстве.</returns>
         public List<string> GetDatasets(string ldName)
         {
             try
@@ -240,7 +243,7 @@ namespace lib61850net
         /// Получение списка буферизированных отчётов.
         /// </summary>
         /// <param name="ldName">Имя логического устройства.</param>
-        /// <returns>Список строк с названиями буферизированных отчётов.</returns>
+        /// <returns>Список строк с названиями буферизированных отчётов указанного устройства.</returns>
         public List<string> GetBufferedReports(string ldName)
         {
             try
@@ -259,7 +262,7 @@ namespace lib61850net
         /// Получение списка небуферизированных отчётов.
         /// </summary>
         /// <param name="ldName">Имя логического устройства.</param>
-        /// <returns>Список строк с названиями небуферизированных отчётов.</returns>
+        /// <returns>Список строк с названиями небуферизированных отчётов указанного устройства.</returns>
         public List<string> GetUnbufferedReports(string ldName)
         {
             try
@@ -274,6 +277,14 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Синхронная запись данных в узел дерева объектов.
+        /// </summary>
+        /// <param name="name">Ссылка (полное имя) узла в дереве объектов устройства.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <param name="value">Записываемое значение.</param>
+        /// <param name="waitingTime">Время ожидания записи данных (в миллисекундах).</param>
+        /// <returns>Ответ на запрос записи данных.</returns>
         public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, object value, int waitingTime = 2000)
         {
             try
@@ -299,11 +310,14 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Запись данных.
+        /// Асинхронная запись данных в узел дерева объектов.
         /// </summary>
-        /// <param name="name">Имя узла в дереве объектов устройства.</param>
+        /// <param name="name">Ссылка (полное имя) узла в дереве объектов устройства.</param>
+        /// <param name="FC">Функциональная связь.</param>
         /// <param name="value">Записываемое значение.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли произошла запись.</returns>
+        /// <param name="responseReceived">Пользовательское событие, которое перейдёт в сигнальное состояние при успешной отправке запроса на запись.</param>
+        /// <param name="response">Экземпляр WriteResponse, в который будет записан ответ на запрос записи.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись данных за указанное время.</returns>
         public bool WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, AutoResetEvent responseReceived, WriteResponse response)
         {
             try
@@ -322,6 +336,13 @@ namespace lib61850net
             return true;
         }
 
+        /// <summary>
+        /// Синхронное чтение данных с устройства.
+        /// </summary>
+        /// <param name="name">Ссылка (полное имя) узла дерева объектов в устройстве.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <param name="waitingTime">Время ожидания чтения данных.</param>
+        /// <returns>Результат чтения данных.</returns>
         public MmsValue ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
         {
             try
@@ -347,9 +368,13 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Чтение данных.
+        /// Асинхронное чтение данных с устройства.
         /// </summary>
-        /// <param name="node">Узел программного дерева, соответствующий узлу в дереве объектов устройства.</param>
+        /// <param name="name">Ссылка (полное имя) узла дерева объектов в устройстве.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа.</param>
+        /// <param name="value">Экземпляр MmsValue, в который будет записан ответ на чтение.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос за чтение данных.</returns>
         public bool ReadDataAsync(string name, FunctionalConstraintEnum FC, AutoResetEvent responseEvent, object value)
         {
             try
@@ -373,6 +398,7 @@ namespace lib61850net
         /// Создание экземпляра ReportControlBlock для настраивания параметров отчёта.
         /// </summary>
         /// <param name="name">Ссылка (полное имя) отчёта.</param>
+        /// <param name="isBuffered">Тип отчёта (true - буферизированный, false - небуферизированный).</param>
         /// <returns>Экземпляр ReportControlBlock с текущими параметрами данного отчёта.</returns>
         public ReportControlBlock CreateReportControlBlock(string name, bool isBuffered)
         {
@@ -401,6 +427,12 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Синхронное получение актуальных параметров отчёта.
+        /// </summary>
+        /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
+        /// <param name="waitingTime">Время ожидания получения ответа.</param>
+        /// <returns>Обновленные параметры отчёта.</returns>
         public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
         {
             try
@@ -423,10 +455,11 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Получить актуальные параметры отчёта с IED.
+        /// Асинхронное получение актуальных параметров отчёта.
         /// </summary>
-        /// <param name="rcb">Экземпляр ReportControlBlock, для которого хотим обновить параметры.</param>
-        /// <param name="receivedHandler">Обработчик получения ответа с IED.</param>
+        /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
+        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении новых параметров отчёта.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отпарвлен запрос.</returns>
         public bool UpdateReportControlBlockAsync(ReportControlBlock rcb, AutoResetEvent responseEvent)
         {
             try
@@ -441,6 +474,12 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Синхронная запись параметров отчёта.
+        /// </summary>
+        /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
+        /// <param name="waitingTime">Время ожидания получения ответа.</param>
+        /// <returns>Ответ на запрос записи параметров отчёта.</returns>
         public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 2000)
         {
             try
@@ -464,9 +503,12 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Установка и запись параметров отчёта.
+        /// Асинхронная запись параметров отчёта.
         /// </summary>
-        /// <param name="rcbPar">Параметры отчёта.</param>
+        /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
+        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа на запись.</param>
+        /// <param name="response">Ответ на запись параметров.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись параметров.</returns>
         public bool SetReportControlBlockAsync(ReportControlBlock rcbPar, AutoResetEvent responseEvent, WriteResponse response)
         {
             try
@@ -482,6 +524,12 @@ namespace lib61850net
             return true;
         }
 
+        /// <summary>
+        /// Синхронное получение директории файлов.
+        /// </summary>
+        /// <param name="name">Полное имя директории.</param>
+        /// <param name="waitingTime">Время ожидания получения директории.</param>
+        /// <returns>Ответ на запрос.</returns>
         public FileDirectoryResponse GetFileDirectory(string name, int waitingTime = 3000)
         {
             try
@@ -504,6 +552,13 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Асинхронное получение директории файлов.
+        /// </summary>
+        /// <param name="name">Полное имя директории.</param>
+        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении директории.</param>
+        /// <param name="response">Экземпляр, в который будет записан ответ.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на получение директории.</returns>
         public bool GetFileDirectoryAsync(string name, AutoResetEvent responseEvent, FileDirectoryResponse response)
         {
             try
@@ -529,12 +584,17 @@ namespace lib61850net
             }
         }
 
-        public FileBuffer GetFile(string name, int waitingTime = 4000)
+        /// <summary>
+        /// Синхронное получение файла.
+        /// </summary>
+        /// <param name="name">Полное имя файла.</param>
+        /// <param name="waitingTime">Время ожидания получения файла.</param>
+        /// <returns>Прочитанный файл с устройства.</returns>
+        public FileBuffer GetFile(string name, int waitingTime = 5000)
         {
             try
             {
                 AutoResetEvent responseEvent = new AutoResetEvent(false);
-                //        byte[] result = new byte[100000];
                 FileBuffer result = new FileBuffer();
                 if (!GetFileAsync(name, responseEvent, result))
                 {
@@ -552,6 +612,13 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Асинхронное получение файла.
+        /// </summary>
+        /// <param name="name">Полное имя файла.</param>
+        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении файла.</param>
+        /// <param name="file">Экземпляр, куда будет записан файл.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на чтение файла.</returns>
         public bool GetFileAsync(string name, AutoResetEvent responseEvent, FileBuffer file)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
@@ -594,26 +661,6 @@ namespace lib61850net
         {
             lastExceptionInfo.LastException = ex;
             lastExceptionInfo.LastMethodWithException = methodName;
-        }
-
-        protected void Worker_ConnectShutDownedEvent()
-        {
-            ConnectionClosed?.Invoke();
-        }
-
-        protected void Mms_NewReportReceived(Report report)
-        {
-            NewReportReceived?.Invoke(report);
-        }
-
-        protected void Worker_ModelHasBeenCreated()
-        {
-            ModelHasBeenCreated?.Invoke();
-        }
-
-        private void Worker_ConnectionOpened()
-        {
-            ConnectionOpened?.Invoke();
         }
     }
 }

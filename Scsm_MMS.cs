@@ -1401,8 +1401,10 @@ namespace lib61850net
                                         }
                                         else
                                         {
-
-                                        }    
+                                            (responseEventWithArg.Item2 as ReportControlBlock).self = rcb.self;
+                                            (responseEventWithArg.Item2 as ReportControlBlock).TypeOfError = rcb.TypeOfError;
+                                            (responseEventWithArg.Item2 as ReportControlBlock).ResetFlags();
+                                        }
                                         Console.WriteLine("before set, isrcb?: {0}", isRcbRequested);
                                         responseEventWithArg.Item1?.Set();
                                         Console.WriteLine("after set");

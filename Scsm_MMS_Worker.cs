@@ -30,8 +30,6 @@ namespace lib61850net
         internal delegate void modelHasBeenCreatedEventHandler();
         internal event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
 
-        internal event LibraryManager.connectionOpenedEventHandler ConnectionOpened;
-
         AutoResetEvent stateOfStartConnection;
         AutoResetEvent connectionShutDownedForClient;
 
