@@ -331,7 +331,7 @@ namespace lib61850net
                                     iecs.mms.SendFileDirectory(iecs, el);
                                     break;
                                 case ActionRequested.OpenFile:
-                                    iecs.mms.SendFileOpen(iecs, el);
+                                    iecs.mms.SendFileOpen(iecs, el, el.ResponseEvent, el.Param);
                                     break;
                                 case ActionRequested.ReadFile:
                                     iecs.mms.SendFileRead(iecs, el);

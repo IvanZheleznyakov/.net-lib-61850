@@ -316,19 +316,6 @@ namespace lib61850net
             invokeidunknown = 1,
             cancelnotpossible = 2
         }
-        enum ServiceError_errorClass_file
-        {
-            other = 0,
-            filenameambiguous = 1,
-            filebusy = 2,
-            filenamesyntaxError = 3,
-            contenttypeinvalid = 4,
-            positioninvalid = 5,
-            fileaccesdenied = 6,
-            filenonexistent = 7,
-            duplicatefilename = 8,
-            insufficientspaceinfilestore = 9
-        }
 
         enum ControlAddCause
         {
@@ -351,7 +338,9 @@ namespace lib61850net
 
         static Env _env = Env.getEnv();
 
-        private LibraryManager.responseReceivedHandler holdHandlerUntilFileIsRead = null;
+        private AutoResetEvent holdEventUntilFileIsRead = null;
+
+        private int saveInvokeIdUntilFileIsRead = -1;
 
         private Dictionary<int, (AutoResetEvent, object)> waitingMmsPdu;
 
@@ -494,6 +483,22 @@ namespace lib61850net
             else if (mymmspdu.Confirmed_ErrorPDU != null)
             {
                 NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
+
+                if (waitingMmsPdu.ContainsKey(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value))
+                {
+                    waitingMmsPdu.TryGetValue(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value, out (AutoResetEvent, object) responseEventWithArg);
+                    if (responseEventWithArg.Item2 is FileDirectoryResponse)
+                    {
+                        FileDirectoryResponse response = new FileDirectoryResponse()
+                        {
+                            TypeOfError = (FileErrorResponseEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.ErrorClass.File
+                        };
+                        responseEventWithArg.Item2 = response;
+                        responseEventWithArg.Item1?.Set();
+                    }
+                    waitingMmsPdu.Remove(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
+                }
+
                 iecs.logger.LogError("Confirmed_ErrorPDU received - requested operation not possible!!");
             }
             else
@@ -628,15 +633,16 @@ namespace lib61850net
                 iecs.fstate = FileTransferState.FILE_DIRECTORY;
                 if (waitingMmsPdu.ContainsKey(invokeId))
                 {
-                    ReadResponse response = new ReadResponse()
+                    FileDirectoryResponse response = new FileDirectoryResponse()
                     {
-                        TypeOfResponse = TypeOfResponseEnum.FILE_DIRECTORY,
-                        TypeOfError = DataAccessErrorEnum.none,
+                        TypeOfError = FileErrorResponseEnum.none,
                         FileDirectories = listOfFileDirectory
                     };
 
-                    waitingMmsPdu.TryGetValue(invokeId, out (LibraryManager.responseReceivedHandler, object) handlerWithParam);
-                    handlerWithParam.Item1?.Invoke(response, null);
+                    waitingMmsPdu.TryGetValue(invokeId, out (AutoResetEvent, object) responseEventWithArg);
+                    responseEventWithArg.Item2 = response;
+                    responseEventWithArg.Item1?.Set();
+                //    handlerWithParam.Item1?.Invoke(response, null);
                //     waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
@@ -671,14 +677,13 @@ namespace lib61850net
                 }
                 else
                 {
-                    ReadResponse response = new ReadResponse()
+                    if (waitingMmsPdu.ContainsKey(saveInvokeIdUntilFileIsRead))
                     {
-                        TypeOfResponse = TypeOfResponseEnum.FILE,
-                        TypeOfError = DataAccessErrorEnum.none,
-                        FileData = (iecs.lastFileOperationData[0] as NodeFile).Data
-                    };
-                    holdHandlerUntilFileIsRead?.Invoke(response, null);
-                    holdHandlerUntilFileIsRead = null;
+                        waitingMmsPdu.TryGetValue(saveInvokeIdUntilFileIsRead, out (AutoResetEvent, object) responseWithArg);
+                        responseWithArg.Item2 = (iecs.lastFileOperationData[0] as NodeFile).Data;
+                        responseWithArg.Item1?.Set();
+                    }
+                    saveInvokeIdUntilFileIsRead = -1;
                     iecs.fstate = FileTransferState.FILE_COMPLETE;
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
                     ReadFileStateChanged?.Invoke(false);
@@ -2654,7 +2659,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendFileDirectory(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileDirectory(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
             
 
@@ -2686,9 +2691,9 @@ namespace lib61850net
 
             csrreq.selectFileDirectory(filedreq);
 
-            if (el.Handler != null)
+            if (el.ResponseEvent != null)
             {
-                waitingMmsPdu.Add(InvokeID, (el.Handler, null));
+                waitingMmsPdu.Add(InvokeID, (el.ResponseEvent, param));
             }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
@@ -2712,10 +2717,8 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendFileOpen(Iec61850State iecs, WriteQueueElement el)
+        internal int SendFileOpen(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
-            
-
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2739,6 +2742,11 @@ namespace lib61850net
 
             csrreq.selectFileOpen(fileoreq);
 
+            if (responseEvent != null)
+            {
+                waitingMmsPdu.Add(InvokeID, (responseEvent, param));
+            }
+
             crreq.InvokeID = new Unsigned32(InvokeID++);
 
             crreq.Service = csrreq;
@@ -2753,7 +2761,7 @@ namespace lib61850net
                 return -1;
             }
 
-            holdHandlerUntilFileIsRead = el.Handler;
+            holdEventUntilFileIsRead = el.ResponseEvent;
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 

@@ -35,7 +35,7 @@ namespace lib61850net
             iecs.Send(ndarr, nvl.CommAddress, ActionRequested.DeleteNVL);
         }
 
-        internal void GetFileList(NodeBase nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
+        internal void GetFileList(NodeBase nfi, AutoResetEvent responseEvent = null, FileDirectoryResponse response = null)
         {
             CommAddress ad = new CommAddress();
             ad.Variable = "/";  // for the case of reading root
@@ -53,10 +53,10 @@ namespace lib61850net
                     ad.Variable = nd.StringValue;
                 }
             } */
-            iecs.Send(ndarr, ad, ActionRequested.GetDirectory, receivedHandler);
+            iecs.Send(ndarr, ad, ActionRequested.GetDirectory, responseEvent, response);
         }
 
-        internal void GetFile(NodeFile nfi, LibraryManager.responseReceivedHandler receivedHandler = null)
+        internal void GetFile(NodeFile nfi, AutoResetEvent responseEvent = null, byte[] file = null)
         {
             CommAddress ad = new CommAddress();
             NodeBase[] ndarr = new NodeBase[1];
@@ -78,7 +78,7 @@ namespace lib61850net
                 nfi.NameSet4Test(ad.Variable);
             }
             nfi.Reset();
-            iecs.Send(ndarr, ad, ActionRequested.OpenFile, receivedHandler);
+            iecs.Send(ndarr, ad, ActionRequested.OpenFile, responseEvent, file);
         }
 
         internal void FileDelete(NodeFile nfi)
@@ -372,9 +372,9 @@ namespace lib61850net
                 Logger.getLogger().LogError("Iec61850Controller.WriteData: null data (-Value), cannot send");
         }
 
-        internal void WriteRcb(ReportControlBlock rpar, bool reRead)
+        internal void WriteRcb(ReportControlBlock rpar, bool reRead, AutoResetEvent responseEvent = null, WriteResponse response = null)
         {
-            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write);
+            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write, responseEvent, response);
             rpar.ResetFlags();
 
             if (reRead)

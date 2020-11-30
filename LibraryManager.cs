@@ -57,7 +57,7 @@ namespace lib61850net
         /// <param name="hostName">IP адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
         /// <returns>Булева переменная, указывающая, успешно ли создалось соединение.</returns>
-        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned)
+        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, int waitingTime = 7000)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace lib61850net
                 {
                     return false;
                 }
-                bool isReceive = connectionStarted.WaitOne(10000);
+                bool isReceive = connectionStarted.WaitOne(waitingTime);
                 return isReceive;
             }
             catch (Exception ex)
@@ -264,7 +264,7 @@ namespace lib61850net
             }
         }
 
-        public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, object value)
+        public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, object value, int waitingTime = 2000)
         {
             try
             {
@@ -274,7 +274,7 @@ namespace lib61850net
                 {
                     return null;
                 }
-                responseReceived.WaitOne(10000);
+                responseReceived.WaitOne(waitingTime);
 
                 return resultResponse;
             }
@@ -309,7 +309,7 @@ namespace lib61850net
             return true;
         }
 
-        public MmsValue ReadData(string name, FunctionalConstraintEnum FC)
+        public MmsValue ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
         {
             try
             {
@@ -319,14 +319,14 @@ namespace lib61850net
                 {
                     return null;
                 }
-                responseEvent.WaitOne(10000);
+                responseEvent.WaitOne(waitingTime);
 
                 return resultMmsValue;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
 
@@ -383,7 +383,7 @@ namespace lib61850net
             }
         }
 
-        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb)
+        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
         {
             try
             {
@@ -393,9 +393,14 @@ namespace lib61850net
                     return null;
                 }
 
-                responseEvent.WaitOne(10000);
+                responseEvent.WaitOne(waitingTime);
 
                 return rcb;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
             }
         }
 
@@ -418,22 +423,37 @@ namespace lib61850net
             }
         }
 
-        private AutoResetEvent waitHandler = new AutoResetEvent(false);
-
-        private void ReceiveUpdatedRCBHandler(ReadResponse response, object param)
+        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 2000)
         {
-            waitHandler.Set();
+            try
+            {
+                AutoResetEvent responseEvent = new AutoResetEvent(false);
+                WriteResponse resultResponse = null;
+                if (!SetReportControlBlockAsync(rcbPar, responseEvent, resultResponse))
+                {
+                    return null;
+                }
+
+                responseEvent.WaitOne(waitingTime);
+
+                return resultResponse;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
         }
 
         /// <summary>
         /// Установка и запись параметров отчёта.
         /// </summary>
         /// <param name="rcbPar">Параметры отчёта.</param>
-        public bool SetReportControlBlock(ReportControlBlock rcbPar)
+        public bool SetReportControlBlockAsync(ReportControlBlock rcbPar, AutoResetEvent responseEvent, WriteResponse response)
         {
             try
             {
-                worker.iecs.Controller.WriteRcb(rcbPar, true);
+                worker.iecs.Controller.WriteRcb(rcbPar, true, responseEvent, response);
             }
             catch (Exception ex)
             {
@@ -444,7 +464,29 @@ namespace lib61850net
             return true;
         }
 
-        public bool GetFileDirectory(string name, responseReceivedHandler receivedHandler)
+        public FileDirectoryResponse GetFileDirectory(string name, int waitingTime = 3000)
+        {
+            try
+            {
+                AutoResetEvent responseEvent = new AutoResetEvent(false);
+                FileDirectoryResponse response = null;
+                if (!GetFileDirectoryAsync(name, responseEvent, response))
+                {
+                    return null;
+                }
+
+                responseEvent.WaitOne(waitingTime);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        public bool GetFileDirectoryAsync(string name, AutoResetEvent responseEvent, FileDirectoryResponse response)
         {
             try
             {
@@ -458,7 +500,7 @@ namespace lib61850net
                     node = worker.iecs.DataModel.files.FindFileByName(name);
                 }
 
-                worker.iecs.Controller.GetFileList(node, receivedHandler);
+                worker.iecs.Controller.GetFileList(node, responseEvent, response);
 
                 return true;
             }
@@ -469,7 +511,29 @@ namespace lib61850net
             }
         }
 
-        public bool GetFile(string name, responseReceivedHandler receivedHandler)
+        public byte[] GetFile(string name, int waitingTime = 4000)
+        {
+            try
+            {
+                AutoResetEvent responseEvent = new AutoResetEvent(false);
+                byte[] result = null;
+                if (!GetFileAsync(name, responseEvent, result))
+                {
+                    return null;
+                }
+
+                responseEvent.WaitOne(waitingTime);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        public bool GetFileAsync(string name, AutoResetEvent responseEvent, byte[] file)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
@@ -482,7 +546,7 @@ namespace lib61850net
             {
                 worker.IsFileReadingNow = true;
                 var nodeFile = worker.iecs.DataModel.files.FindFileByName(name);
-                worker.iecs.Controller.GetFile((NodeFile)nodeFile, receivedHandler);
+                worker.iecs.Controller.GetFile((NodeFile)nodeFile, responseEvent, file);
             }
             catch (Exception ex)
             {
