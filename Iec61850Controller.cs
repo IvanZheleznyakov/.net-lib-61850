@@ -56,7 +56,7 @@ namespace lib61850net
             iecs.Send(ndarr, ad, ActionRequested.GetDirectory, responseEvent, response);
         }
 
-        internal void GetFile(NodeFile nfi, AutoResetEvent responseEvent = null, byte[] file = null)
+        internal void GetFile(NodeFile nfi, AutoResetEvent responseEvent = null, FileBuffer file = null)
         {
             CommAddress ad = new CommAddress();
             NodeBase[] ndarr = new NodeBase[1];

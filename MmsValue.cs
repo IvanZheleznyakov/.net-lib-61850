@@ -9,7 +9,7 @@ namespace lib61850net
 {
     public class MmsValue
     {
-        internal MmsValue()
+        public MmsValue()
         {
 
         }
@@ -90,7 +90,14 @@ namespace lib61850net
             }
         }
 
-        private Data asn1Data;
+        internal void CopyFrom(MmsValue mmsValue)
+        {
+            this.TypeOfError = mmsValue.TypeOfError;
+            this.asn1Data = mmsValue.asn1Data;
+            this.MmsType = mmsValue.MmsType;
+        }
+
+        internal Data asn1Data;
 
         public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }

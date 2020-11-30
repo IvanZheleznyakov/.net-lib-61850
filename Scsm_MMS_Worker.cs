@@ -328,7 +328,7 @@ namespace lib61850net
                                     iecs.mms.SendDeleteNVL(iecs, el);
                                     break;
                                 case ActionRequested.GetDirectory:
-                                    iecs.mms.SendFileDirectory(iecs, el);
+                                    iecs.mms.SendFileDirectory(iecs, el, el.ResponseEvent, el.Param);
                                     break;
                                 case ActionRequested.OpenFile:
                                     iecs.mms.SendFileOpen(iecs, el, el.ResponseEvent, el.Param);

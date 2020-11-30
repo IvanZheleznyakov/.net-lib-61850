@@ -154,7 +154,7 @@ namespace lib61850net
 
             for (int i = 1; i != parts.Length; ++i)
             {
-                if ((b = b.FindChildNode(parts[i])) == null)
+                if (parts[i] != "" && (b = b.FindChildNode(parts[i])) == null)
                 {
                     return null;
                 }

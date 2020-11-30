@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -39,16 +40,20 @@ namespace lib61850net
 
         public delegate void responseReceivedHandler(ReadResponse response, object param);
 
+        public ConcurrentQueue<Report> QueueOfReports
+        {
+            get
+            {
+                return worker.iecs.mms.queueOfReports;
+            }
+        }
+
         /// <summary>
         /// Конструктор класса, инициализирующий необходимые поля.
         /// </summary>
         public LibraryManager()
         {
             worker = new Scsm_MMS_Worker();
-            worker.ConnectShutDownedEvent += Worker_ConnectShutDownedEvent;
-            worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
-            worker.ModelHasBeenCreated += Worker_ModelHasBeenCreated;
-            worker.ConnectionOpened += Worker_ConnectionOpened;
         }
 
         /// <summary>
@@ -106,6 +111,11 @@ namespace lib61850net
             }
 
             return true;
+        }
+
+        public void SetNewReportReceivedEvent(AutoResetEvent reportReceivedEvent)
+        {
+            worker.iecs.mms.newReportReceivedEvent = reportReceivedEvent;
         }
 
         /// <summary>
@@ -268,13 +278,16 @@ namespace lib61850net
         {
             try
             {
-                WriteResponse resultResponse = null;
+                Console.WriteLine("writedata start");
+                WriteResponse resultResponse = new WriteResponse();
                 AutoResetEvent responseReceived = new AutoResetEvent(false);
                 if (!WriteDataAsync(name, FC, value, responseReceived, resultResponse))
                 {
                     return null;
                 }
                 responseReceived.WaitOne(waitingTime);
+
+                Console.WriteLine("writedata got responseevent");
 
                 return resultResponse;
             }
@@ -313,13 +326,16 @@ namespace lib61850net
         {
             try
             {
-                MmsValue resultMmsValue = null;
+                Console.WriteLine("readdata start");
+                MmsValue resultMmsValue = new MmsValue();
                 AutoResetEvent responseEvent = new AutoResetEvent(false);
                 if (!ReadDataAsync(name, FC, responseEvent, resultMmsValue))
                 {
                     return null;
                 }
                 responseEvent.WaitOne(waitingTime);
+
+                Console.WriteLine("readdata got event");
 
                 return resultMmsValue;
             }
@@ -338,9 +354,11 @@ namespace lib61850net
         {
             try
             {
+                Console.WriteLine("readdataasync start");
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 worker.iecs.Controller.ReadData(node, responseEvent, value);
+                Console.WriteLine("readdataasync end");
             }
             catch (Exception ex)
             {
@@ -428,7 +446,7 @@ namespace lib61850net
             try
             {
                 AutoResetEvent responseEvent = new AutoResetEvent(false);
-                WriteResponse resultResponse = null;
+                WriteResponse resultResponse = new WriteResponse();
                 if (!SetReportControlBlockAsync(rcbPar, responseEvent, resultResponse))
                 {
                     return null;
@@ -469,7 +487,7 @@ namespace lib61850net
             try
             {
                 AutoResetEvent responseEvent = new AutoResetEvent(false);
-                FileDirectoryResponse response = null;
+                FileDirectoryResponse response = new FileDirectoryResponse();
                 if (!GetFileDirectoryAsync(name, responseEvent, response))
                 {
                     return null;
@@ -511,12 +529,13 @@ namespace lib61850net
             }
         }
 
-        public byte[] GetFile(string name, int waitingTime = 4000)
+        public FileBuffer GetFile(string name, int waitingTime = 4000)
         {
             try
             {
                 AutoResetEvent responseEvent = new AutoResetEvent(false);
-                byte[] result = null;
+                //        byte[] result = new byte[100000];
+                FileBuffer result = new FileBuffer();
                 if (!GetFileAsync(name, responseEvent, result))
                 {
                     return null;
@@ -533,7 +552,7 @@ namespace lib61850net
             }
         }
 
-        public bool GetFileAsync(string name, AutoResetEvent responseEvent, byte[] file)
+        public bool GetFileAsync(string name, AutoResetEvent responseEvent, FileBuffer file)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {

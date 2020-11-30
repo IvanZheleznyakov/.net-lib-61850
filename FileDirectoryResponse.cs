@@ -8,7 +8,7 @@ namespace lib61850net
 {
     public class FileDirectoryResponse
     {
-        internal FileDirectoryResponse()
+        public FileDirectoryResponse()
         {
 
         }
