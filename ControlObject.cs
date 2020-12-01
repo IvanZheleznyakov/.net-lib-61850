@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace lib61850net
 {
     /// <summary>
-    /// Класс программного представления объекта управления.
+    /// Класс для программного представления объекта управления.
     /// </summary>
     public class ControlObject
     {
@@ -79,8 +79,19 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Модель управления.
+        /// </summary>
         public ControlModelEnum ControlModel { get; internal set; }
+
+        /// <summary>
+        /// Ссылка (полное имя) узла в дереве объектов, соответствующего управляемому объекту.
+        /// </summary>
         public string ObjectReference { get; internal set; }
+
+        /// <summary>
+        /// Пользовательское событие, которое переходит в сигнальное состояние, когда приходит отчёт об управлении командой.
+        /// </summary>
         public AutoResetEvent CommandTerminationEvent 
         {
             internal get
@@ -92,6 +103,10 @@ namespace lib61850net
                 libraryManager.worker.iecs.mms.newCommandTerminationEvent = value;
             }
         }
+
+        /// <summary>
+        /// Очередь отчётов управления командой.
+        /// </summary>
         public ConcurrentQueue<CommandTerminationReport> QueueOfComTerminationReports { get; internal set; }
 
         /// <summary>
@@ -111,8 +126,6 @@ namespace lib61850net
                 this.ObjectReference = objectReference;
                 var node = manager.worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 self = (NodeDO)node;
-                //manager.worker.iecs.DataModel.addressNodesPairs.TryGetValue(objectReference, out var outNode);
-                //self = (NodeDO)outNode;
                 commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(node.FindChildNode("Oper").FindChildNode("ctlVal"));
                 ControlModel = commandParams.CommandFlowFlag;
                 isControlObjectCorrect = true;

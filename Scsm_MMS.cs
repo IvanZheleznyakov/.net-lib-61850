@@ -2327,189 +2327,223 @@ namespace lib61850net
 
         internal int SendWrite(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
-
-            MMSpdu mymmspdu = new MMSpdu();
-            iecs.msMMSout = new MemoryStream();
-
-            Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
-            ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
-            Write_Request wreq = new Write_Request();
-
-            List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
-            List<Data> datl = new List<Data>();
-
-            foreach (NodeData d in el.Data)
+            try
             {
-                if (d != null)
+                MMSpdu mymmspdu = new MMSpdu();
+                iecs.msMMSout = new MemoryStream();
+
+                Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
+                ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
+                Write_Request wreq = new Write_Request();
+
+                List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
+                List<Data> datl = new List<Data>();
+
+                foreach (NodeData d in el.Data)
                 {
-                    VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
-                    Data dat = new Data();
-
-                    ObjectName on = new ObjectName();
-                    ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
-                    dst.DomainID = new Identifier(el.Address.Domain);
-                    dst.ItemID = new Identifier(el.Address.Variable + "$" + d.Name);
-                    on.selectDomain_specific(dst);
-
-                    vas.VariableSpecification = new VariableSpecification();
-                    vas.VariableSpecification.selectName(on);
-
-                    vasl.Add(vas);
-
-                    switch (d.DataType)
+                    if (d != null)
                     {
-                        case MmsTypeEnum.BOOLEAN:
-                            dat.selectBoolean((bool)d.DataValue);
-                            break;
-                        case MmsTypeEnum.VISIBLE_STRING:
-                            dat.selectVisible_string((string)d.DataValue);
-                            break;
-                        case MmsTypeEnum.OCTET_STRING:
-                            dat.selectOctet_string((byte[])d.DataValue);
-                            break;
-                        case MmsTypeEnum.UTC_TIME:
-                            UtcTime val = new UtcTime((byte[])d.DataValue);
-                            dat.selectUtc_time(val);
-                            break;
-                        case MmsTypeEnum.BIT_STRING:
-                            dat.selectBit_string(new BitString((byte[])d.DataValue, (int)d.DataParam));
-                            break;
-                        case MmsTypeEnum.UNSIGNED:
-                            dat.selectUnsigned((long)d.DataValue);
-                            break;
-                        case MmsTypeEnum.INTEGER:
-                            dat.selectInteger((long)d.DataValue);
-                            break;
-                        case MmsTypeEnum.FLOATING_POINT:
-                            byte[] byteval;
-                            byte[] tmp;
-                            if (d.DataValue is float)
-                            {
-                                byteval = new byte[5];
-                                tmp = BitConverter.GetBytes((float)d.DataValue);
-                                byteval[4] = tmp[0];
-                                byteval[3] = tmp[1];
-                                byteval[2] = tmp[2];
-                                byteval[1] = tmp[3];
-                                byteval[0] = 0x08;
-                            }
-                            else
-                            {
-                                byteval = new byte[9];
-                                tmp = BitConverter.GetBytes((float)d.DataValue);
-                                byteval[8] = tmp[0];
-                                byteval[7] = tmp[1];
-                                byteval[6] = tmp[2];
-                                byteval[5] = tmp[3];
-                                byteval[4] = tmp[4];
-                                byteval[3] = tmp[5];
-                                byteval[2] = tmp[6];
-                                byteval[1] = tmp[7];
-                                byteval[0] = 0x08;      // ???????????? TEST
-                            }
-                            FloatingPoint fpval = new FloatingPoint(byteval);
-                            dat.selectFloating_point(fpval);
-                            break;
-                        default:
-                            iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
-                            return 1;
+                        VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
+                        Data dat = new Data();
+
+                        ObjectName on = new ObjectName();
+                        ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
+                        dst.DomainID = new Identifier(el.Address.Domain);
+                        dst.ItemID = new Identifier(el.Address.Variable + "$" + d.Name);
+                        on.selectDomain_specific(dst);
+
+                        vas.VariableSpecification = new VariableSpecification();
+                        vas.VariableSpecification.selectName(on);
+
+                        vasl.Add(vas);
+
+                        switch (d.DataType)
+                        {
+                            case MmsTypeEnum.BOOLEAN:
+                                dat.selectBoolean((bool)d.DataValue);
+                                break;
+                            case MmsTypeEnum.VISIBLE_STRING:
+                                dat.selectVisible_string((string)d.DataValue);
+                                break;
+                            case MmsTypeEnum.OCTET_STRING:
+                                dat.selectOctet_string((byte[])d.DataValue);
+                                break;
+                            case MmsTypeEnum.UTC_TIME:
+                                UtcTime val = new UtcTime((byte[])d.DataValue);
+                                dat.selectUtc_time(val);
+                                break;
+                            case MmsTypeEnum.BIT_STRING:
+                                dat.selectBit_string(new BitString((byte[])d.DataValue, (int)d.DataParam));
+                                break;
+                            case MmsTypeEnum.UNSIGNED:
+                                dat.selectUnsigned((long)d.DataValue);
+                                break;
+                            case MmsTypeEnum.INTEGER:
+                                dat.selectInteger((long)d.DataValue);
+                                break;
+                            case MmsTypeEnum.FLOATING_POINT:
+                                byte[] byteval;
+                                byte[] tmp;
+                                if (d.DataValue is float)
+                                {
+                                    byteval = new byte[5];
+                                    tmp = BitConverter.GetBytes((float)d.DataValue);
+                                    byteval[4] = tmp[0];
+                                    byteval[3] = tmp[1];
+                                    byteval[2] = tmp[2];
+                                    byteval[1] = tmp[3];
+                                    byteval[0] = 0x08;
+                                }
+                                else
+                                {
+                                    byteval = new byte[9];
+                                    tmp = BitConverter.GetBytes((float)d.DataValue);
+                                    byteval[8] = tmp[0];
+                                    byteval[7] = tmp[1];
+                                    byteval[6] = tmp[2];
+                                    byteval[5] = tmp[3];
+                                    byteval[4] = tmp[4];
+                                    byteval[3] = tmp[5];
+                                    byteval[2] = tmp[6];
+                                    byteval[1] = tmp[7];
+                                    byteval[0] = 0x08;      // ???????????? TEST
+                                }
+                                FloatingPoint fpval = new FloatingPoint(byteval);
+                                dat.selectFloating_point(fpval);
+                                break;
+                            default:
+                                iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
+                                return 1;
+                        }
+                        datl.Add(dat);
+
+                        iecs.logger.LogDebug("SendWrite: Writing: " + dst.ItemID.Value);
                     }
-                    datl.Add(dat);
-
-                    iecs.logger.LogDebug("SendWrite: Writing: " + dst.ItemID.Value);
+                    else
+                        iecs.logger.LogWarning("SendWrite: Null in data for write for: " + el.Address.Variable);
                 }
-                else
-                    iecs.logger.LogWarning("SendWrite: Null in data for write for: " + el.Address.Variable);
+                wreq.VariableAccessSpecification = new VariableAccessSpecification();
+                wreq.VariableAccessSpecification.selectListOfVariable(vasl);
+                wreq.ListOfData = datl;
+
+                csrreq.selectWrite(wreq);
+
+                if (responseEvent != null)
+                {
+                    waitingMmsPdu.Add(InvokeID, (responseEvent, param));
+                }
+
+                crreq.InvokeID = new Unsigned32(InvokeID++);
+
+                crreq.Service = csrreq;
+
+                mymmspdu.selectConfirmed_RequestPDU(crreq);
+
+                encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
+
+                if (iecs.msMMSout.Length == 0)
+                {
+                    iecs.logger.LogError("mms.SendWrite: Encoding Error!");
+                    return -1;
+                }
+
+                this.Send(iecs, mymmspdu, InvokeID, el.Data);
+
+
+
+                return 0;
             }
-            wreq.VariableAccessSpecification = new VariableAccessSpecification();
-            wreq.VariableAccessSpecification.selectListOfVariable(vasl);
-            wreq.ListOfData = datl;
-
-            csrreq.selectWrite(wreq);
-
-            if (responseEvent != null)
+            catch
             {
-                waitingMmsPdu.Add(InvokeID, (responseEvent, param));
-            }
+                if (responseEvent != null)
+                {
+                    (param as WriteResponse).TypeOfErrors = new List<DataAccessErrorEnum>
+                    {
+                        DataAccessErrorEnum.typeInconsistent
+                    };
+                    responseEvent.Set();
+                }
 
-            crreq.InvokeID = new Unsigned32(InvokeID++);
-
-            crreq.Service = csrreq;
-
-            mymmspdu.selectConfirmed_RequestPDU(crreq);
-
-            encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
-
-            if (iecs.msMMSout.Length == 0)
-            {
-                iecs.logger.LogError("mms.SendWrite: Encoding Error!");
                 return -1;
             }
-
-            this.Send(iecs, mymmspdu, InvokeID, el.Data);
-
-            
-
-            return 0;
         }
 
-        internal int SendWriteAsStructure(Iec61850State iecs, WriteQueueElement el)
+        internal int SendWriteAsStructure(Iec61850State iecs, WriteQueueElement el, AutoResetEvent responseEvent = null, object param = null)
         {
-            
-
-            MMSpdu mymmspdu = new MMSpdu();
-            iecs.msMMSout = new MemoryStream();
-
-            Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
-            ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
-            Write_Request wreq = new Write_Request();
-
-            List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
-            List<Data> datList_Seq = new List<Data>();
-            List<Data> datList_Struct = new List<Data>();
-
-            VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
-            Data dat_Seq = new Data();
-            ObjectName on = new ObjectName();
-            ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
-            dst.DomainID = new Identifier(el.Address.Domain);
-            dst.ItemID = new Identifier(el.Address.Variable);   // until Oper
-            on.selectDomain_specific(dst);
-            vas.VariableSpecification = new VariableSpecification();
-            vas.VariableSpecification.selectName(on);
-            vasl.Add(vas);
-
-            MakeStruct(iecs, el.Data, datList_Struct);
-            iecs.logger.LogDebug("SendWrite: Writing Command Structure: " + dst.ItemID.Value);
-
-            dat_Seq.selectStructure(datList_Struct);
-            datList_Seq.Add(dat_Seq);
-
-            wreq.VariableAccessSpecification = new VariableAccessSpecification();
-            wreq.VariableAccessSpecification.selectListOfVariable(vasl);
-            wreq.ListOfData = datList_Seq;
-
-            csrreq.selectWrite(wreq);
-
-            crreq.InvokeID = new Unsigned32(InvokeID++);
-
-            crreq.Service = csrreq;
-
-            mymmspdu.selectConfirmed_RequestPDU(crreq);
-
-            encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
-
-            if (iecs.msMMSout.Length == 0)
+            try
             {
-                iecs.logger.LogError("mms.SendWriteAsStructure: Encoding Error!");
+                MMSpdu mymmspdu = new MMSpdu();
+                iecs.msMMSout = new MemoryStream();
+
+                Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
+                ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
+                Write_Request wreq = new Write_Request();
+
+                List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
+                List<Data> datList_Seq = new List<Data>();
+                List<Data> datList_Struct = new List<Data>();
+
+                VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
+                Data dat_Seq = new Data();
+                ObjectName on = new ObjectName();
+                ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
+                dst.DomainID = new Identifier(el.Address.Domain);
+                dst.ItemID = new Identifier(el.Address.Variable);   // until Oper
+                on.selectDomain_specific(dst);
+                vas.VariableSpecification = new VariableSpecification();
+                vas.VariableSpecification.selectName(on);
+                vasl.Add(vas);
+
+                MakeStruct(iecs, el.Data, datList_Struct);
+                iecs.logger.LogDebug("SendWrite: Writing Command Structure: " + dst.ItemID.Value);
+
+                dat_Seq.selectStructure(datList_Struct);
+                datList_Seq.Add(dat_Seq);
+
+                wreq.VariableAccessSpecification = new VariableAccessSpecification();
+                wreq.VariableAccessSpecification.selectListOfVariable(vasl);
+                wreq.ListOfData = datList_Seq;
+
+                csrreq.selectWrite(wreq);
+
+                if (responseEvent != null)
+                {
+                    waitingMmsPdu.Add(InvokeID, (responseEvent, param));
+                }
+
+                crreq.InvokeID = new Unsigned32(InvokeID++);
+
+                crreq.Service = csrreq;
+
+                mymmspdu.selectConfirmed_RequestPDU(crreq);
+
+                encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
+
+                if (iecs.msMMSout.Length == 0)
+                {
+                    iecs.logger.LogError("mms.SendWriteAsStructure: Encoding Error!");
+                    return -1;
+                }
+
+                this.Send(iecs, mymmspdu, InvokeID, el.Data);
+
+
+
+                return 0;
+            }
+            catch
+            {
+                if (responseEvent != null)
+                {
+                    (param as WriteResponse).TypeOfErrors = new List<DataAccessErrorEnum>
+                    {
+                        DataAccessErrorEnum.typeInconsistent
+                    };
+                    responseEvent.Set();
+                }
+
                 return -1;
             }
-
-            this.Send(iecs, mymmspdu, InvokeID, el.Data);
-
-            
-
-            return 0;
         }
 
         private static void MakeStruct(Iec61850State iecs, NodeBase[] data, List<Data> datList_Struct)

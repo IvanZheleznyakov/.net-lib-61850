@@ -304,7 +304,7 @@ namespace lib61850net
                                     iecs.mms.SendWrite(iecs, el, el.ResponseEvent, el.Param);
                                     break;
                                 case ActionRequested.WriteAsStructure:
-                                    iecs.mms.SendWriteAsStructure(iecs, el);
+                                    iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseEvent, el.Param);
                                     break;
                                 case ActionRequested.Read:
                                     if (el.Data[0] is NodeVL)
