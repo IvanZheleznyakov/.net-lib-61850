@@ -25,6 +25,7 @@ namespace lib61850net
 
         internal Scsm_MMS_Worker worker;
         protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
+        internal List<ControlObject> listOfControlObjects = new List<ControlObject>();
 
         /// <summary>
         /// Очередь из поступивших отчётов.
@@ -657,7 +658,7 @@ namespace lib61850net
         /// </summary>
         /// <param name="ex">Последнее сработавшее исключение.</param>
         /// <param name="methodName">Имя метода, где сработало исключение.</param>
-        protected void UpdateLastExceptionInfo(Exception ex, string methodName)
+        internal void UpdateLastExceptionInfo(Exception ex, string methodName)
         {
             lastExceptionInfo.LastException = ex;
             lastExceptionInfo.LastMethodWithException = methodName;

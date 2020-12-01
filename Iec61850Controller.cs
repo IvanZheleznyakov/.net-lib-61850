@@ -121,7 +121,7 @@ namespace lib61850net
                     cPar.interlockCheck = false;
                     cPar.synchroCheck = false;
                     cPar.orCat = OriginatorCategoryEnum.STATION_CONTROL;
-                    cPar.orIdent = "mtra";
+                    cPar.orIdent = "";
                     cPar.CommandFlowFlag = ControlModelEnum.Unknown;
                     b = data;
                     List<string> path = new List<string>();
@@ -218,7 +218,7 @@ namespace lib61850net
                 SendCommandToIed(data, cPar, how);
         }
 
-        internal void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how)
+        internal void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how, AutoResetEvent responseEvent = null, object param = null)
         {
             if (data != null)
             {
@@ -333,7 +333,7 @@ namespace lib61850net
                         n.DataParam = ((NodeData)b).DataParam;
                         ndar.Add(n);
                     }
-                    iecs.Send(ndar.ToArray(), d.CommAddress, how);
+                    iecs.Send(ndar.ToArray(), d.CommAddress, how, responseEvent, param);
                 }
                 else
                     Logger.getLogger().LogError("Basic structure for a command not found at " + data.IecAddress + "!");

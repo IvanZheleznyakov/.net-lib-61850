@@ -83,7 +83,7 @@ namespace lib61850net
                     tcps.workSocket = null;
                     }
                 }
-                tcps.logger.LogInfo("SOCKET FINALLY RELEASED!!!");
+                tcps.logger.LogInfo("Socket closed and disposed.");
             } 
             catch (Exception e)
             {

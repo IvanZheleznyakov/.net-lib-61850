@@ -27,9 +27,6 @@ namespace lib61850net
         internal delegate void ConnectShutDowned();
         internal event ConnectShutDowned ConnectShutDownedEvent;
 
-        internal delegate void modelHasBeenCreatedEventHandler();
-        internal event modelHasBeenCreatedEventHandler ModelHasBeenCreated;
-
         AutoResetEvent stateOfStartConnection;
         AutoResetEvent connectionShutDownedForClient;
 

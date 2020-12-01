@@ -318,33 +318,18 @@ namespace lib61850net
             cancelnotpossible = 2
         }
 
-        enum ControlAddCause
-        {
-            ADD_CAUSE_UNKNOWN = 0, ADD_CAUSE_NOT_SUPPORTED = 1, ADD_CAUSE_BLOCKED_BY_SWITCHING_HIERARCHY = 2, ADD_CAUSE_SELECT_FAILED = 3,
-            ADD_CAUSE_INVALID_POSITION = 4, ADD_CAUSE_POSITION_REACHED = 5, ADD_CAUSE_PARAMETER_CHANGE_IN_EXECUTION = 6, ADD_CAUSE_STEP_LIMIT = 7,
-            ADD_CAUSE_BLOCKED_BY_MODE = 8, ADD_CAUSE_BLOCKED_BY_PROCESS = 9, ADD_CAUSE_BLOCKED_BY_INTERLOCKING = 10, ADD_CAUSE_BLOCKED_BY_SYNCHROCHECK = 11,
-            ADD_CAUSE_COMMAND_ALREADY_IN_EXECUTION = 12, ADD_CAUSE_BLOCKED_BY_HEALTH = 13, ADD_CAUSE_1_OF_N_CONTROL = 14, ADD_CAUSE_ABORTION_BY_CANCEL = 15,
-            ADD_CAUSE_TIME_LIMIT_OVER = 16, ADD_CAUSE_ABORTION_BY_TRIP = 17, ADD_CAUSE_OBJECT_NOT_SELECTED = 18, ADD_CAUSE_OBJECT_ALREADY_SELECTED = 19,
-            ADD_CAUSE_NO_ACCESS_AUTHORITY = 20, ADD_CAUSE_ENDED_WITH_OVERSHOOT = 21, ADD_CAUSE_ABORTION_DUE_TO_DEVIATION = 22, ADD_CAUSE_ABORTION_BY_COMMUNICATION_LOSS = 23,
-            ADD_CAUSE_ABORTION_BY_COMMAND = 24, ADD_CAUSE_NONE = 25, ADD_CAUSE_INCONSISTENT_PARAMETERS = 26, ADD_CAUSE_LOCKED_BY_OTHER_CLIENT = 27
-        }
-
-        enum ControlError
-        {
-            NoError = 0,
-            Unknown = 1,
-            TimeoutTestNotOk = 2,
-            OperatortestNotOk = 3
-        }
-
         static Env _env = Env.getEnv();
 
         private int saveInvokeIdUntilFileIsRead = -1;
 
         private Dictionary<int, (AutoResetEvent, object)> waitingMmsPdu;
 
+        internal List<ControlObject> listOfControlObjects = new List<ControlObject>();
+
         internal AutoResetEvent newReportReceivedEvent;
         internal ConcurrentQueue<Report> queueOfReports = new ConcurrentQueue<Report>();
+
+        internal AutoResetEvent newCommandTerminationEvent;
 
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
@@ -1123,11 +1108,13 @@ namespace lib61850net
                     {
                         int phs = 0;
                         string cntrlObj = "";
-                        ControlError error = ControlError.NoError;
+                        ControlErrorEnum error = ControlErrorEnum.NoError;
                         OriginatorCategoryEnum originOrCat = OriginatorCategoryEnum.NOT_SUPPORTED;
                         string originOrStr = "";
                         long ctlNum = 0;
-                        ControlAddCause addCause = ControlAddCause.ADD_CAUSE_UNKNOWN;
+                        ControlAddCauseEnum addCause = ControlAddCauseEnum.ADD_CAUSE_UNKNOWN;
+                        ControlObject controlObject = null;
+                        CommandTerminationReport comTermReport = new CommandTerminationReport();
 
                         foreach (AccessResult ara in Report.ListOfAccessResult)
                         {
@@ -1139,11 +1126,17 @@ namespace lib61850net
                                     {
                                         case 0:
                                             if (data.isVisible_stringSelected())
+                                            {
                                                 cntrlObj = data.Visible_string;
+                                                controlObject = listOfControlObjects.Find(x => x.mmsReference == cntrlObj);
+                                            }
                                             break;
                                         case 1:
                                             if (data.isIntegerSelected())
-                                                error = (ControlError)data.Integer;
+                                            {
+                                                error = (ControlErrorEnum)data.Integer;
+                                                comTermReport.ControlError = error;
+                                            }
                                             break;
                                         case 2:
                                             if (data.isStructureSelected())
@@ -1173,18 +1166,23 @@ namespace lib61850net
                                             break;
                                         case 4:
                                             if (data.isIntegerSelected())
-                                                addCause = (ControlAddCause)data.Integer;
+                                            {
+                                                addCause = (ControlAddCauseEnum)data.Integer;
+                                                comTermReport.ControlAddCause = addCause;
+                                            }
                                             break;
                                     } // switch
                                 }
                             } // if
                         } // foreach
+                        controlObject?.QueueOfComTerminationReports.Enqueue(comTermReport);
+                        newCommandTerminationEvent?.Set();
                         Logger.getLogger().LogWarning("Have got LastApplError:" +
                             ", Control Object: " + cntrlObj +
-                            ", Error: " + ((int)error).ToString() + " (" + Enum.GetName(typeof(ControlError), error) + ")" +
+                            ", Error: " + ((int)error).ToString() + " (" + Enum.GetName(typeof(ControlErrorEnum), error) + ")" +
                             ", Originator: " + ((int)originOrCat).ToString() + " (" + Enum.GetName(typeof(OriginatorCategoryEnum), originOrCat) + "), Id = " + originOrStr +
                             ", CtlNum: " + ctlNum.ToString() +
-                            ", addCause: " + ((int)addCause).ToString() + " (" + Enum.GetName(typeof(ControlAddCause), addCause) + ")"
+                            ", addCause: " + ((int)addCause).ToString() + " (" + Enum.GetName(typeof(ControlAddCauseEnum), addCause) + ")"
                              );
                     }
                     else
@@ -1395,15 +1393,20 @@ namespace lib61850net
                                             };
                                         }
                                       //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
-                                        if (!isRcbRequested)
-                                        {
-                                            (responseEventWithArg.Item2 as MmsValue).CopyFrom(mmsValue);
-                                        }
-                                        else
+                                        if (isRcbRequested)
                                         {
                                             (responseEventWithArg.Item2 as ReportControlBlock).self = rcb.self;
                                             (responseEventWithArg.Item2 as ReportControlBlock).TypeOfError = rcb.TypeOfError;
                                             (responseEventWithArg.Item2 as ReportControlBlock).ResetFlags();
+                                        }
+                                        else if (responseEventWithArg.Item2 is MmsValue)
+                                        {
+                                            (responseEventWithArg.Item2 as MmsValue).CopyFrom(mmsValue);
+                                        }
+                                        else if (responseEventWithArg.Item2 is SelectResponse)
+                                        {
+                                            (responseEventWithArg.Item2 as SelectResponse).IsSelected = true;
+                                            (responseEventWithArg.Item2 as SelectResponse).TypeOfError = DataAccessErrorEnum.none;
                                         }
                                         Console.WriteLine("before set, isrcb?: {0}", isRcbRequested);
                                         responseEventWithArg.Item1?.Set();
@@ -1422,9 +1425,13 @@ namespace lib61850net
                                 {
                                     (responseEventWithArg.Item2 as ReportControlBlock).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
                                 }
-                                else
+                                else if (responseEventWithArg.Item2 is MmsValue)
                                 {
                                     (responseEventWithArg.Item2 as MmsValue).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
+                                }
+                                else if (responseEventWithArg.Item2 is SelectResponse)
+                                {
+                                    (responseEventWithArg.Item2 as SelectResponse).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
                                 }
                                 responseEventWithArg.Item1?.Set();
                            //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
