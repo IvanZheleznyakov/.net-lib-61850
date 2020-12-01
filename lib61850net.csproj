@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>lib61850net</AssemblyName>
-    <RootNamespace>lib61850net</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Ivan Zheleznyakov</Authors>
+    <Company>Meknanotronika RA</Company>
   </PropertyGroup>
-  </Project>
+
+</Project>

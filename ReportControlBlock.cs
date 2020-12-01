@@ -29,21 +29,21 @@ namespace lib61850net
 
         public DataAccessErrorEnum TypeOfError { get; internal set; }
 
-        public bool IsBuffered { get { return self.isBuffered; } internal set { IsBuffered = value; } }
-        public string Name { get { return self.IecAddress; } internal set { Name = value; } }
+        public bool IsBuffered { get { return self.isBuffered; } }
+        public string Name { get { return self.IecAddress; } }
 
-        public bool IsRptIDPresent { get { return self.RptID_present; } internal set { IsRptIDPresent = value; } }
-        public bool IsRptEnaPresent { get { return self.RptEna_present; } internal set { IsRptEnaPresent = value; } }
-        public bool IsResvPresent { get { return self.Resv_present; } internal set { IsResvPresent = value; } }
-        public bool IsDatSetPresent { get { return self.DatSet_present; } internal set { IsDatSetPresent = value; } }
-        public bool IsOptFldsPresent { get { return self.OptFlds_present; } internal set { IsOptFldsPresent = value; } }
-        public bool IsBufTmPresent { get { return self.BufTm_present; } internal set { IsBufTmPresent = value; } }
-        public bool IsTrgOpsPresent { get { return self.TrgOps_present; } internal set { IsTrgOpsPresent = value; } }
-        public bool IsIntgPdPresent { get { return self.IntgPd_present; } internal set { IsIntgPdPresent = value; } }
-        public bool IsGIPresent { get { return self.GI_present; } internal set { IsGIPresent = value; } }
-        public bool IsPurgeBufPresent { get { return self.PurgeBuf_present; } internal set { IsPurgeBufPresent = value; } }
-        public bool IsResvTmsPresent { get { return self.ResvTms_present; } internal set { IsResvTmsPresent = value; } }
-        public bool IsEntryIDPresent { get { return self.EntryID_present; } internal set { IsEntryIDPresent = value; } }
+        public bool IsRptIDPresent { get { return self.RptID_present; } }
+        public bool IsRptEnaPresent { get { return self.RptEna_present; } }
+        public bool IsResvPresent { get { return self.Resv_present; } }
+        public bool IsDatSetPresent { get { return self.DatSet_present; } }
+        public bool IsOptFldsPresent { get { return self.OptFlds_present; } }
+        public bool IsBufTmPresent { get { return self.BufTm_present; } }
+        public bool IsTrgOpsPresent { get { return self.TrgOps_present; } }
+        public bool IsIntgPdPresent { get { return self.IntgPd_present; } }
+        public bool IsGIPresent { get { return self.GI_present; } }
+        public bool IsPurgeBufPresent { get { return self.PurgeBuf_present; } }
+        public bool IsResvTmsPresent { get { return self.ResvTms_present; } }
+        public bool IsEntryIDPresent { get { return self.EntryID_present; } }
 
         public string RptId
         {
