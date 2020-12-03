@@ -24,9 +24,6 @@ namespace lib61850net
 
         internal bool IsFileReadingNow { get; set; } = false;
 
-        internal delegate void ConnectShutDowned();
-        internal event ConnectShutDowned ConnectShutDownedEvent;
-
         AutoResetEvent stateOfStartConnection;
         AutoResetEvent connectionShutDownedForClient;
 
@@ -136,7 +133,6 @@ namespace lib61850net
                         break;
                     case TcpProtocolState.TCP_STATE_SHUTDOWN:
                         iecs.logger.LogInfo("[TCP_STATE_SHUTDOWN]");
-                        ConnectShutDownedEvent?.Invoke();
                         connectionShutDownedForClient?.Set();
                         Stop();
                         Thread.Sleep(5000);

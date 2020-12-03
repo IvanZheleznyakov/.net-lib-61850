@@ -81,9 +81,9 @@ namespace lib61850net
                     tcps.workSocket.Close();
                     tcps.workSocket.Dispose();
                     tcps.workSocket = null;
+                    tcps.logger.LogInfo("Socket closed and disposed.");
                     }
                 }
-                tcps.logger.LogInfo("Socket closed and disposed.");
             } 
             catch (Exception e)
             {

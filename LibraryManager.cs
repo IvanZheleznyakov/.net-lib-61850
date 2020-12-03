@@ -54,7 +54,7 @@ namespace lib61850net
         /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
         /// <param name="waitingTime">Время ожидания установки соединения и построения программной модели (в миллисекундах).</param>
         /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
-        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, int waitingTime = 7000)
+        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, int waitingTime = 8000)
         {
             try
             {
