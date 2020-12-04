@@ -138,6 +138,8 @@ namespace lib61850net
             }
         }
 
+        private SelectResponse lastSelectResponse;
+
         /// <summary>
         /// Синхронная отправка операции захвата Select.
         /// </summary>
@@ -147,19 +149,9 @@ namespace lib61850net
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                SelectResponse response = new SelectResponse();
-                if (!SelectAsync(responseEvent, response))
-                {
-                    return null;
-                }
-
-                if (!responseEvent.WaitOne(waitingTime))
-                {
-                    return null;
-                }
-
-                return response;
+                Task responseTask = SelectAsync(SelectPrivateHandler);
+                responseTask.Wait();
+                return lastSelectResponse;
             }
             catch (Exception ex)
             {
@@ -168,25 +160,34 @@ namespace lib61850net
             }
         }
 
+        private void SelectPrivateHandler(SelectResponse response)
+        {
+            lastSelectResponse = response;
+        }
+
         /// <summary>
         /// Асинхронная отправка операции Select.
         /// </summary>
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа на операцию.</param>
         /// <param name="selectResponse">Экземпляр SelectResponse, куда будет записан ответ.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла отправка операции на устройство.</returns>
-        public bool SelectAsync(AutoResetEvent responseEvent, SelectResponse selectResponse)
+        public Task SelectAsync(LibraryManager.selectResponseReceivedHandler responseHandler)
         {
             try
             {
-                libraryManager.worker.iecs.Controller.ReadData(self.FindChildNode("SBO"), responseEvent, selectResponse);
-                return true;
+                SelectResponse response = new SelectResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+                libraryManager.worker.iecs.Controller.ReadData(self.FindChildNode("SBO"), responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 libraryManager.UpdateLastExceptionInfo(new Exception("Ошибка отправки SELECT в " + ObjectReference + ": " + ex.Message), MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
+
+        WriteResponse lastWriteResponse;
 
         /// <summary>
         /// Синхронная отправка операции SelectWithValue.
@@ -198,19 +199,9 @@ namespace lib61850net
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                WriteResponse response = new WriteResponse();
-                if (!SelectWithValueAsync(ctlVal, responseEvent, response))
-                {
-                    return null;
-                }
-
-                if (!responseEvent.WaitOne(waitingTime))
-                {
-                    return null;
-                }
-
-                return response;
+                Task responseTask = SelectWithValueAsync(ctlVal, WritePrivateHandler);
+                responseTask.Wait();
+                return lastWriteResponse;
             }
             catch (Exception ex)
             {
@@ -220,6 +211,11 @@ namespace lib61850net
             }
         }
 
+        private void WritePrivateHandler(WriteResponse response)
+        {
+            lastWriteResponse = response;
+        }
+
         /// <summary>
         /// Асинхронная отправка операции SelectWithValue.
         /// </summary>
@@ -227,20 +223,22 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состоянии при получении ответа.</param>
         /// <param name="response">Экземпляр WhiteResponse, куда будет записан ответ.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла отправка операции.</returns>
-        public bool SelectWithValueAsync(object ctlVal, AutoResetEvent responseEvent, WriteResponse response)
+        public Task SelectWithValueAsync(object ctlVal, LibraryManager.writeResponseReceivedHandler responseHandler)
         {
             try
             {
+                WriteResponse response = new WriteResponse();
+                Task responseTask = new Task(() => responseHandler(response));
                 var sendNode = (self.FindChildNode("SBOw").FindChildNode("ctlVal") as NodeData);
                 commandParams.ctlVal = ctlVal;
-                libraryManager.worker.iecs.Controller.SendCommandToIed(sendNode, commandParams, ActionRequested.WriteAsStructure, responseEvent, response);
-                return true;
+                libraryManager.worker.iecs.Controller.SendCommandToIed(sendNode, commandParams, ActionRequested.WriteAsStructure, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 libraryManager.UpdateLastExceptionInfo(new Exception("Ошибка отправки SELECTWITHVAL в " + ObjectReference + ": " + ex.Message), 
                     MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
 
@@ -254,19 +252,9 @@ namespace lib61850net
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                WriteResponse response = new WriteResponse();
-                if (!OperateAsync(ctlVal, responseEvent, response))
-                {
-                    return null;
-                }
-
-                if (!responseEvent.WaitOne(waitingTime))
-                {
-                    return null;
-                }
-
-                return response;
+                Task responseTask = OperateAsync(ctlVal, WritePrivateHandler);
+                responseTask.Wait();
+                return lastWriteResponse;
             }
             catch (Exception ex)
             {
@@ -283,20 +271,22 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа.</param>
         /// <param name="response">Экземпляр WhiteResponse, куда будет записан ответ.</param>
         /// <returns>Булева переменная, указывающая, успешно ли произошла отправка команды.</returns>
-        public bool OperateAsync(object ctlVal, AutoResetEvent responseEvent, WriteResponse response)
+        public Task OperateAsync(object ctlVal, LibraryManager.writeResponseReceivedHandler responseHandler)
         {
             try
             {
+                WriteResponse response = new WriteResponse();
+                Task responseTask = new Task(() => responseHandler(response));
                 var sendNode = (self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData);
                 commandParams.ctlVal = ctlVal;
-                libraryManager.worker.iecs.Controller.SendCommandToIed(sendNode, commandParams, ActionRequested.WriteAsStructure, responseEvent, response);
-                return true;
+                libraryManager.worker.iecs.Controller.SendCommandToIed(sendNode, commandParams, ActionRequested.WriteAsStructure, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 libraryManager.UpdateLastExceptionInfo(new Exception("Ошибка отправки OPERATE в " + ObjectReference + ": " + ex.Message),
                     MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
     }

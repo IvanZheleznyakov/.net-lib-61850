@@ -8,6 +8,7 @@ using org.bn;
 using MMS_ASN1_Model;
 using System.Threading;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace lib61850net
 {
@@ -27,6 +28,13 @@ namespace lib61850net
         AutoResetEvent stateOfStartConnection;
         AutoResetEvent connectionShutDownedForClient;
 
+        public delegate void connectionClosedEventHandler();
+        internal connectionClosedEventHandler connectionClosedUserEventHandler;
+        public event connectionClosedEventHandler ConnectionClosed;
+
+        internal Task connectionCreatedTask;
+        internal Task connectionClosedTask;
+
         internal bool modelCreated = false;
 
         internal Scsm_MMS_Worker()
@@ -41,12 +49,13 @@ namespace lib61850net
             IsFileReadingNow = isReading;
         }
 
-        internal bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, AutoResetEvent stateOfConnection = null)
+        internal bool Start(string hostName, int port, Task connectClosedTask, 
+            Task connectStartedTask = null)
         {
             isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
-            stateOfStartConnection = stateOfConnection;
-            connectionShutDownedForClient = connectionShutDowned;
+            connectionCreatedTask = connectStartedTask;
+            connectionClosedTask = connectClosedTask;
             return Start();
         }
 
@@ -133,8 +142,8 @@ namespace lib61850net
                         break;
                     case TcpProtocolState.TCP_STATE_SHUTDOWN:
                         iecs.logger.LogInfo("[TCP_STATE_SHUTDOWN]");
-                        connectionShutDownedForClient?.Set();
                         Stop();
+                        connectionClosedTask?.Start();
                         Thread.Sleep(5000);
                         //      iecs.tstate = TcpProtocolState.TCP_STATE_START;
                         iecs.tstate = TcpProtocolState.TCP_CONNECT_WAIT;
@@ -235,7 +244,7 @@ namespace lib61850net
                                         iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
                                         // ModelHasBeenCreated?.Invoke();
                                         modelCreated = true;
-                                        stateOfStartConnection?.Set();
+                                        connectionCreatedTask?.Start();
                                         iecs.istate = Iec61850lStateEnum.IEC61850_FREILAUF;
                                         break;
                                     case Iec61850lStateEnum.IEC61850_FREILAUF:
@@ -297,10 +306,10 @@ namespace lib61850net
                             switch (el.Action)
                             {
                                 case ActionRequested.Write:
-                                    iecs.mms.SendWrite(iecs, el, el.ResponseEvent, el.Param);
+                                    iecs.mms.SendWrite(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
                                     break;
                                 case ActionRequested.WriteAsStructure:
-                                    iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseEvent, el.Param);
+                                    iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
                                     break;
                                 case ActionRequested.Read:
                                     if (el.Data[0] is NodeVL)
@@ -309,7 +318,7 @@ namespace lib61850net
                                     }
                                     else
                                     {
-                                        iecs.mms.SendRead(iecs, el, el.ResponseEvent, el.Param);
+                                        iecs.mms.SendRead(iecs, el, el.ResponseTask, el.Response);
                                     }
                                     break;
                                 case ActionRequested.DefineNVL:
@@ -319,10 +328,10 @@ namespace lib61850net
                                     iecs.mms.SendDeleteNVL(iecs, el);
                                     break;
                                 case ActionRequested.GetDirectory:
-                                    iecs.mms.SendFileDirectory(iecs, el, el.ResponseEvent, el.Param);
+                                    iecs.mms.SendFileDirectory(iecs, el, el.ResponseTask, (FileDirectoryResponse)el.Response);
                                     break;
                                 case ActionRequested.OpenFile:
-                                    iecs.mms.SendFileOpen(iecs, el, el.ResponseEvent, el.Param);
+                                    iecs.mms.SendFileOpen(iecs, el, el.ResponseTask, (FileResponse)el.Response);
                                     break;
                                 case ActionRequested.ReadFile:
                                     iecs.mms.SendFileRead(iecs, el);

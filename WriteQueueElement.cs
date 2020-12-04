@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace lib61850net
 {
     internal class WriteQueueElement
     {
-        internal WriteQueueElement(NodeBase[] Data, CommAddress Address, ActionRequested Action, AutoResetEvent responseEvent = null, object param = null)
+        internal WriteQueueElement(NodeBase[] Data, CommAddress Address, ActionRequested Action, Task responseTask = null, IResponse response = null)
         {
             this.Data = Data;
             this.Address = Address;
             this.Action = Action;
-            this.ResponseEvent = responseEvent;
-            this.Param = param;
+            this.ResponseTask = responseTask;            
+            this.Response = response;
         }
 
         internal NodeBase[] Data { get; private set; }
         internal CommAddress Address { get; private set; }
         internal ActionRequested Action { get; private set; }
-        internal AutoResetEvent ResponseEvent { get; private set; }
-        internal object Param { get; private set; }
+        internal Task ResponseTask { get; private set; }
+        internal IResponse Response { get; private set; }
     }
 }

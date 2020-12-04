@@ -27,6 +27,21 @@ namespace lib61850net
         protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
         internal List<ControlObject> listOfControlObjects = new List<ControlObject>();
 
+        public delegate void connectionClosedEventHandler();
+        public event connectionClosedEventHandler ConnectionClosed;
+        public delegate void connectionStartedHandler();
+
+        public delegate void newReportReceivedEventHandler(Report report);
+        public event newReportReceivedEventHandler NewReportReceived;
+
+        public delegate void responseReceivedHandler(IResponse response);
+        public delegate void writeResponseReceivedHandler(WriteResponse response);
+        public delegate void readResponseReceivedHandler(ReadResponse response);
+        public delegate void rcbResponseReceivedHandler(RCBResponse response);
+        public delegate void selectResponseReceivedHandler(SelectResponse response);
+        public delegate void fileDirectoryResponseReceivedHandler(FileDirectoryResponse response);
+        public delegate void fileResponseReceivedHandler(FileResponse response);
+
         /// <summary>
         /// Очередь из поступивших отчётов.
         /// </summary>
@@ -44,6 +59,7 @@ namespace lib61850net
         public LibraryManager()
         {
             worker = new Scsm_MMS_Worker();
+            worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
         }
 
         /// <summary>
@@ -54,23 +70,24 @@ namespace lib61850net
         /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
         /// <param name="waitingTime">Время ожидания установки соединения и построения программной модели (в миллисекундах).</param>
         /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
-        public bool Start(string hostName, int port, AutoResetEvent connectionShutDowned, int waitingTime = 8000)
+        public bool Start(string hostName, int port, connectionClosedEventHandler closedHandler, int waitingTime = 8000)
         {
             try
             {
-                AutoResetEvent connectionStarted = new AutoResetEvent(false);
-                if (!StartAsync(hostName, port, connectionShutDowned, connectionStarted))
-                {
-                    return false;
-                }
-                bool isReceive = connectionStarted.WaitOne(waitingTime);
-                return isReceive;
+                Task connectedTask = StartAsync(hostName, port, closedHandler, ConnectionStartedPrivateHandler);
+                connectedTask.Wait();
+                return true;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return false;
             }
+        }
+
+        private void ConnectionStartedPrivateHandler()
+        {
+
         }
 
         /// <summary>
@@ -81,16 +98,25 @@ namespace lib61850net
         /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
         /// <param name="connectionStarted">Пользовательское событие, которое перейдет в сигнальное состояние при успешной установке соединения.</param>
         /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
-        public bool StartAsync(string hostName, int port, AutoResetEvent connectionShutDowned, AutoResetEvent connectionStarted)
+        public Task StartAsync(string hostName, int port, connectionClosedEventHandler closedHandler, connectionStartedHandler startedHandler)
         {
             try
             {
-                return worker.Start(hostName, port, connectionShutDowned, connectionStarted);
+                Task connectedTask = new Task(() => startedHandler());
+                Task closedTask = new Task(() => closedHandler());
+                if (worker.Start(hostName, port, closedTask, connectedTask))
+                {
+                    return connectedTask;
+                }
+                else
+                {
+                    return null;
+                }    
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
 
@@ -111,15 +137,6 @@ namespace lib61850net
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Установка события для получения отчётов.
-        /// </summary>
-        /// <param name="reportReceivedEvent">Пользовательское событие, которое перейдёт в сигнальное состояние, когда придёт новый отчёт.</param>
-        public void SetNewReportReceivedEvent(AutoResetEvent reportReceivedEvent)
-        {
-            worker.iecs.mms.newReportReceivedEvent = reportReceivedEvent;
         }
 
         /// <summary>
@@ -278,6 +295,10 @@ namespace lib61850net
             }
         }
 
+
+        private OldResponse lastResponse;
+        private WriteResponse lastWriteRespone;
+
         /// <summary>
         /// Синхронная запись данных в узел дерева объектов.
         /// </summary>
@@ -290,24 +311,20 @@ namespace lib61850net
         {
             try
             {
-                Console.WriteLine("writedata start");
-                WriteResponse resultResponse = new WriteResponse();
-                AutoResetEvent responseReceived = new AutoResetEvent(false);
-                if (!WriteDataAsync(name, FC, value, responseReceived, resultResponse))
-                {
-                    return null;
-                }
-                responseReceived.WaitOne(waitingTime);
-
-                Console.WriteLine("writedata got responseevent");
-
-                return resultResponse;
+                Task responseTask = WriteDataAsync(name, FC, value, WriteDataPrivateHandler);
+                responseTask.Wait();
+                return lastWriteRespone;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
+        }
+
+        private void WriteDataPrivateHandler(WriteResponse response)
+        {
+            lastWriteRespone = response;
         }
 
         /// <summary>
@@ -319,23 +336,31 @@ namespace lib61850net
         /// <param name="responseReceived">Пользовательское событие, которое перейдёт в сигнальное состояние при успешной отправке запроса на запись.</param>
         /// <param name="response">Экземпляр WriteResponse, в который будет записан ответ на запрос записи.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись данных за указанное время.</returns>
-        public bool WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, AutoResetEvent responseReceived, WriteResponse response)
+        public Task WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, writeResponseReceivedHandler responseHandler)
         {
             try
             {
+                //Action<Response, object> responseAction = (response, param) =>
+                //{
+                //    responseHandler(response.Item1, response.Item2);
+                //};
+                WriteResponse response = new WriteResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 (node as NodeData).DataValue = value;
-                worker.iecs.Controller.WriteData((node as NodeData), true, responseReceived, response);
+                worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
-
-            return true;
         }
+
+        private ReadResponse lastReadResponse;
 
         /// <summary>
         /// Синхронное чтение данных с устройства.
@@ -344,28 +369,24 @@ namespace lib61850net
         /// <param name="FC">Функциональная связь.</param>
         /// <param name="waitingTime">Время ожидания чтения данных.</param>
         /// <returns>Результат чтения данных.</returns>
-        public MmsValue ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
+        public ReadResponse ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
         {
             try
             {
-                Console.WriteLine("readdata start");
-                MmsValue resultMmsValue = new MmsValue();
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                if (!ReadDataAsync(name, FC, responseEvent, resultMmsValue))
-                {
-                    return null;
-                }
-                responseEvent.WaitOne(waitingTime);
-
-                Console.WriteLine("readdata got event");
-
-                return resultMmsValue;
+                Task responseTask = ReadDataAsync(name, FC, ReadDataPrivateHandler);
+                responseTask.Wait();
+                return lastReadResponse;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
+        }
+
+        private void ReadDataPrivateHandler(ReadResponse response)
+        {
+            lastReadResponse = response;
         }
 
         /// <summary>
@@ -376,23 +397,22 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа.</param>
         /// <param name="value">Экземпляр MmsValue, в который будет записан ответ на чтение.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос за чтение данных.</returns>
-        public bool ReadDataAsync(string name, FunctionalConstraintEnum FC, AutoResetEvent responseEvent, object value)
+        public Task ReadDataAsync(string name, FunctionalConstraintEnum FC, readResponseReceivedHandler responseHandler)
         {
             try
             {
-                Console.WriteLine("readdataasync start");
+                ReadResponse response = new ReadResponse();
+                Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                worker.iecs.Controller.ReadData(node, responseEvent, value);
-                Console.WriteLine("readdataasync end");
+                worker.iecs.Controller.ReadData(node, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -428,25 +448,21 @@ namespace lib61850net
             }
         }
 
+        private RCBResponse lastRCBResponse;
+
         /// <summary>
         /// Синхронное получение актуальных параметров отчёта.
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Обновленные параметры отчёта.</returns>
-        public ReportControlBlock UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
+        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                if (!UpdateReportControlBlockAsync(rcb, responseEvent))
-                {
-                    return null;
-                }
-
-                responseEvent.WaitOne(waitingTime);
-
-                return rcb;
+                Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
+                responseTask.Wait();
+                return lastRCBResponse;
             }
             catch (Exception ex)
             {
@@ -455,23 +471,32 @@ namespace lib61850net
             }
         }
 
+        private void UpdateRCBHandler(RCBResponse response)
+        {
+            lastRCBResponse = response;
+        }
+
         /// <summary>
         /// Асинхронное получение актуальных параметров отчёта.
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении новых параметров отчёта.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отпарвлен запрос.</returns>
-        public bool UpdateReportControlBlockAsync(ReportControlBlock rcb, AutoResetEvent responseEvent)
+        public Task UpdateReportControlBlockAsync(ReportControlBlock rcb, rcbResponseReceivedHandler responseHandler)
         {
             try
             {
-                ReadDataAsync(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP, responseEvent, rcb);
-                return true;
+                RCBResponse response = new RCBResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                worker.iecs.Controller.ReadData(node, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
 
@@ -485,16 +510,9 @@ namespace lib61850net
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                WriteResponse resultResponse = new WriteResponse();
-                if (!SetReportControlBlockAsync(rcbPar, responseEvent, resultResponse))
-                {
-                    return null;
-                }
-
-                responseEvent.WaitOne(waitingTime);
-
-                return resultResponse;
+                Task responseTask = SetReportControlBlockAsync(rcbPar, WriteDataPrivateHandler);
+                responseTask.Wait();
+                return lastWriteRespone;
             }
             catch (Exception ex)
             {
@@ -510,20 +528,23 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа на запись.</param>
         /// <param name="response">Ответ на запись параметров.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись параметров.</returns>
-        public bool SetReportControlBlockAsync(ReportControlBlock rcbPar, AutoResetEvent responseEvent, WriteResponse response)
+        public Task SetReportControlBlockAsync(ReportControlBlock rcbPar, writeResponseReceivedHandler responseHandler)
         {
             try
             {
-                worker.iecs.Controller.WriteRcb(rcbPar, true, responseEvent, response);
+                WriteResponse response = new WriteResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+                worker.iecs.Controller.WriteRcb(rcbPar, true, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
-
-            return true;
         }
+
+        private FileDirectoryResponse lastFileDirectoryResponse;
 
         /// <summary>
         /// Синхронное получение директории файлов.
@@ -535,22 +556,20 @@ namespace lib61850net
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                FileDirectoryResponse response = new FileDirectoryResponse();
-                if (!GetFileDirectoryAsync(name, responseEvent, response))
-                {
-                    return null;
-                }
-
-                responseEvent.WaitOne(waitingTime);
-
-                return response;
+                Task responseTask = GetFileDirectoryAsync(name, FileDirectoryPrivateHandler);
+                responseTask.Wait();
+                return lastFileDirectoryResponse;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
+        }
+
+        public void FileDirectoryPrivateHandler(FileDirectoryResponse response)
+        {
+            lastFileDirectoryResponse = response;
         }
 
         /// <summary>
@@ -560,7 +579,7 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении директории.</param>
         /// <param name="response">Экземпляр, в который будет записан ответ.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на получение директории.</returns>
-        public bool GetFileDirectoryAsync(string name, AutoResetEvent responseEvent, FileDirectoryResponse response)
+        public Task GetFileDirectoryAsync(string name, fileDirectoryResponseReceivedHandler responseHandler)
         {
             try
             {
@@ -574,16 +593,21 @@ namespace lib61850net
                     node = worker.iecs.DataModel.files.FindFileByName(name);
                 }
 
-                worker.iecs.Controller.GetFileList(node, responseEvent, response);
+                FileDirectoryResponse response = new FileDirectoryResponse();
+                Task responseTask = new Task(() => responseHandler(response));
 
-                return true;
+                worker.iecs.Controller.GetFileList(node, responseTask, response);
+
+                return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
         }
+
+        FileResponse lastFileResponse;
 
         /// <summary>
         /// Синхронное получение файла.
@@ -591,26 +615,24 @@ namespace lib61850net
         /// <param name="name">Полное имя файла.</param>
         /// <param name="waitingTime">Время ожидания получения файла.</param>
         /// <returns>Прочитанный файл с устройства.</returns>
-        public FileBuffer GetFile(string name, int waitingTime = 5000)
+        public FileResponse GetFile(string name, int waitingTime = 5000)
         {
             try
             {
-                AutoResetEvent responseEvent = new AutoResetEvent(false);
-                FileBuffer result = new FileBuffer();
-                if (!GetFileAsync(name, responseEvent, result))
-                {
-                    return null;
-                }
-
-                responseEvent.WaitOne(waitingTime);
-
-                return result;
+                Task responseTask = GetFileAsync(name, FilePrivateHandler);
+                responseTask.Wait();
+                return lastFileResponse;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
                 return null;
             }
+        }
+
+        private void FilePrivateHandler(FileResponse response)
+        {
+            lastFileResponse = response;
         }
 
         /// <summary>
@@ -620,28 +642,30 @@ namespace lib61850net
         /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении файла.</param>
         /// <param name="file">Экземпляр, куда будет записан файл.</param>
         /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на чтение файла.</returns>
-        public bool GetFileAsync(string name, AutoResetEvent responseEvent, FileBuffer file)
+        public Task GetFileAsync(string name, fileResponseReceivedHandler responseHandler)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
                 Console.WriteLine("file is reading now");
                 Exception exception = new Exception("В данный момент уже происходит чтение файла.");
                 UpdateLastExceptionInfo(exception, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
             try
             {
+                FileResponse response = new FileResponse();
+                Task responseTask = new Task(() => responseHandler(response));
                 worker.IsFileReadingNow = true;
                 var nodeFile = worker.iecs.DataModel.files.FindFileByName(name);
-                worker.iecs.Controller.GetFile((NodeFile)nodeFile, responseEvent, file);
+                worker.iecs.Controller.GetFile((NodeFile)nodeFile, responseTask, response);
+                return responseTask;
             }
             catch (Exception ex)
             {
                 worker.IsFileReadingNow = false;
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return false;
+                return null;
             }
-            return true;
         }
 
         /// <summary>
@@ -662,6 +686,11 @@ namespace lib61850net
         {
             lastExceptionInfo.LastException = ex;
             lastExceptionInfo.LastMethodWithException = methodName;
+        }
+
+        private void Mms_NewReportReceived(Report report)
+        {
+            NewReportReceived?.Invoke(report);
         }
     }
 }

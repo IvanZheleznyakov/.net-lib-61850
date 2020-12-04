@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using MMS_ASN1_Model;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace lib61850net
 {
@@ -102,9 +103,9 @@ namespace lib61850net
         {
         }
 
-        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, AutoResetEvent responseEvent = null, object param = null)
+        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, Task responseTask = null, IResponse response = null)
         {
-            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, responseEvent, param);
+            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, responseTask, response);
             SendQueue.Enqueue(el);
             sendQueueWritten.Set();
         }

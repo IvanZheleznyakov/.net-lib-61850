@@ -35,7 +35,7 @@ namespace lib61850net
             iecs.Send(ndarr, nvl.CommAddress, ActionRequested.DeleteNVL);
         }
 
-        internal void GetFileList(NodeBase nfi, AutoResetEvent responseEvent = null, FileDirectoryResponse response = null)
+        internal void GetFileList(NodeBase nfi, Task responseTask = null, FileDirectoryResponse response = null)
         {
             CommAddress ad = new CommAddress();
             ad.Variable = "/";  // for the case of reading root
@@ -53,10 +53,10 @@ namespace lib61850net
                     ad.Variable = nd.StringValue;
                 }
             } */
-            iecs.Send(ndarr, ad, ActionRequested.GetDirectory, responseEvent, response);
+            iecs.Send(ndarr, ad, ActionRequested.GetDirectory, responseTask, response);
         }
 
-        internal void GetFile(NodeFile nfi, AutoResetEvent responseEvent = null, FileBuffer file = null)
+        internal void GetFile(NodeFile nfi, Task responseTask = null, FileResponse file = null)
         {
             CommAddress ad = new CommAddress();
             NodeBase[] ndarr = new NodeBase[1];
@@ -78,7 +78,7 @@ namespace lib61850net
                 nfi.NameSet4Test(ad.Variable);
             }
             nfi.Reset();
-            iecs.Send(ndarr, ad, ActionRequested.OpenFile, responseEvent, file);
+            iecs.Send(ndarr, ad, ActionRequested.OpenFile, responseTask, file);
         }
 
         internal void FileDelete(NodeFile nfi)
@@ -218,7 +218,7 @@ namespace lib61850net
                 SendCommandToIed(data, cPar, how);
         }
 
-        internal void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how, AutoResetEvent responseEvent = null, object param = null)
+        internal void SendCommandToIed(NodeBase data, CommandParams cPar, ActionRequested how, Task responseTask = null, WriteResponse response = null)
         {
             if (data != null)
             {
@@ -333,7 +333,7 @@ namespace lib61850net
                         n.DataParam = ((NodeData)b).DataParam;
                         ndar.Add(n);
                     }
-                    iecs.Send(ndar.ToArray(), d.CommAddress, how, responseEvent, param);
+                    iecs.Send(ndar.ToArray(), d.CommAddress, how, responseTask, response);
                 }
                 else
                     Logger.getLogger().LogError("Basic structure for a command not found at " + data.IecAddress + "!");
@@ -352,13 +352,13 @@ namespace lib61850net
             return nd;
         }
 
-        internal void WriteData(NodeData data, bool reRead, AutoResetEvent responseReceived = null, WriteResponse response = null)
+        internal void WriteData(NodeData data, bool reRead, Task responseTask = null, IResponse response = null)
         {
             if (data != null && data.DataValue != null)
             {
                 NodeData[] ndarr = new NodeData[1];
                 ndarr[0] = data;
-                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, responseReceived, response);
+                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, responseTask, response);
 
                 if (reRead)
                 {
@@ -372,9 +372,9 @@ namespace lib61850net
                 Logger.getLogger().LogError("Iec61850Controller.WriteData: null data (-Value), cannot send");
         }
 
-        internal void WriteRcb(ReportControlBlock rpar, bool reRead, AutoResetEvent responseEvent = null, WriteResponse response = null)
+        internal void WriteRcb(ReportControlBlock rpar, bool reRead, Task responseTask = null, WriteResponse response = null)
         {
-            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write, responseEvent, response);
+            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write, responseTask, response);
             rpar.ResetFlags();
 
             if (reRead)
@@ -386,11 +386,11 @@ namespace lib61850net
             }
         }
 
-        internal void ReadData(NodeBase data, AutoResetEvent responseEvent = null, object param = null)
+        internal void ReadData(NodeBase data, Task responseTask = null, IResponse response = null)
         {
             NodeBase[] ndarr = new NodeBase[1];
             ndarr[0] = data;
-            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, responseEvent, param);
+            iecs.Send(ndarr, data.CommAddress, ActionRequested.Read, responseTask, response);
         }
 
         internal void ActivateNVL(NodeVL vl)

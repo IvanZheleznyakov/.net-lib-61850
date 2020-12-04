@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace lib61850net
 {
-    public class FileDirectoryResponse
+    public class FileDirectoryResponse: IResponse
     {
-        public FileDirectoryResponse()
+        internal FileDirectoryResponse()
         {
 
         }

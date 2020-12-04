@@ -10,6 +10,7 @@ namespace lib61850net
     {
         ERROR,
         WRITE_RESPONSE,
+        REPORT_CONTROL_BLOCK,
         MMS_VALUE,
         FILE_DIRECTORY,
         FILE
