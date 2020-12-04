@@ -8,7 +8,5 @@ namespace lib61850net
     {
         public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsValue MmsValue { get; internal set; }
-        public bool IsContainRCB { get; internal set; } = false;
-        public ReportControlBlock ReportControlBlock { get; internal set; }
     }
 }

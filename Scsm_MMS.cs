@@ -327,7 +327,7 @@ namespace lib61850net
 
         internal List<ControlObject> listOfControlObjects = new List<ControlObject>();
 
-        public event LibraryManager.newReportReceivedEventHandler NewReportReceived;
+        internal LibraryManager.newReportReceivedEventHandler reportReceivedEventHandler;
         internal ConcurrentQueue<Report> queueOfReports = new ConcurrentQueue<Report>();
 
         internal AutoResetEvent newCommandTerminationEvent;
@@ -1093,7 +1093,7 @@ namespace lib61850net
                             }
                         }
                     }
-                    Task newReportTask = Task.Run(() => NewReportReceived?.Invoke(report));
+                    Task newReportTask = new Task(() => reportReceivedEventHandler(report));
                     newReportTask.Start();
                 }
             }
@@ -1126,7 +1126,8 @@ namespace lib61850net
                                             if (data.isVisible_stringSelected())
                                             {
                                                 cntrlObj = data.Visible_string;
-                                                controlObject = listOfControlObjects.Find(x => x.mmsReference == cntrlObj);
+                                                controlObject = listOfControlObjects.Find(x => cntrlObj.Contains(x.mmsReference));
+                                                comTermReport.ObjectReference = cntrlObj;
                                             }
                                             break;
                                         case 1:
@@ -1173,8 +1174,11 @@ namespace lib61850net
                                 }
                             } // if
                         } // foreach
-                        controlObject?.QueueOfComTerminationReports.Enqueue(comTermReport);
-                        newCommandTerminationEvent?.Set();
+                        if (controlObject != null)
+                        {
+                            Task controlTask = new Task(() => controlObject.userEventHandler(comTermReport));
+                            controlTask.Start();
+                        }
                         Logger.getLogger().LogWarning("Have got LastApplError:" +
                             ", Control Object: " + cntrlObj +
                             ", Error: " + ((int)error).ToString() + " (" + Enum.GetName(typeof(ControlErrorEnum), error) + ")" +
@@ -1369,7 +1373,7 @@ namespace lib61850net
                                     };
                                     ReportControlBlock rcb = null;
                                     waitingMmsPdu.TryGetValue(receivedInvokeId, out (Task, IResponse) response);
-                                    bool isRcbRequested = response.Item2 is ReportControlBlock;
+                                    bool isRcbRequested = response.Item2 is RCBResponse;
                                     if (lastOperationData[i] is NodeDO)
                                     {
                                         if (isRcbRequested && ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR))
@@ -1393,13 +1397,16 @@ namespace lib61850net
                                       //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
                                         if (isRcbRequested)
                                         {
-                                            (response.Item2 as ReportControlBlock).self = rcb.self;
-                                            (response.Item2 as ReportControlBlock).TypeOfError = rcb.TypeOfError;
-                                            (response.Item2 as ReportControlBlock).ResetFlags();
+                                            (response.Item2 as RCBResponse).ReportControlBlock = new ReportControlBlock();
+                                            (response.Item2 as RCBResponse).ReportControlBlock.self = rcb.self;
+                                            (response.Item2 as RCBResponse).ReportControlBlock.TypeOfError = rcb.TypeOfError;
+                                            (response.Item2 as RCBResponse).TypeOfError = rcb.TypeOfError;
+                                            (response.Item2 as RCBResponse).ReportControlBlock.ResetFlags();
                                         }
-                                        else if (response.Item2 is MmsValue)
+                                        else if (response.Item2 is ReadResponse)
                                         {
-                                            (response.Item2 as MmsValue).CopyFrom(mmsValue);
+                                            (response.Item2 as ReadResponse).MmsValue.CopyFrom(mmsValue);
+                                            (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
                                         }
                                         else if (response.Item2 is SelectResponse)
                                         {
@@ -1417,9 +1424,9 @@ namespace lib61850net
                             if (waitingMmsPdu.ContainsKey(receivedInvokeId))
                             {
                                 waitingMmsPdu.TryGetValue(receivedInvokeId, out (Task, IResponse) response);
-                                if (response.Item2 is ReportControlBlock)
+                                if (response.Item2 is RCBResponse)
                                 {
-                                    (response.Item2 as ReportControlBlock).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
+                                    (response.Item2 as RCBResponse).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
                                 }
                                 else if (response.Item2 is ReadResponse)
                                 {

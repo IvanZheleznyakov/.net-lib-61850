@@ -89,25 +89,13 @@ namespace lib61850net
         /// </summary>
         public string ObjectReference { get; internal set; }
 
-        /// <summary>
-        /// Пользовательское событие, которое переходит в сигнальное состояние, когда приходит отчёт об управлении командой.
-        /// </summary>
-        public AutoResetEvent CommandTerminationEvent 
-        {
-            internal get
-            {
-                return libraryManager.worker.iecs.mms.newCommandTerminationEvent;
-            }
-            set
-            {
-                libraryManager.worker.iecs.mms.newCommandTerminationEvent = value;
-            }
-        }
+        public delegate void newCommandTerminationEventHandler(CommandTerminationReport report);
+        internal newCommandTerminationEventHandler userEventHandler;
 
-        /// <summary>
-        /// Очередь отчётов управления командой.
-        /// </summary>
-        public ConcurrentQueue<CommandTerminationReport> QueueOfComTerminationReports { get; internal set; }
+        public void SetCommandTerminationEventHandler(newCommandTerminationEventHandler eventHandler)
+        {
+            userEventHandler = eventHandler;
+        }
 
         /// <summary>
         /// Обязательный конструктор объекта управления.

@@ -24,15 +24,13 @@ namespace lib61850net
         }
 
         internal Scsm_MMS_Worker worker;
-        protected LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
+        internal LastExceptionInfo lastExceptionInfo = new LastExceptionInfo();
         internal List<ControlObject> listOfControlObjects = new List<ControlObject>();
 
         public delegate void connectionClosedEventHandler();
-        public event connectionClosedEventHandler ConnectionClosed;
         public delegate void connectionStartedHandler();
 
         public delegate void newReportReceivedEventHandler(Report report);
-        public event newReportReceivedEventHandler NewReportReceived;
 
         public delegate void responseReceivedHandler(IResponse response);
         public delegate void writeResponseReceivedHandler(WriteResponse response);
@@ -59,7 +57,6 @@ namespace lib61850net
         public LibraryManager()
         {
             worker = new Scsm_MMS_Worker();
-            worker.iecs.mms.NewReportReceived += Mms_NewReportReceived;
         }
 
         /// <summary>
@@ -137,6 +134,20 @@ namespace lib61850net
             }
 
             return true;
+        }
+
+        public bool SetReportReceivedHandler(newReportReceivedEventHandler eventHandler)
+        {
+            try
+            {
+                worker.iecs.mms.reportReceivedEventHandler = eventHandler;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
         }
 
         /// <summary>
@@ -296,7 +307,6 @@ namespace lib61850net
         }
 
 
-        private OldResponse lastResponse;
         private WriteResponse lastWriteRespone;
 
         /// <summary>
@@ -686,11 +696,6 @@ namespace lib61850net
         {
             lastExceptionInfo.LastException = ex;
             lastExceptionInfo.LastMethodWithException = methodName;
-        }
-
-        private void Mms_NewReportReceived(Report report)
-        {
-            NewReportReceived?.Invoke(report);
         }
     }
 }
