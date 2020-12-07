@@ -64,7 +64,7 @@ namespace lib61850net
         /// </summary>
         /// <param name="hostName">IP-адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
-        /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
+        /// <param name="closedHandler">Пользовательский обработчик закрытия соединения.</param>
         /// <param name="waitingTime">Время ожидания установки соединения и построения программной модели (в миллисекундах).</param>
         /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
         public bool Start(string hostName, int port, connectionClosedEventHandler closedHandler, int waitingTime = 8000)
@@ -72,7 +72,7 @@ namespace lib61850net
             try
             {
                 Task connectedTask = StartAsync(hostName, port, closedHandler, ConnectionStartedPrivateHandler);
-                connectedTask.Wait();
+                connectedTask.Wait(waitingTime);
                 return true;
             }
             catch (Exception ex)
@@ -92,9 +92,9 @@ namespace lib61850net
         /// </summary>
         /// <param name="hostName">IP-адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
-        /// <param name="connectionShutDowned">Пользовательское событие, которое перейдет в сигнальное состоянии при обрыве соединения.</param>
-        /// <param name="connectionStarted">Пользовательское событие, которое перейдет в сигнальное состояние при успешной установке соединения.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
+        /// <param name="closedHandler">Пользовательский обработчик закрытия соединения.</param>
+        /// <param name="startedHandler">Пользовательский обработчик успешной установки соединения.</param>
+        /// <returns>Задача, выполняющая обработчик успешной установки соединения.</returns>
         public Task StartAsync(string hostName, int port, connectionClosedEventHandler closedHandler, connectionStartedHandler startedHandler)
         {
             try
@@ -136,6 +136,11 @@ namespace lib61850net
             return true;
         }
 
+        /// <summary>
+        /// Установка обработчика для получения отчётов.
+        /// </summary>
+        /// <param name="eventHandler">Пользовательский обработчик получения отчётов.</param>
+        /// <returns>Булева переменная, указывающая, успешно ли произошла установка обработчика.</returns>
         public bool SetReportReceivedHandler(newReportReceivedEventHandler eventHandler)
         {
             try
@@ -322,7 +327,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = WriteDataAsync(name, FC, value, WriteDataPrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastWriteRespone;
             }
             catch (Exception ex)
@@ -343,9 +348,8 @@ namespace lib61850net
         /// <param name="name">Ссылка (полное имя) узла в дереве объектов устройства.</param>
         /// <param name="FC">Функциональная связь.</param>
         /// <param name="value">Записываемое значение.</param>
-        /// <param name="responseReceived">Пользовательское событие, которое перейдёт в сигнальное состояние при успешной отправке запроса на запись.</param>
-        /// <param name="response">Экземпляр WriteResponse, в который будет записан ответ на запрос записи.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись данных за указанное время.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на запись.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, writeResponseReceivedHandler responseHandler)
         {
             try
@@ -384,7 +388,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = ReadDataAsync(name, FC, ReadDataPrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastReadResponse;
             }
             catch (Exception ex)
@@ -404,9 +408,8 @@ namespace lib61850net
         /// </summary>
         /// <param name="name">Ссылка (полное имя) узла дерева объектов в устройстве.</param>
         /// <param name="FC">Функциональная связь.</param>
-        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа.</param>
-        /// <param name="value">Экземпляр MmsValue, в который будет записан ответ на чтение.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос за чтение данных.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на чтение.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task ReadDataAsync(string name, FunctionalConstraintEnum FC, readResponseReceivedHandler responseHandler)
         {
             try
@@ -465,13 +468,13 @@ namespace lib61850net
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
-        /// <returns>Обновленные параметры отчёта.</returns>
+        /// <returns>Ответ на обновление ReportControlBlock.</returns>
         public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
         {
             try
             {
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastRCBResponse;
             }
             catch (Exception ex)
@@ -490,8 +493,8 @@ namespace lib61850net
         /// Асинхронное получение актуальных параметров отчёта.
         /// </summary>
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
-        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении новых параметров отчёта.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отпарвлен запрос.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на обновление RCB.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task UpdateReportControlBlockAsync(ReportControlBlock rcb, rcbResponseReceivedHandler responseHandler)
         {
             try
@@ -521,7 +524,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = SetReportControlBlockAsync(rcbPar, WriteDataPrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastWriteRespone;
             }
             catch (Exception ex)
@@ -535,9 +538,8 @@ namespace lib61850net
         /// Асинхронная запись параметров отчёта.
         /// </summary>
         /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
-        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении ответа на запись.</param>
-        /// <param name="response">Ответ на запись параметров.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на запись параметров.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на запись параметров отчёта.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task SetReportControlBlockAsync(ReportControlBlock rcbPar, writeResponseReceivedHandler responseHandler)
         {
             try
@@ -567,7 +569,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = GetFileDirectoryAsync(name, FileDirectoryPrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastFileDirectoryResponse;
             }
             catch (Exception ex)
@@ -586,9 +588,8 @@ namespace lib61850net
         /// Асинхронное получение директории файлов.
         /// </summary>
         /// <param name="name">Полное имя директории.</param>
-        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении директории.</param>
-        /// <param name="response">Экземпляр, в который будет записан ответ.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на получение директории.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на запрос.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task GetFileDirectoryAsync(string name, fileDirectoryResponseReceivedHandler responseHandler)
         {
             try
@@ -630,7 +631,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = GetFileAsync(name, FilePrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(waitingTime);
                 return lastFileResponse;
             }
             catch (Exception ex)
@@ -649,9 +650,8 @@ namespace lib61850net
         /// Асинхронное получение файла.
         /// </summary>
         /// <param name="name">Полное имя файла.</param>
-        /// <param name="responseEvent">Пользовательское событие, которое перейдёт в сигнальное состояние при получении файла.</param>
-        /// <param name="file">Экземпляр, куда будет записан файл.</param>
-        /// <returns>Булева переменная, указывающая, успешно ли отправлен запрос на чтение файла.</returns>
+        /// <param name="responseHandler">Пользовательский обработчик получения ответа на запрос.</param>
+        /// <returns>Задача, выполняющая обработчик.</returns>
         public Task GetFileAsync(string name, fileResponseReceivedHandler responseHandler)
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
