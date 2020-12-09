@@ -74,7 +74,7 @@ namespace lib61850net
                     if (tcps.workSocket.Connected)
                     {
                         tcps.workSocket.Shutdown(SocketShutdown.Both);
-                        tcps.receiveDone.WaitOne(5000);
+                        tcps.receiveDone.WaitOne(1000);
                     }
                     if(tcps.workSocket != null) {
 

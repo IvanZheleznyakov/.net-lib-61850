@@ -72,8 +72,7 @@ namespace lib61850net
             try
             {
                 Task connectedTask = StartAsync(hostName, port, closedHandler, ConnectionStartedPrivateHandler);
-                connectedTask.Wait(waitingTime);
-                return true;
+                return connectedTask.Wait(waitingTime);
             }
             catch (Exception ex)
             {
@@ -231,21 +230,22 @@ namespace lib61850net
         /// </summary>
         /// <param name="variableReference">Ссылка (полное имя) переменной.</param>
         /// <param name="FC">Функциональная связь.</param>
-        /// <returns>Список экземпляров MmsVariableSpecification, которые описывают данные в переменной.</returns>
-        public List<MmsVariableSpecification> GetDataValues(string variableReference, FunctionalConstraintEnum FC)
+        /// <returns></returns>
+        public MmsVariableSpecification GetVariableSpecification(string variableReference, FunctionalConstraintEnum FC)
         {
             try
             {
                 var result = new List<MmsVariableSpecification>();
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(variableReference, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                var childs = node.GetChildNodes();
-                foreach (var ch in childs)
-                {
-                    result.Add(new MmsVariableSpecification((NodeData)ch));
-                }
+                return new MmsVariableSpecification((NodeData)node);
+        //        var childs = node.GetChildNodes();
+                //foreach (var ch in childs)
+                //{
+                //    result.Add(new MmsVariableSpecification((NodeData)ch));
+                //}
 
-                return result;
+                //return result;
             }
             catch (Exception ex)
             {
@@ -326,6 +326,7 @@ namespace lib61850net
         {
             try
             {
+                lastWriteRespone = null;
                 Task responseTask = WriteDataAsync(name, FC, value, WriteDataPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastWriteRespone;
@@ -387,6 +388,7 @@ namespace lib61850net
         {
             try
             {
+                lastReadResponse = null;
                 Task responseTask = ReadDataAsync(name, FC, ReadDataPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastReadResponse;
@@ -473,6 +475,7 @@ namespace lib61850net
         {
             try
             {
+                lastRCBResponse = null;
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
                 responseTask.Wait(waitingTime);
                 return lastRCBResponse;
@@ -523,6 +526,7 @@ namespace lib61850net
         {
             try
             {
+                lastWriteRespone = null;
                 Task responseTask = SetReportControlBlockAsync(rcbPar, WriteDataPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastWriteRespone;
@@ -568,6 +572,7 @@ namespace lib61850net
         {
             try
             {
+                lastFileDirectoryResponse = null;
                 Task responseTask = GetFileDirectoryAsync(name, FileDirectoryPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastFileDirectoryResponse;
@@ -630,6 +635,7 @@ namespace lib61850net
         {
             try
             {
+                lastFileResponse = null;
                 Task responseTask = GetFileAsync(name, FilePrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastFileResponse;

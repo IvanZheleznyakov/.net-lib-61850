@@ -6,4 +6,13 @@
     <Company>Meknanotronika RA</Company>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="DLL_Base">
+      <HintPath>..\NesgMake\Nesg_61850_Lib\bin\Debug\netstandard2.0\DLL_Base.dll</HintPath>
+    </Reference>
+    <Reference Include="DLL_Log">
+      <HintPath>..\NesgMake\Nesg_61850_Lib\bin\Debug\netstandard2.0\DLL_Log.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

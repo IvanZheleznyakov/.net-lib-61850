@@ -22,15 +22,11 @@ namespace lib61850net
         WaitHandle[] _waitHandles = new WaitHandle[5];
         internal Iec61850State iecs;
         Logger logger = Logger.getLogger();
+        //SourceMsg_t srcLogger = SourceMsgLogger.
 
         internal bool IsFileReadingNow { get; set; } = false;
 
-        AutoResetEvent stateOfStartConnection;
-        AutoResetEvent connectionShutDownedForClient;
 
-        public delegate void connectionClosedEventHandler();
-        internal connectionClosedEventHandler connectionClosedUserEventHandler;
-        public event connectionClosedEventHandler ConnectionClosed;
 
         internal Task connectionCreatedTask;
         internal Task connectionClosedTask;
@@ -49,8 +45,7 @@ namespace lib61850net
             IsFileReadingNow = isReading;
         }
 
-        internal bool Start(string hostName, int port, Task connectClosedTask, 
-            Task connectStartedTask = null)
+        internal bool Start(string hostName, int port, Task connectClosedTask, Task connectStartedTask = null)
         {
             isoParameters = new IsoConnectionParameters(hostName, port);
             restart_allowed = false;
@@ -109,6 +104,7 @@ namespace lib61850net
 
         private void WorkerThreadProc(object obj)
         {
+            logger.LogInfo("lib61850net: Start WorkerThreadProc");
             Scsm_MMS_Worker self = (Scsm_MMS_Worker)obj;
 
             iecs.hostname = self.isoParameters.hostname;
@@ -143,8 +139,7 @@ namespace lib61850net
                     case TcpProtocolState.TCP_STATE_SHUTDOWN:
                         iecs.logger.LogInfo("[TCP_STATE_SHUTDOWN]");
                         Stop();
-                        connectionClosedTask?.Start();
-                        Thread.Sleep(5000);
+                     //   Thread.Sleep(5000);
                         //      iecs.tstate = TcpProtocolState.TCP_STATE_START;
                         iecs.tstate = TcpProtocolState.TCP_CONNECT_WAIT;
                         break;
@@ -278,79 +273,80 @@ namespace lib61850net
                     default:
                         break;
                 }
-                int waitres = WaitHandle.WaitAny(_waitHandles, 500);
-                switch (waitres)
-                {
-                    case 0:     // connect
-                        if (iecs.ostate == IsoProtocolState.OSI_STATE_START)
-                            iecs.ostate = IsoProtocolState.OSI_CONNECT_COTP;
-                        iecs.connectDone.Reset();
-                        TcpRw.Receive(iecs);    // issue a Receive call
-                        break;
-                    case 1:     // receive
-                        iecs.receiveDone.Reset();
-                        TcpRw.Receive(iecs);    // issue a new Receive call
-                        break;
-                    case 2:     // send
-                        iecs.sendDone.Reset();
-                        break;
-                    case 3:     // endthread
-                        self._run = false;
-                        break;
-                    case 4:     // send data
-                        iecs.sendQueueWritten.Reset();
-                        Logger.getLogger().LogDebug("SendQueue Waiting for lock in Worker!");
-                        WriteQueueElement el;
-                        while (iecs.SendQueue.TryDequeue(out el))
-                        {
-                            switch (el.Action)
+                    int waitres = WaitHandle.WaitAny(_waitHandles, 500);
+                    switch (waitres)
+                    {
+                        case 0:     // connect
+                            if (iecs.ostate == IsoProtocolState.OSI_STATE_START)
+                                iecs.ostate = IsoProtocolState.OSI_CONNECT_COTP;
+                            iecs.connectDone.Reset();
+                            TcpRw.Receive(iecs);    // issue a Receive call
+                            break;
+                        case 1:     // receive
+                            iecs.receiveDone.Reset();
+                            TcpRw.Receive(iecs);    // issue a new Receive call
+                            break;
+                        case 2:     // send
+                            iecs.sendDone.Reset();
+                            break;
+                        case 3:     // endthread
+                            self._run = false;
+                            break;
+                        case 4:     // send data
+                            iecs.sendQueueWritten.Reset();
+                            Logger.getLogger().LogDebug("SendQueue Waiting for lock in Worker!");
+                            WriteQueueElement el;
+                            while (iecs.SendQueue.TryDequeue(out el))
                             {
-                                case ActionRequested.Write:
-                                    iecs.mms.SendWrite(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
-                                    break;
-                                case ActionRequested.WriteAsStructure:
-                                    iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
-                                    break;
-                                case ActionRequested.Read:
-                                    if (el.Data[0] is NodeVL)
-                                    {
-                                        iecs.mms.SendReadVL(iecs, el);
-                                    }
-                                    else
-                                    {
-                                        iecs.mms.SendRead(iecs, el, el.ResponseTask, el.Response);
-                                    }
-                                    break;
-                                case ActionRequested.DefineNVL:
-                                    iecs.mms.SendDefineNVL(iecs, el);
-                                    break;
-                                case ActionRequested.DeleteNVL:
-                                    iecs.mms.SendDeleteNVL(iecs, el);
-                                    break;
-                                case ActionRequested.GetDirectory:
-                                    iecs.mms.SendFileDirectory(iecs, el, el.ResponseTask, (FileDirectoryResponse)el.Response);
-                                    break;
-                                case ActionRequested.OpenFile:
-                                    iecs.mms.SendFileOpen(iecs, el, el.ResponseTask, (FileResponse)el.Response);
-                                    break;
-                                case ActionRequested.ReadFile:
-                                    iecs.mms.SendFileRead(iecs, el);
-                                    break;
-                                case ActionRequested.CloseFile:
-                                    iecs.mms.SendFileClose(iecs, el);
-                                    break;
-                                case ActionRequested.FileDelete:
-                                    iecs.mms.SendFileDelete(iecs, el);
-                                    break;
+                                switch (el.Action)
+                                {
+                                    case ActionRequested.Write:
+                                        iecs.mms.SendWrite(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
+                                        break;
+                                    case ActionRequested.WriteAsStructure:
+                                        iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
+                                        break;
+                                    case ActionRequested.Read:
+                                        if (el.Data[0] is NodeVL)
+                                        {
+                                            iecs.mms.SendReadVL(iecs, el);
+                                        }
+                                        else
+                                        {
+                                            iecs.mms.SendRead(iecs, el, el.ResponseTask, el.Response);
+                                        }
+                                        break;
+                                    case ActionRequested.DefineNVL:
+                                        iecs.mms.SendDefineNVL(iecs, el);
+                                        break;
+                                    case ActionRequested.DeleteNVL:
+                                        iecs.mms.SendDeleteNVL(iecs, el);
+                                        break;
+                                    case ActionRequested.GetDirectory:
+                                        iecs.mms.SendFileDirectory(iecs, el, el.ResponseTask, (FileDirectoryResponse)el.Response);
+                                        break;
+                                    case ActionRequested.OpenFile:
+                                        iecs.mms.SendFileOpen(iecs, el, el.ResponseTask, (FileResponse)el.Response);
+                                        break;
+                                    case ActionRequested.ReadFile:
+                                        iecs.mms.SendFileRead(iecs, el);
+                                        break;
+                                    case ActionRequested.CloseFile:
+                                        iecs.mms.SendFileClose(iecs, el);
+                                        break;
+                                    case ActionRequested.FileDelete:
+                                        iecs.mms.SendFileDelete(iecs, el);
+                                        break;
+                                }
                             }
-                        }
-                        break;
-                    case WaitHandle.WaitTimeout:
-                        break;
-                }
+                            break;
+                        case WaitHandle.WaitTimeout:
+                            break;
+                    }
             }
             TcpRw.StopClient(iecs);
-            if(restart_allowed) {
+            connectionClosedTask?.Start();
+            if (restart_allowed) {
                 Start();
                 try
                 {

@@ -80,7 +80,7 @@ namespace lib61850net
         IEncoder encoder = CoderFactory.getInstance().newEncoder("BER");
 
         int InvokeID = 0;
-        int MaxCalls = 10;
+        int MaxCalls = int.MaxValue;
 
         bool[] ServiceSupportOptions = new bool[96];
         enum ServiceSupportOptionsEnum
@@ -1893,7 +1893,7 @@ namespace lib61850net
                 iecs.logger.LogDebug(String.Format("mymmspdu.Initiate_ResponsePDU.NegotiatedMaxServOutstandingCalling: {0}, Called: {1}",
                     cing, ced));
 
-                MaxCalls = cing < ced ? cing : ced;
+                //MaxCalls = cing < ced ? cing : ced;
 
                 StringBuilder sb2 = new StringBuilder();
                 int j = 0;

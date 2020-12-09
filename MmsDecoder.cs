@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lib61850net
 {
-    internal static class MmsDecoder
+    public static class MmsDecoder
     {
         internal static bool GetBitStringFromMmsValue(byte[] buf, int size, int bitPos)
         {
@@ -26,6 +26,37 @@ namespace lib61850net
             }
             else
                 return false;
+        }
+
+        private static void SetBitStringBit(ref byte[] buffer, int size, int bitPos, bool value)
+        {
+            if (bitPos < size)
+            {
+                int bytePos = bitPos / 8;
+                int bitPosInByte = 7 - (bitPos % 8);
+                int bitMask = (1 << bitPosInByte);
+                
+                if (value)
+                {
+                    buffer[bytePos] |= (byte)bitMask;
+                }
+                else
+                {
+                    buffer[bytePos] &= (byte)(~bitMask);
+                }
+            }
+        }
+
+        public static byte[] GetBitStringFromInteger(int size, ulong value)
+        {
+            byte[] result = new byte[size];
+            for (int bitPos = 0; bitPos != size; ++bitPos)
+            {
+                SetBitStringBit(ref result, size, bitPos, ((value & 1) == 1));
+                value >>= 1;
+            }
+
+            return result;
         }
 
         internal static DateTime DecodeMmsBinaryTime(byte[] binTimeBuf)
