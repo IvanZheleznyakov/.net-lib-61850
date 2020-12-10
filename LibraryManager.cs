@@ -39,6 +39,7 @@ namespace lib61850net
         public delegate void selectResponseReceivedHandler(SelectResponse response);
         public delegate void fileDirectoryResponseReceivedHandler(FileDirectoryResponse response);
         public delegate void fileResponseReceivedHandler(FileResponse response);
+        public delegate void readDataSetResponseReceivedHandler(ReadDataSetResponse response);
 
         /// <summary>
         /// Очередь из поступивших отчётов.
@@ -273,6 +274,20 @@ namespace lib61850net
             }
         }
 
+        public List<string> GetDatasetNameValues(string datasetName)
+        {
+            try
+            {
+                NodeBase node = worker.iecs.DataModel.datasets.FindNodeByAddress(datasetName);
+                return node.GetChildNodeNames();
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Получение списка буферизированных отчётов.
         /// </summary>
@@ -375,6 +390,47 @@ namespace lib61850net
             }
         }
 
+        public Task ReadDataSetValuesAsync(string name, readDataSetResponseReceivedHandler responseHandler)
+        {
+            try
+            {
+                ReadDataSetResponse response = new ReadDataSetResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+
+                var node = worker.iecs.DataModel.datasets.FindNodeByAddress(name);
+                worker.iecs.Controller.ReadData((NodeVL)node, responseTask, response);
+                return responseTask;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        private ReadDataSetResponse lastReadDataSetResponse;
+
+        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 5000)
+        {
+            try
+            {
+                lastReadResponse = null;
+                Task responseTask = ReadDataSetValuesAsync(name, ReadDSPrivateHandler);
+                responseTask.Wait(waitingTime);
+                return lastReadDataSetResponse;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        private void ReadDSPrivateHandler(ReadDataSetResponse response)
+        {
+            lastReadDataSetResponse = response;
+        }
+
         private ReadResponse lastReadResponse;
 
         /// <summary>
@@ -443,6 +499,7 @@ namespace lib61850net
                 FunctionalConstraintEnum repFC = isBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP;
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, repFC);
                 ReportControlBlock resultRcb = new ReportControlBlock();
+                resultRcb.ObjectReference = name;
                 var repNode = new NodeBase("");
                 if (isBuffered)
                 {

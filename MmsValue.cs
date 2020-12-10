@@ -102,6 +102,33 @@ namespace lib61850net
         public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
 
+        private int size = -1;
+        public int Size
+        {
+            get
+            {
+                if (size == -1 && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
+                {
+                    size = GetMmsArray().Count;
+                }
+                return size;
+            }
+            internal set
+            {
+                size = value;
+            }
+        }
+
+        public MmsValue GetChildByIndex(int index)
+        {
+            if (MmsType != MmsTypeEnum.ARRAY || MmsType != MmsTypeEnum.STRUCTURE || index < 0 || index >= Size)
+            {
+                return null;
+            }
+
+            return GetMmsArray()[index];
+        }
+
         public List<MmsValue> GetMmsArray()
         {
             List<MmsValue> result = new List<MmsValue>();
@@ -137,6 +164,42 @@ namespace lib61850net
         public byte[] GetBitString()
         {
             return asn1Data.Bit_string.Value;
+        }
+
+        public UInt32 GetBitStringAsInteger()
+        {
+            if (MmsType != MmsTypeEnum.BIT_STRING)
+            {
+                throw new Exception("Value type is not bit string");
+            }
+
+            byte[] bitString = GetBitString();
+
+            UInt32 value = 0;
+
+            int bitPos;
+
+            for (bitPos = 0; bitPos < bitString.Length; bitPos++)
+            {
+                if (GetBitStringBit(bitPos))
+                {
+                    value += (UInt32)(1 << bitPos);
+                }
+            }
+
+            return value;
+
+        }
+
+        public bool GetBitStringBit(int bitPos)
+        {
+            if (MmsType != MmsTypeEnum.BIT_STRING)
+            {
+                throw new Exception("Value type is not bit string");
+            }
+
+            byte[] bitString = GetBitString();
+            return MmsDecoder.GetBitStringFromMmsValue(bitString, bitString.Length, bitPos);
         }
 
         public bool GetBoolean()
@@ -179,9 +242,9 @@ namespace lib61850net
             return asn1Data.Octet_string;
         }
 
-        public long GetUnsigned()
+        public uint GetUnsigned()
         {
-            return asn1Data.Unsigned;
+            return (uint)asn1Data.Unsigned;
         }
 
         public DateTime GetUtcTime()

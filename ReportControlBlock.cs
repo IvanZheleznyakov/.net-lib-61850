@@ -27,6 +27,20 @@ namespace lib61850net
         internal bool sendResvTms = false;
         internal bool sendEntryID = false;
 
+        private string objReference;
+
+        public string ObjectReference
+        {
+            get
+            {
+                return objReference;
+            }
+            internal set
+            {
+                objReference = value;
+            }
+        }
+
         public DataAccessErrorEnum TypeOfError { get; internal set; }
 
         public bool IsBuffered { get { return self.isBuffered; } }

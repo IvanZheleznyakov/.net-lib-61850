@@ -13,6 +13,22 @@ namespace lib61850net
         public string ObjectReference { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
         internal object DataValue { get; set; }
+        private int size = -1;
+        public int Size
+        {
+            get
+            {
+                if (size == -1 && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
+                {
+                    size = GetMmsArray().Count;
+                }
+                return size;
+            }
+            internal set
+            {
+                size = value;
+            }
+        }
 
         internal MmsVariableSpecification(NodeData node)
         {
@@ -21,6 +37,16 @@ namespace lib61850net
             ObjectReference = self.IecAddress;
             MmsType = self.DataType;
             DataValue = self.DataValue;
+        }
+
+        public MmsVariableSpecification GetChildByIndex(int index)
+        {
+            if (MmsType != MmsTypeEnum.ARRAY || MmsType != MmsTypeEnum.STRUCTURE || index < 0 || index >= Size)
+            {
+                return null;
+            }
+
+            return GetMmsArray()[index];
         }
 
         public List<MmsVariableSpecification> GetMmsArray()

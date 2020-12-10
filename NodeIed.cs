@@ -41,7 +41,7 @@ namespace lib61850net
                 }
                 else
                 {
-                    if (Name == "urcbs" || Name == "brcbs")
+                    if (Name == "urcbs" || Name == "brcbs" || Name == "datasets")
                     {
                         if ((b = b.FindChildNode(IecAddress)) == null)
                         {

@@ -98,6 +98,17 @@ namespace lib61850net
             }
         }
 
+        internal List<string> GetChildNodeNames()
+        {
+            List<string> names = new List<string>();
+            foreach (NodeBase nb in _childNodes)
+            {
+                names.Add(nb.IecAddress);
+            }
+
+            return names;
+        }
+
         internal List<string> GetChildNodeNames(bool isReportsNeeded, bool isDatasetsNeeded)
         {
             List<string> names = new List<string>();

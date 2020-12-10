@@ -1326,6 +1326,12 @@ namespace lib61850net
                             string domain = Read.VariableAccessSpecification.VariableListName.Domain_specific.DomainID.Value;
                             string address = Read.VariableAccessSpecification.VariableListName.Domain_specific.ItemID.Value;
                             NodeBase nb = iecs.DataModel.datasets.FindNodeByAddress(domain, address, true);
+                            bool isInvokeIdExists = (waitingMmsPdu.ContainsKey(receivedInvokeId));
+                            ReadDataSetResponse response = new ReadDataSetResponse()
+                            {
+                                TypeOfErrors = new List<DataAccessErrorEnum>(),
+                                MmsValues = new List<MmsValue>(),
+                            };
                             // TODO
                             if (nb != null && nb.GetChildCount() == Read.ListOfAccessResult.Count)
                             {
@@ -1335,6 +1341,20 @@ namespace lib61850net
                                 {
                                     iecs.logger.LogDebug("Reading variable: " + data[i].IecAddress);
                                     recursiveReadData(iecs, (Read.ListOfAccessResult as List<AccessResult>)[i].Success, data[i], NodeState.Read);
+                                    if (isInvokeIdExists)
+                                    {
+                                        response.TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                        response.MmsValues.Add(new MmsValue((Read.ListOfAccessResult as List<AccessResult>)[i].Success));
+                                    }
+                                }
+
+                                if (isInvokeIdExists)
+                                {
+                                    waitingMmsPdu.TryGetValue(receivedInvokeId, out (Task, IResponse) userResponse);
+                                    (userResponse.Item2 as ReadDataSetResponse).MmsValues = new List<MmsValue>(response.MmsValues);
+                                    (userResponse.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>(response.TypeOfErrors);
+                                    userResponse.Item1?.Start();
+                                    waitingMmsPdu.Remove(receivedInvokeId);
                                 }
                             }
                         }
@@ -2280,7 +2300,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendReadVL(Iec61850State iecs, WriteQueueElement el)
+        internal int SendReadVL(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, IResponse response = null)
         {
             
 
@@ -2306,6 +2326,11 @@ namespace lib61850net
             rreq.SpecificationWithResult = true;
 
             csrreq.selectRead(rreq);
+
+            if (responseTask != null)
+            {
+                waitingMmsPdu.Add(InvokeID, (responseTask, response));
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 
