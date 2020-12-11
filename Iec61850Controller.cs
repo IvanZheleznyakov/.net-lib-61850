@@ -146,7 +146,7 @@ namespace lib61850net
                         }
                     }
 
-                    if (cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Enhanced_Security || cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Normal_Security)
+                    if (cPar.CommandFlowFlag == ControlModelEnum.SBO_ENHANCED || cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Normal_Security)
                     {
                         cPar.SBOrun = true;
                     }
@@ -173,7 +173,7 @@ namespace lib61850net
         {
             if (cPar.SBOrun)
             {
-                string sName = (cPar.CommandFlowFlag == ControlModelEnum.Select_Before_Operate_With_Enhanced_Security) ? "SBOw" : "SBO";
+                string sName = (cPar.CommandFlowFlag == ControlModelEnum.SBO_ENHANCED) ? "SBOw" : "SBO";
                 NodeData d = (NodeData)data.Parent;
                 NodeData op = null, sel = null;
                 if (d != null)

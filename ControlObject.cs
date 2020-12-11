@@ -19,6 +19,27 @@ namespace lib61850net
         internal CommandParams commandParams;
         internal string mmsReference;
 
+        internal ControlErrorEnum ControlError { get; set; } = ControlErrorEnum.NoError;
+        private ControlAddCauseEnum controlAddCauseEnum = ControlAddCauseEnum.ADD_CAUSE_NONE;
+        public ControlAddCauseEnum ControlAddCause 
+        {
+            get
+            {
+                responseComTerTask?.Wait();
+                responseComTerTask = null;
+                return controlAddCauseEnum;
+            }
+            internal set
+            {
+                controlAddCauseEnum = value;
+            }
+        }
+
+        private void CommandTerminationHandler()
+        {
+
+        }
+
         public string Originator
         {
             get
@@ -104,7 +125,7 @@ namespace lib61850net
         /// <param name="FC">Функциональная связь.</param>
         /// <param name="manager">Текущий экземпляр LibraryManager, в котором установлено соединение.</param>
         /// <param name="isControlObjectCorrect">Корректно ли создан объект управления.</param>
-        public ControlObject(string objectReference, FunctionalConstraintEnum FC, LibraryManager manager, ref bool isControlObjectCorrect)
+        public ControlObject(string objectReference, FunctionalConstraintEnum FC, LibraryManager manager)
         {
             try
             {
@@ -116,13 +137,12 @@ namespace lib61850net
                 self = (NodeDO)node;
                 commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(node.FindChildNode("Oper").FindChildNode("ctlVal"));
                 ControlModel = commandParams.CommandFlowFlag;
-                isControlObjectCorrect = true;
                 manager.worker.iecs.mms.listOfControlObjects.Add(this);     
             }
             catch (Exception ex)
             {
                 manager.UpdateLastExceptionInfo(new Exception("Ошибка при создании управляемого объекта: " + ex.Message), MethodBase.GetCurrentMethod().Name);
-                isControlObjectCorrect = false;
+                return;
             }
         }
 
@@ -177,6 +197,9 @@ namespace lib61850net
 
         WriteResponse lastWriteResponse;
 
+        internal Task responseComTerTask;
+        internal CommandTerminationReport lastComTermReport;
+
         /// <summary>
         /// Синхронная отправка операции SelectWithValue.
         /// </summary>
@@ -215,6 +238,7 @@ namespace lib61850net
         {
             try
             {
+                responseComTerTask = new Task(() => CommandTerminationHandler());
                 WriteResponse response = new WriteResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 var sendNode = (self.FindChildNode("SBOw").FindChildNode("ctlVal") as NodeData);
@@ -263,6 +287,7 @@ namespace lib61850net
         {
             try
             {
+                responseComTerTask = new Task(() => CommandTerminationHandler());
                 WriteResponse response = new WriteResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 var sendNode = (self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData);

@@ -728,8 +728,12 @@ namespace lib61850net
                         {
                             (response.Item2 as WriteResponse).Names.Add(lastOperationData[i++].IecAddress);
                             (response.Item2 as WriteResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
+                            Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i - 1].IecAddress);
                         }
-                        Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i++].IecAddress);
+                        else
+                        {
+                            Logger.getLogger().LogInfo("Write succeeded for " + lastOperationData[i++].IecAddress);
+                        }
                     }
                 }
 
@@ -1176,8 +1180,9 @@ namespace lib61850net
                         } // foreach
                         if (controlObject != null)
                         {
-                            Task controlTask = new Task(() => controlObject.userEventHandler(comTermReport));
-                            controlTask.Start();
+                            controlObject.ControlAddCause = addCause;
+                            controlObject.ControlError = error;
+                            controlObject.responseComTerTask?.Start();
                         }
                         Logger.getLogger().LogWarning("Have got LastApplError:" +
                             ", Control Object: " + cntrlObj +
@@ -1397,7 +1402,6 @@ namespace lib61850net
                                 recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                                 if (isInvokeIdExists)
                                 {
-                                    Console.WriteLine("receiveread: waitingmmspdu contains: {0}", receivedInvokeId);
                                     MmsValue mmsValue = new MmsValue(ar.Success)
                                     {
                                         TypeOfError = DataAccessErrorEnum.none,

@@ -12,7 +12,7 @@ namespace lib61850net
         Direct_Control_With_Normal_Security,
         Select_Before_Operate_With_Normal_Security,
         Direct_Control_With_Enhanced_Security,
-        Select_Before_Operate_With_Enhanced_Security,
+        SBO_ENHANCED,
         Unknown,
     }
 }

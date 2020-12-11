@@ -59,42 +59,6 @@ namespace lib61850net
         public bool IsResvTmsPresent { get { return self.ResvTms_present; } }
         public bool IsEntryIDPresent { get { return self.EntryID_present; } }
 
-        DateTime m_tmTimeLastDataSetReports = DateTime.Now;
-        public DateTime TimeLastDataSetReports
-        {
-            set
-            {
-                m_tmTimeLastDataSetReports = DateTime.Now;
-            }
-        }
-
-        int m_nLastExchangeTimeOutErrorCount;
-        public int LastExchangeTimeOutErrorCount
-        {
-            get { return m_nLastExchangeTimeOutErrorCount; }
-        }
-
-        public void LastExchangeTimeOutErrorCountClear()
-        {
-            m_nLastExchangeTimeOutErrorCount = 0;
-        }
-
-        public void LastExchangeTimeOutErrorCountInc()
-        {
-            m_nLastExchangeTimeOutErrorCount++;
-        }
-
-        uint m_nSavedIntegrityPeriod = 0;
-
-        public bool BadTimeoutInterval
-        {
-            get
-            {
-                TimeSpan tmsDelta = DateTime.Now - m_tmTimeLastDataSetReports;
-                return tmsDelta.TotalMilliseconds > m_nSavedIntegrityPeriod + 3000;
-            }
-        }
-
         public string RptId
         {
             get

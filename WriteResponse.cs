@@ -8,5 +8,23 @@ namespace lib61850net
     {
         public List<DataAccessErrorEnum> TypeOfErrors { get; internal set; }
         public List<string> Names { get; internal set; }
+
+        public bool IsErrorExists()
+        {
+            if (TypeOfErrors == null)
+            {
+                return true;
+            }
+
+            foreach (var error in TypeOfErrors)
+            {
+                if (error != DataAccessErrorEnum.none)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
