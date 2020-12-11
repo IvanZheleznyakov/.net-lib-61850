@@ -18,15 +18,18 @@ namespace lib61850net
         {
             get
             {
-                if (size == -1 && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
+                if (size == -1)
                 {
-                    size = GetMmsArray().Count;
+                    if (MmsType == MmsTypeEnum.ARRAY)
+                    {
+                        size = GetMmsArray().Count;
+                    }
+                    else if (MmsType == MmsTypeEnum.STRUCTURE)
+                    {
+                        size = GetMmsStructure().Count;
+                    }
                 }
                 return size;
-            }
-            internal set
-            {
-                size = value;
             }
         }
 
@@ -41,9 +44,14 @@ namespace lib61850net
 
         public MmsVariableSpecification GetChildByIndex(int index)
         {
-            if (MmsType != MmsTypeEnum.ARRAY || MmsType != MmsTypeEnum.STRUCTURE || index < 0 || index >= Size)
+            if ((MmsType != MmsTypeEnum.ARRAY && MmsType != MmsTypeEnum.STRUCTURE) || index < 0 || index >= Size)
             {
                 return null;
+            }
+
+            if (MmsType == MmsTypeEnum.STRUCTURE)
+            {
+                return GetMmsStructure()[index];
             }
 
             return GetMmsArray()[index];

@@ -279,7 +279,7 @@ namespace lib61850net
             try
             {
                 NodeBase node = worker.iecs.DataModel.datasets.FindNodeByAddress(datasetName);
-                return node.GetChildNodeNames();
+                return node.GetDataSetChildsWithFC();
             }
             catch (Exception ex)
             {
@@ -410,11 +410,11 @@ namespace lib61850net
 
         private ReadDataSetResponse lastReadDataSetResponse;
 
-        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 5000)
+        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = int.MaxValue)
         {
             try
             {
-                lastReadResponse = null;
+                lastReadDataSetResponse = null;
                 Task responseTask = ReadDataSetValuesAsync(name, ReadDSPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastReadDataSetResponse;
@@ -528,7 +528,7 @@ namespace lib61850net
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на обновление ReportControlBlock.</returns>
-        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 2500)
+        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = int.MaxValue)
         {
             try
             {

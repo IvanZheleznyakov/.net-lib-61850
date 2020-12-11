@@ -1376,6 +1376,17 @@ namespace lib61850net
                         }
                     }
                     // libiec61850 correction end
+                    bool isInvokeIdExists = waitingMmsPdu.ContainsKey(receivedInvokeId);
+                    (Task, IResponse) response = (null, null);
+                    if (isInvokeIdExists)
+                    {
+                        waitingMmsPdu.TryGetValue(receivedInvokeId, out response);
+                    }
+                    if (response.Item2 is ReadDataSetResponse)
+                    {
+                        (response.Item2 as ReadDataSetResponse).MmsValues = new List<MmsValue>();
+                        (response.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>();
+                    }
                     foreach (AccessResult ar in Read.ListOfAccessResult)
                     {
                         if (i <= lastOperationData.GetUpperBound(0))
@@ -1384,7 +1395,7 @@ namespace lib61850net
                             {
                                 iecs.logger.LogDebug("Reading Actual variable value: " + lastOperationData[i].IecAddress);
                                 recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
-                                if (waitingMmsPdu.ContainsKey(receivedInvokeId))
+                                if (isInvokeIdExists)
                                 {
                                     Console.WriteLine("receiveread: waitingmmspdu contains: {0}", receivedInvokeId);
                                     MmsValue mmsValue = new MmsValue(ar.Success)
@@ -1392,7 +1403,6 @@ namespace lib61850net
                                         TypeOfError = DataAccessErrorEnum.none,
                                     };
                                     ReportControlBlock rcb = null;
-                                    waitingMmsPdu.TryGetValue(receivedInvokeId, out (Task, IResponse) response);
                                     bool isRcbRequested = response.Item2 is RCBResponse;
                                     if (lastOperationData[i] is NodeDO)
                                     {
@@ -1433,17 +1443,29 @@ namespace lib61850net
                                             (response.Item2 as SelectResponse).IsSelected = true;
                                             (response.Item2 as SelectResponse).TypeOfError = DataAccessErrorEnum.none;
                                         }
-                                        response.Item1?.Start();
-                                        waitingMmsPdu.Remove(receivedInvokeId);
+                                        else if (response.Item2 is ReadDataSetResponse)
+                                        {
+                                            (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(mmsValue));
+                                            (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                        }
+                                        if (isRcbRequested || response.Item2 is SelectResponse)
+                                        {
+                                            response.Item1?.Start();
+                                            waitingMmsPdu.Remove(receivedInvokeId);
+                                        }
+                                    }
+                                    else if (response.Item2 is ReadDataSetResponse && lastOperationData[i] is NodeData)
+                                    {
+                                        (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(ar.Success));
+                                        (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            if (waitingMmsPdu.ContainsKey(receivedInvokeId))
+                            if (isInvokeIdExists)
                             {
-                                waitingMmsPdu.TryGetValue(receivedInvokeId, out (Task, IResponse) response);
                                 if (response.Item2 is RCBResponse)
                                 {
                                     (response.Item2 as RCBResponse).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;

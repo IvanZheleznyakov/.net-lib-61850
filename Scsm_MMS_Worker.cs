@@ -309,7 +309,7 @@ namespace lib61850net
                                     case ActionRequested.Read:
                                         if (el.Data[0] is NodeVL)
                                         {
-                                            iecs.mms.SendReadVL(iecs, el);
+                                        iecs.mms.SendReadVL(iecs, el, el.ResponseTask, el.Response);
                                         }
                                         else
                                         {

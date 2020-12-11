@@ -109,6 +109,24 @@ namespace lib61850net
             return names;
         }
 
+        internal List<string> GetDataSetChildsWithFC()
+        {
+            List<string> names = new List<string>();
+            foreach (NodeBase nb in _childNodes)
+            {
+                if (nb is NodeDO)
+                {
+                    names.Add(nb.IecAddress + "[" + (nb as NodeDO).FC.ToString() + "]");
+                }
+                else if (nb is NodeData)
+                {
+                    names.Add(nb.IecAddress + "[" + (nb as NodeData).FC.ToString() + "]");
+                }
+            }
+
+            return names;
+        }
+
         internal List<string> GetChildNodeNames(bool isReportsNeeded, bool isDatasetsNeeded)
         {
             List<string> names = new List<string>();
