@@ -237,7 +237,7 @@ namespace lib61850net
 
         internal NodeBase LinkChildNodeByAddress(NodeBase Node)
         {
-            foreach (var n in _childNodes.Where(n => Node.CommAddress.Variable == n.CommAddress.Variable))
+            foreach (var n in _childNodes.Where(n => Node.CommAddress.Domain == n.CommAddress.Domain && Node.CommAddress.Variable == n.CommAddress.Variable))
             {
                 return n;
             }

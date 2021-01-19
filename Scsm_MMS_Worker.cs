@@ -9,6 +9,7 @@ using MMS_ASN1_Model;
 using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DLL_Log;
 
 namespace lib61850net
 {
@@ -33,10 +34,10 @@ namespace lib61850net
 
         internal bool modelCreated = false;
 
-        internal Scsm_MMS_Worker()
+        internal Scsm_MMS_Worker(SourceMsg_t logger = null)
         {
             _env = Env.getEnv();
-            iecs = new Iec61850State();
+            iecs = new Iec61850State(logger);
             iecs.mms.ReadFileStateChanged += Mms_ReadFileStateChanged;
         }
 
@@ -105,6 +106,7 @@ namespace lib61850net
         private void WorkerThreadProc(object obj)
         {
             logger.LogInfo("lib61850net: Start WorkerThreadProc");
+            iecs.sourceLogger?.SendInfo("lib61850net: Start WorkerThreadProc");
             Scsm_MMS_Worker self = (Scsm_MMS_Worker)obj;
 
             iecs.hostname = self.isoParameters.hostname;
@@ -130,6 +132,7 @@ namespace lib61850net
                 switch (iecs.tstate)
                 {
                     case TcpProtocolState.TCP_STATE_START:
+                        iecs.sourceLogger?.SendInfo("[TCP_STATE_START]");
                         iecs.logger.LogInfo("[TCP_STATE_START]");
                         iecs.kstate = IsoTpktState.TPKT_RECEIVE_START;
                         iecs.ostate = IsoProtocolState.OSI_STATE_START;
@@ -137,6 +140,7 @@ namespace lib61850net
                         TcpRw.StartClient(iecs);
                         break;
                     case TcpProtocolState.TCP_STATE_SHUTDOWN:
+                        iecs.sourceLogger?.SendInfo("[TCP_STATE_SHUTDOWN]");
                         iecs.logger.LogInfo("[TCP_STATE_SHUTDOWN]");
                         Stop();
                      //   Thread.Sleep(5000);
@@ -147,11 +151,13 @@ namespace lib61850net
                         switch (iecs.ostate)
                         {
                             case IsoProtocolState.OSI_CONNECT_COTP:
+                                iecs.sourceLogger?.SendInfo("[OSI_CONNECT_COTP]");
                                 iecs.logger.LogInfo("[OSI_CONNECT_COTP]");
                                 iecs.ostate = IsoProtocolState.OSI_CONNECT_COTP_WAIT;
                                 iecs.iso.SendCOTPSessionInit(iecs);
                                 break;
                             case IsoProtocolState.OSI_CONNECT_PRES:
+                                iecs.sourceLogger?.SendInfo("[OSI_CONNECT_PRES]");
                                 iecs.logger.LogInfo("[OSI_CONNECT_PRES]");
                                 // This cannot be before Send, but is issued inside Send chain before TCP send
                                 // iecs.ostate = IsoProtocolState.OSI_CONNECT_PRES_WAIT;
@@ -163,6 +169,7 @@ namespace lib61850net
                                     case Iec61850lStateEnum.IEC61850_STATE_START:
                                         if (iecs.DataModel.ied.Identify)
                                         {
+                                            iecs.sourceLogger?.SendInfo("[IEC61850_STATE_START] (Send IdentifyRequest)");
                                             iecs.logger.LogInfo("[IEC61850_STATE_START] (Send IdentifyRequest)");
                                             iecs.istate = Iec61850lStateEnum.IEC61850_CONNECT_MMS_WAIT;
                                             iecs.mms.SendIdentify(iecs);
@@ -183,24 +190,29 @@ namespace lib61850net
                                         }
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_NAMELIST_DOMAIN:
-                                        iecs.logger.LogDebug("[IEC61850_READ_NAMELIST_DOMAIN]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_READ_NAMELIST_DOMAIN]");
+                                        iecs.logger.LogInfo("[IEC61850_READ_NAMELIST_DOMAIN]");
                                         iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_DOMAIN_WAIT;
                                         iecs.mms.SendGetNameListDomain(iecs);
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_NAMELIST_VAR:
-                                        iecs.logger.LogDebug("[IEC61850_READ_NAMELIST_VAR]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_READ_NAMELIST_VAR]");
+                                        iecs.logger.LogInfo("[IEC61850_READ_NAMELIST_VAR]");
                                         iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_VAR_WAIT;
                                         iecs.mms.SendGetNameListVariables(iecs);
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR:
-                                        iecs.logger.LogDebug("[IEC61850_READ_ACCESSAT_VAR]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_READ_ACCESSAT_VAR]");
+                                        iecs.logger.LogInfo("[IEC61850_READ_ACCESSAT_VAR]");
                                         iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR_WAIT;
                                         iecs.mms.SendGetVariableAccessAttributes(iecs);
+                                        //iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_MODEL_DATA:
                                         if (_env.dataReadOnStartup)
                                         {
-                                            iecs.logger.LogDebug("[IEC61850_READ_MODEL_DATA]");
+                                            iecs.sourceLogger?.SendInfo("[IEC61850_READ_MODEL_DATA]");
+                                            iecs.logger.LogInfo("[IEC61850_READ_MODEL_DATA]");
                                             CommAddress adr = new CommAddress
                                             {
                                                 Domain = null,
@@ -216,27 +228,32 @@ namespace lib61850net
                                         }
                                         else
                                         {
-                                            iecs.logger.LogDebug("[IEC61850_READ_MODEL_DATA] - Skipped due to a presetting");
+                                            iecs.sourceLogger?.SendInfo("[IEC61850_READ_MODEL_DATA] - Skipped due to a presetting");
+                                            iecs.logger.LogInfo("[IEC61850_READ_MODEL_DATA] - Skipped due to a presetting");
                                             iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
                                         }
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST:
-                                        iecs.logger.LogDebug("[IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
+                                        iecs.logger.LogInfo("[IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
                                         iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST_WAIT;
                                         iecs.mms.SendGetNameListNamedVariableList(iecs);
                                         break;
                                     case Iec61850lStateEnum.IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST:
-                                        iecs.logger.LogDebug("[IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST]");
+                                        iecs.logger.LogInfo("[IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST]");
                                         iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_NAMED_VARIABLE_LIST_WAIT;
                                         if (iecs.mms.SendGetNamedVariableListAttributes(iecs) != 0)
                                         {
                                             // No VarLists
+                                            iecs.sourceLogger?.SendInfo("Init end: [IEC61850_FREILAUF]");
                                             iecs.logger.LogInfo("Init end: [IEC61850_FREILAUF]");
                                             iecs.istate = Iec61850lStateEnum.IEC61850_MAKEGUI;
                                         }
                                         break;
                                     case Iec61850lStateEnum.IEC61850_MAKEGUI:
-                                        iecs.logger.LogDebug("[IEC61850_MAKEGUI]");
+                                        iecs.sourceLogger?.SendInfo("[IEC61850_MAKEGUI]");
+                                        iecs.logger.LogInfo("[IEC61850_MAKEGUI]");
                                         // ModelHasBeenCreated?.Invoke();
                                         modelCreated = true;
                                         connectionCreatedTask?.Start();
@@ -277,22 +294,31 @@ namespace lib61850net
                     switch (waitres)
                     {
                         case 0:     // connect
+                        {
                             if (iecs.ostate == IsoProtocolState.OSI_STATE_START)
                                 iecs.ostate = IsoProtocolState.OSI_CONNECT_COTP;
                             iecs.connectDone.Reset();
                             TcpRw.Receive(iecs);    // issue a Receive call
                             break;
+                        }
                         case 1:     // receive
+                        {
                             iecs.receiveDone.Reset();
                             TcpRw.Receive(iecs);    // issue a new Receive call
                             break;
+                        }
                         case 2:     // send
+                        {
                             iecs.sendDone.Reset();
                             break;
+                        }
                         case 3:     // endthread
+                        {
                             self._run = false;
                             break;
+                        }
                         case 4:     // send data
+                        {
                             iecs.sendQueueWritten.Reset();
                             Logger.getLogger().LogDebug("SendQueue Waiting for lock in Worker!");
                             WriteQueueElement el;
@@ -309,7 +335,7 @@ namespace lib61850net
                                     case ActionRequested.Read:
                                         if (el.Data[0] is NodeVL)
                                         {
-                                        iecs.mms.SendReadVL(iecs, el, el.ResponseTask, el.Response);
+                                            iecs.mms.SendReadVL(iecs, el, el.ResponseTask, el.Response);
                                         }
                                         else
                                         {
@@ -340,8 +366,11 @@ namespace lib61850net
                                 }
                             }
                             break;
+                        }
                         case WaitHandle.WaitTimeout:
+                        {
                             break;
+                        }
                     }
             }
             TcpRw.StopClient(iecs);

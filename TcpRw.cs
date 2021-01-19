@@ -64,24 +64,31 @@ namespace lib61850net
         public static void StopClient(TcpState tcps)
         {
             // Connect to a remote device.
-            tcps.logger.LogInfo("StopClient: Socket shutdowned.");
+            tcps?.logger.LogInfo("StopClient: Socket shutdowned.");
             try
             {
-                tcps.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
-                // Release the socket.
-                if (tcps.workSocket != null)
+                if (tcps.tstate != TcpProtocolState.TCP_STATE_CLOSING)
                 {
-                    if (tcps.workSocket.Connected)
+                    if (tcps != null)
                     {
-                        tcps.workSocket.Shutdown(SocketShutdown.Both);
-                        tcps.receiveDone.WaitOne(1000);
+                        tcps.tstate = TcpProtocolState.TCP_STATE_CLOSING;
                     }
-                    if(tcps.workSocket != null) {
+                    // Release the socket.
+                    if (tcps?.workSocket != null)
+                    {
+                        if (tcps.workSocket.Connected)
+                        {
+                            tcps.workSocket.Shutdown(SocketShutdown.Both);
+                            tcps.receiveDone.WaitOne(1000);
+                        }
+                        if (tcps.workSocket != null)
+                        {
 
-                    tcps.workSocket.Close();
-                    tcps.workSocket.Dispose();
-                    tcps.workSocket = null;
-                    tcps.logger.LogInfo("Socket closed and disposed.");
+                            tcps.workSocket.Close();
+                            tcps.workSocket.Dispose();
+                            tcps.workSocket = null;
+                            tcps.logger.LogInfo("Socket closed and disposed.");
+                        }
                     }
                 }
             } 
@@ -124,7 +131,7 @@ namespace lib61850net
             {
                 // Begin receiving the data from the remote device.
                 //
-                tcps.workSocket.BeginReceive(tcps.recvBuffer, 0, Iec61850State.recvBufferSize, 0,
+                tcps?.workSocket?.BeginReceive(tcps.recvBuffer, 0, Iec61850State.recvBufferSize, 0,
                     new AsyncCallback(ReceiveCallback), tcps);
             }
             catch (Exception e)

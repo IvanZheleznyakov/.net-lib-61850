@@ -6,6 +6,7 @@ using System.Threading;
 using MMS_ASN1_Model;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using DLL_Log;
 
 namespace lib61850net
 {
@@ -90,13 +91,16 @@ namespace lib61850net
         internal MMSCaptureDb CaptureDb;
         internal Iec61850Controller Controller;
 
-        internal Iec61850State()
+        internal SourceMsg_t sourceLogger;
+
+        internal Iec61850State(SourceMsg_t logger = null)
         {
             DataModel = new Iec61850Model(this);
             CaptureDb = new MMSCaptureDb(this);
             iso = new IsoLayers(this);
             OutstandingCalls = new ConcurrentDictionary<int, NodeBase[]>(2, 10);
             Controller = new Iec61850Controller(this, DataModel);
+            sourceLogger = logger;
         }
 
         internal void NextState()

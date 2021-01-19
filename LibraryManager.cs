@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DLL_Log;
 
 namespace lib61850net
 {
@@ -55,9 +56,25 @@ namespace lib61850net
         /// <summary>
         /// Конструктор класса, инициализирующий необходимые внутренние поля.
         /// </summary>
-        public LibraryManager()
+        public LibraryManager(SourceMsg_t logger = null)
         {
-            worker = new Scsm_MMS_Worker();
+            worker = new Scsm_MMS_Worker(logger);
+        }
+
+        public TcpProtocolState TcpState
+        {
+            get
+            {
+                if (worker == null || worker.iecs == null)
+                {
+                    return TcpProtocolState.TCP_STATE_CLOSED;
+                }
+                return worker.iecs.tstate;
+            }
+            internal set
+            {
+                
+            }
         }
 
         /// <summary>
@@ -73,7 +90,15 @@ namespace lib61850net
             try
             {
                 Task connectedTask = StartAsync(hostName, port, closedHandler, ConnectionStartedPrivateHandler);
-                return connectedTask.Wait(waitingTime);
+                worker.iecs.sourceLogger?.SendInfo("Ожидание соединения с устройством по IP: " + hostName);
+                bool isConnected = connectedTask.Wait(60000);
+                worker.iecs.sourceLogger?.SendInfo("Соединение с " + hostName + " вернуло: " + isConnected);
+                if (!isConnected)
+                {
+                    worker.iecs.sourceLogger?.SendInfo("Самостоятельно закрываем соединение с " + hostName);
+                    worker.Stop();
+                }
+                return isConnected;
             }
             catch (Exception ex)
             {
@@ -99,6 +124,7 @@ namespace lib61850net
         {
             try
             {
+                worker.iecs.sourceLogger?.SendInfo("lib61850net: start opening connection on " + hostName);
                 Task connectedTask = new Task(() => startedHandler());
                 Task closedTask = new Task(() => closedHandler());
                 if (worker.Start(hostName, port, closedTask, connectedTask))
@@ -238,6 +264,7 @@ namespace lib61850net
             {
                 var result = new List<MmsVariableSpecification>();
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(variableReference, FC);
+             //   ReadResponse readResponse = ReadData(variableReference, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 return new MmsVariableSpecification((NodeData)node);
         //        var childs = node.GetChildNodes();
@@ -278,13 +305,15 @@ namespace lib61850net
         {
             try
             {
+                Console.WriteLine("start getting datasetnamevalues on " + datasetName);
                 NodeBase node = worker.iecs.DataModel.datasets.FindNodeByAddress(datasetName);
+                Console.WriteLine("node in datasetname got, name : " + node.Name);
                 return node.GetDataSetChildsWithFC();
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return null;
+                throw new IedException("lib61850net: Dataset " + datasetName + " is not found with ex: " + ex.Message);
             }
         }
 
@@ -404,13 +433,13 @@ namespace lib61850net
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return null;
+                throw new IedException("lib61850net: cant send ReadDataSetValues with ex: " + ex.Message);
             }
         }
 
         private ReadDataSetResponse lastReadDataSetResponse;
 
-        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = int.MaxValue)
+        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 5000)
         {
             try
             {
@@ -422,7 +451,7 @@ namespace lib61850net
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return null;
+                throw new IedException("lib61850net: cant send ReadDataSetValues with ex: " + ex.Message);
             }
         }
 
@@ -496,6 +525,7 @@ namespace lib61850net
         {
             try
             {
+                Console.WriteLine("Creating reportcontrolblock with name" + name);
                 FunctionalConstraintEnum repFC = isBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP;
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, repFC);
                 ReportControlBlock resultRcb = new ReportControlBlock();
@@ -511,11 +541,14 @@ namespace lib61850net
                 }
                 resultRcb.self = (NodeRCB)repNode;
 
+                Console.WriteLine("rcb created with " + name);
+
                 return resultRcb;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                Console.WriteLine("exception on created rcb with name " + name + ": " + ex.Message);
                 return null;
             }
         }
@@ -528,13 +561,15 @@ namespace lib61850net
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на обновление ReportControlBlock.</returns>
-        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = int.MaxValue)
+        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 30000)
         {
             try
             {
                 lastRCBResponse = null;
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
+                Console.WriteLine("now task waiting in updatercb with name: " + rcb.Name);
                 responseTask.Wait(waitingTime);
+                Console.WriteLine("task in updatercb finished with name " + rcb.Name);
                 return lastRCBResponse;
             }
             catch (Exception ex)
@@ -559,11 +594,13 @@ namespace lib61850net
         {
             try
             {
+                Console.WriteLine("start update rcb with name " + rcb.Name);
                 RCBResponse response = new RCBResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 worker.iecs.Controller.ReadData(node, responseTask, response);
+                Console.WriteLine("updatercb task created on " + rcb.Name);
                 return responseTask;
             }
             catch (Exception ex)

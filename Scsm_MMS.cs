@@ -339,155 +339,173 @@ namespace lib61850net
 
         internal int ReceiveData(Iec61850State iecs)
         {
-            if (iecs == null)
-                return -1;
-
-            iecs.logger.LogDebugBuffer("mms.ReceiveData", iecs.msMMS.GetBuffer(), iecs.msMMS.Position, iecs.msMMS.Length - iecs.msMMS.Position);
-
-            MMSpdu mymmspdu = null;
             try
             {
-                MMSCapture cap = null;
-                byte[] pkt = iecs.msMMS.ToArray();
-                if (iecs.CaptureDb.CaptureActive) cap = new MMSCapture(pkt, iecs.msMMS.Position, pkt.Length, MMSCapture.CaptureDirection.In);
-                ////////////////// Decoding
-                mymmspdu = decoder.decode<MMSpdu>(iecs.msMMS);
-                ////////////////// Decoding
-                if (iecs.CaptureDb.CaptureActive && mymmspdu != null)
+                if (iecs == null)
                 {
-                    cap.MMSPdu = mymmspdu;
-                    iecs.CaptureDb.AddPacket(cap);
+                    return -1;
                 }
-            }
-            catch (Exception e)
-            {
-                iecs.logger.LogError("mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
-            }
 
-            if (mymmspdu == null)
-            {
-                iecs.logger.LogError("mms.ReceiveData: Parsing Error!");
+                iecs.logger.LogDebugBuffer("mms.ReceiveData", iecs.msMMS.GetBuffer(), iecs.msMMS.Position, iecs.msMMS.Length - iecs.msMMS.Position);
 
-                // Workaround - we can continue when reading-in the model also if one read fails
-                if (iecs.istate == Iec61850lStateEnum.IEC61850_READ_MODEL_DATA_WAIT)
+                MMSpdu mymmspdu = null;
+                try
                 {
-                    iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
-                    NodeBase logNode = iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().GetActualChildNode();
-                    if (logNode != null)
+                    MMSCapture cap = null;
+                    byte[] pkt = iecs.msMMS.ToArray();
+                    if (iecs.CaptureDb.CaptureActive) cap = new MMSCapture(pkt, iecs.msMMS.Position, pkt.Length, MMSCapture.CaptureDirection.In);
+                    ////////////////// Decoding
+                    mymmspdu = decoder.decode<MMSpdu>(iecs.msMMS);
+                    ////////////////// Decoding
+                    if (iecs.CaptureDb.CaptureActive && mymmspdu != null)
                     {
-                        iecs.logger.LogWarning("mms.ReceiveData: Error reading " + logNode.IecAddress + " in IEC61850_READ_MODEL_DATA_WAIT, data values not actual in the subtree!");
+                        cap.MMSPdu = mymmspdu;
+                        iecs.CaptureDb.AddPacket(cap);
                     }
-                    // Should be possible in this phase: only 1 request can be pending in the discovery phase
-                    iecs.OutstandingCalls.Clear();
-                    // Set up the state variable
-                    if (iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().NextActualChildNode() == null)
+                }
+                catch (Exception e)
+                {
+                    iecs.logger.LogError("mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
+                }
+
+                if (mymmspdu == null)
+                {
+                    iecs.logger.LogError("mms.ReceiveData: Parsing Error!");
+
+                    // Workaround - we can continue when reading-in the model also if one read fails
+                    if (iecs.istate == Iec61850lStateEnum.IEC61850_READ_MODEL_DATA_WAIT)
                     {
-                        if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
+                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                        NodeBase logNode = iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().GetActualChildNode();
+                        if (logNode != null)
                         {
-                            if (iecs.DataModel.ied.NextActualChildNode() == null)
+                            iecs.logger.LogWarning("mms.ReceiveData: Error reading " + logNode.IecAddress + " in IEC61850_READ_MODEL_DATA_WAIT, data values not actual in the subtree!");
+                        }
+                        // Should be possible in this phase: only 1 request can be pending in the discovery phase
+                        iecs.OutstandingCalls.Clear();
+                        // Set up the state variable
+                        if (iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().NextActualChildNode() == null)
+                        {
+                            if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
                             {
-                                // End of loop
-                                iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
-                                iecs.logger.LogInfo("Reading named variable lists: [IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
-                                iecs.DataModel.ied.ResetAllChildNodes();
+                                if (iecs.DataModel.ied.NextActualChildNode() == null)
+                                {
+                                    // End of loop
+                                    iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
+                                    iecs.logger.LogInfo("Reading named variable lists: [IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
+                                    iecs.DataModel.ied.ResetAllChildNodes();
+                                }
                             }
                         }
                     }
+                    return -1;
                 }
+                else if (mymmspdu.Initiate_ResponsePDU != null)
+                {
+                    removeCall(iecs, -1);
+                    ReceiveInitiate(iecs, mymmspdu.Initiate_ResponsePDU);
+                }
+                else if (mymmspdu.Confirmed_ResponsePDU != null && mymmspdu.Confirmed_ResponsePDU.Service != null)
+                {
+                    iecs.logger.LogDebug("mymmspdu.Confirmed_ResponsePDU.Service exists!");
+                    NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+
+                    if (mymmspdu.Confirmed_ResponsePDU.Service.Identify != null)
+                    {
+                        ReceiveIdentify(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Identify);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNameList != null)
+                    {
+                        ReceiveGetNameList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNameList);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes != null)
+                    {
+                        ReceiveGetVariableAccessAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNamedVariableListAttributes != null)
+                    {
+                        ReceiveGetNamedVariableListAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNamedVariableListAttributes);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.Read != null)
+                    {
+                        ReceiveRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Read, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.Write != null)
+                    {
+                        ReceiveWrite(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Write, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+                        //iecs.logger.LogError("Not implemented PDU Write response received!!");
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.DefineNamedVariableList != null)
+                    {
+                        ReceiveDefineNamedVariableList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.DefineNamedVariableList, operData);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory != null)
+                    {
+                        ReceiveFileDirectory(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.FileOpen != null)
+                    {
+                        ReceiveFileOpen(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileOpen);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.FileRead != null)
+                    {
+                        ReceiveFileRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileRead, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.FileClose != null)
+                    {
+                        ReceiveFileClose(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileClose);
+                    }
+                    else if (mymmspdu.Confirmed_ResponsePDU.Service.DeleteNamedVariableList != null)
+                    {
+                        ReceiveDeleteNamedVariableList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.DeleteNamedVariableList, operData);
+                    }
+                }
+                else if (mymmspdu.Unconfirmed_PDU != null && mymmspdu.Unconfirmed_PDU.Service != null && mymmspdu.Unconfirmed_PDU.Service.InformationReport != null)
+                {
+                    ReceiveInformationReport(iecs, mymmspdu.Unconfirmed_PDU.Service.InformationReport);
+                }
+                else if (mymmspdu.RejectPDU != null)
+                {
+                    NodeBase[] operData = removeCall(iecs, mymmspdu.RejectPDU.OriginalInvokeID.Value);
+                    ReceiveRejectPDU(iecs, mymmspdu);
+                }
+                else if (mymmspdu.Confirmed_ErrorPDU != null)
+                {
+                    NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
+
+                    if (waitingMmsPdu.ContainsKey(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value))
+                    {
+                        waitingMmsPdu.TryGetValue(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value, out (Task, IResponse) responseEventWithArg);
+                        if (responseEventWithArg.Item2 is FileDirectoryResponse)
+                        {
+                            (responseEventWithArg.Item2 as FileDirectoryResponse).TypeOfError = (FileErrorResponseEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.ErrorClass.File;
+                            responseEventWithArg.Item1?.Start();
+                        }
+                        //else if (responseEventWithArg.Item2 is ReadDataSetResponse)
+                        //{
+                        //    (responseEventWithArg.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>()
+                        //    { (DataAccessErrorEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.AdditionalCode };
+                        //    responseEventWithArg.Item1?.Start();
+                        //}
+                        waitingMmsPdu.Remove(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
+                    }
+
+                    iecs.logger.LogError("Confirmed_ErrorPDU received - requested operation not possible!!");
+                }
+                else
+                {
+                    iecs.logger.LogError("Not implemented PDU received!!");
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                iecs.sourceLogger?.SendError("lib61850net: ERROR in parsing received mmspdu: " + ex.Message);
+                Console.WriteLine("lib61850net: ERROR in parsing received mmspdu: " + ex.Message);
+                iecs.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
                 return -1;
             }
-            else if (mymmspdu.Initiate_ResponsePDU != null)
-            {
-                removeCall(iecs, -1);
-                ReceiveInitiate(iecs, mymmspdu.Initiate_ResponsePDU);
-            }
-            else if (mymmspdu.Confirmed_ResponsePDU != null && mymmspdu.Confirmed_ResponsePDU.Service != null)
-            {
-                iecs.logger.LogDebug("mymmspdu.Confirmed_ResponsePDU.Service exists!");
-                NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-
-                if (mymmspdu.Confirmed_ResponsePDU.Service.Identify != null)
-                {
-                    ReceiveIdentify(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Identify);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNameList != null)
-                {
-                    ReceiveGetNameList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNameList);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes != null)
-                {
-                    ReceiveGetVariableAccessAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNamedVariableListAttributes != null)
-                {
-                    ReceiveGetNamedVariableListAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNamedVariableListAttributes);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.Read != null)
-                {
-                    ReceiveRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Read, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.Write != null)
-                {
-                    ReceiveWrite(iecs, mymmspdu.Confirmed_ResponsePDU.Service.Write, operData, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-                    //iecs.logger.LogError("Not implemented PDU Write response received!!");
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.DefineNamedVariableList != null)
-                {
-                    ReceiveDefineNamedVariableList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.DefineNamedVariableList, operData);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory != null)
-                {
-                    ReceiveFileDirectory(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileDirectory, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.FileOpen != null)
-                {
-                    ReceiveFileOpen(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileOpen);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.FileRead != null)
-                {
-                    ReceiveFileRead(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileRead, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.FileClose != null)
-                {
-                    ReceiveFileClose(iecs, mymmspdu.Confirmed_ResponsePDU.Service.FileClose);
-                }
-                else if (mymmspdu.Confirmed_ResponsePDU.Service.DeleteNamedVariableList != null)
-                {
-                    ReceiveDeleteNamedVariableList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.DeleteNamedVariableList, operData);
-                }
-            }
-            else if (mymmspdu.Unconfirmed_PDU != null && mymmspdu.Unconfirmed_PDU.Service != null && mymmspdu.Unconfirmed_PDU.Service.InformationReport != null)
-            {
-                ReceiveInformationReport(iecs, mymmspdu.Unconfirmed_PDU.Service.InformationReport);
-            }
-            else if (mymmspdu.RejectPDU != null)
-            {
-                NodeBase[] operData = removeCall(iecs, mymmspdu.RejectPDU.OriginalInvokeID.Value);
-                ReceiveRejectPDU(iecs, mymmspdu);
-            }
-            else if (mymmspdu.Confirmed_ErrorPDU != null)
-            {
-                NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
-
-                if (waitingMmsPdu.ContainsKey(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value))
-                {
-                    waitingMmsPdu.TryGetValue(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value, out (Task, IResponse) responseEventWithArg);
-                    if (responseEventWithArg.Item2 is FileDirectoryResponse)
-                    {
-                        (responseEventWithArg.Item2 as FileDirectoryResponse).TypeOfError = (FileErrorResponseEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.ErrorClass.File;
-                        responseEventWithArg.Item1?.Start();
-                    }
-                    waitingMmsPdu.Remove(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
-                }
-
-                iecs.logger.LogError("Confirmed_ErrorPDU received - requested operation not possible!!");
-            }
-            else
-            {
-                iecs.logger.LogError("Not implemented PDU received!!");
-            }
-
-            return 0;
         }
 
         private void ReceiveRejectPDU(Iec61850State iecs, MMSpdu mymmspdu)
@@ -547,6 +565,38 @@ namespace lib61850net
                 reason = ((RejectPDU_rejectReason_unconfirmedPDU)mymmspdu.RejectPDU.RejectReason.UnconfirmedPDU).ToString();
             }
             iecs.logger.LogError("RejectPDU received - requested operation " + operation + " rejected!! Reason code: " + reason);
+
+            if (iecs.istate == Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR_WAIT)
+            {
+                iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;
+                if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
+                {
+                    if (iecs.DataModel.ied.NextActualChildNode() == null)
+                    {
+                        // End of loop
+                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                        iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
+                        iecs.DataModel.ied.ResetAllChildNodes();
+                    }
+                }
+            }
+            else if (iecs.istate == Iec61850lStateEnum.IEC61850_READ_MODEL_DATA_WAIT)
+            {
+                iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                if (iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().NextActualChildNode() == null)
+                {
+                    if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
+                    {
+                        if (iecs.DataModel.ied.NextActualChildNode() == null)
+                        {
+                            // End of loop
+                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
+                            iecs.logger.LogInfo("Reading named variable lists: [IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST]");
+                            iecs.DataModel.ied.ResetAllChildNodes();
+                        }
+                    }
+                }
+            }
         }
 
         private void ReceiveFileDirectory(Iec61850State iecs, FileDirectory_Response dir, int invokeId)
@@ -784,6 +834,7 @@ namespace lib61850net
                                     {
                                         rptName = list[i].Success.Visible_string;
                                         iecs.logger.LogDebug("Report Name = " + rptName);
+                                        iecs.logger.LogInfo("Report Name = " + rptName);
                                         report.RptId = rptName;
                                         continue;
                                     }
@@ -795,6 +846,7 @@ namespace lib61850net
                                     {
                                         rptOpts = list[i].Success.Bit_string.Value;
                                         iecs.logger.LogDebug("Report Optional Fields = " + rptOpts[0].ToString());
+                                        iecs.logger.LogInfo("Report Optional Fields = " + rptOpts[0].ToString());
                                         continue;
                                     }
                                 }
@@ -847,14 +899,17 @@ namespace lib61850net
                                 { // Is this phase active, e.g. is this bit set in OptFlds??
                                     phase++;
                                     if ((rptOpts[0] & OptFldsDataSet) != 0)
+                                    {
                                         if (list[i].Success.isVisible_stringSelected())
                                         {
                                             report.HasDataSetName = true;
                                             datName = list[i].Success.Visible_string;
                                             report.DataSetName = datName;
                                             iecs.logger.LogDebug("Report Data Set Name = " + datName);
+                                            iecs.logger.LogInfo("Report Data Set Name = " + datName);
                                             continue;
                                         }
+                                    }
                                 }
 
                                 if (phase == phsBufOvfl)
@@ -938,6 +993,7 @@ namespace lib61850net
                                         report.DataIndices = new int[datanum];
                                         report.DataValues = new MmsValue[datanum];
                                         report.ReasonForInclusion = new ReasonForInclusionEnum[datanum];
+                                        report.HasReasonForInclusion = true;
                                         for (int k = 0; k != datanum; ++k)
                                         {
                                             report.DataIndices[k] = listmap[k];
@@ -996,8 +1052,6 @@ namespace lib61850net
                                                 if (list[i + datanum].Success != null)
                                                 {
                                                     recursiveReadData(iecs, dataref, b, NodeState.Reported);
-
-                                                    createReportRecord(iecs, varName, b);
                                                 }
                                             }
                                             dataReferenceCount++;
@@ -1037,7 +1091,6 @@ namespace lib61850net
                                                 {
                                                     recursiveReadData(iecs, dataref, nba[listmap[dataValuesCount]], NodeState.Reported);
                                                     varName = nba[listmap[dataValuesCount]].CommAddress.Domain + "/" + nba[listmap[dataValuesCount]].CommAddress.Variable;
-                                                    createReportRecord(iecs, varName, nba[listmap[dataValuesCount]]);
                                                 }
                                             }
                                             dataValuesCount++;
@@ -1200,91 +1253,6 @@ namespace lib61850net
            // NewReportReceived?.Invoke(report);
         }
 
-        private void createReportRecord(Iec61850State iecs, string varName, NodeBase b)
-        {
-            /* Get information needed to log report */
-
-            string rptdVarQuality = "";
-            string rptdVarTimeQuality = "";
-            string rptdVarValue = "";
-            string rptdVarTimestamp = "";
-            string rptdVarDescription = "";
-            string rptdVarPath = "";
-
-            NodeBase[] nb = b.GetChildNodes();
-
-            if (nb.Length == 0)
-            {
-                // Probably we've got report information about single DA not DO, so we don't have new infofmation about t and q
-                nb = new NodeBase[1] { b };
-                varName = varName.Replace("$" + b.Name, "");
-                NodeBase t = iecs.DataModel.ied.FindNodeByAddress(varName + "$t");
-                if (t != null)
-                    rptdVarTimestamp = (t as NodeData).StringValue;
-            }
-
-            rptdVarPath = nb[0].IecAddress;
-
-            foreach (NodeBase nbs in nb)
-            {
-                switch (nbs.Name)
-                {
-                    case "stVal":
-                        if (nbs.IecAddress.Contains("XCBR") || nbs.IecAddress.Contains("XSWI"))
-                        {
-                            rptdVarValue = (nbs as NodeData).StringValue;
-                            switch (rptdVarValue)
-                            {
-                                case "01":
-                                    rptdVarValue = "Open";
-                                    break;
-                                case "10":
-                                    rptdVarValue = "Closed";
-                                    break;
-                                case "00":
-                                case "11":
-                                    rptdVarValue = "Bad Pos";
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else
-                            rptdVarValue = (nbs as NodeData).StringValue;
-
-                        break;
-                    case "q":
-                        rptdVarQuality = (nbs as NodeData).StringValueQuality;
-                        break;
-                    case "t":
-                        rptdVarTimestamp = (nbs as NodeData).StringValue;
-                        break;
-                    default:
-                        rptdVarValue = (nbs as NodeData).StringValue;
-                        break;
-                }
-            }
-
-            NodeBase d = iecs.DataModel.ied.FindNodeByAddress(varName.Replace("$ST$", "$DC$"));
-            if (d != null)
-            {
-                NodeBase[] nd = d.GetChildNodes();
-
-                foreach (NodeBase nds in nd)
-                {
-                    if (nds.Name == "d")
-                        rptdVarDescription = (nds as NodeData).StringValue;
-                }
-            }
-            else
-                rptdVarDescription = "";
-
-            rptdVarTimeQuality = rptdVarTimestamp.Contains("Bad Time Quality") ? "T" : "";
-
-            iecs.Controller.FireNewReport(rptdVarQuality + rptdVarTimeQuality, rptdVarTimestamp, rptdVarPath, rptdVarDescription, rptdVarValue);
-            //return varName;
-        }
-
         private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData, int receivedInvokeId)
         {
             iecs.logger.LogDebug("Read != null");
@@ -1299,6 +1267,17 @@ namespace lib61850net
                     {
                         if (Read.ListOfAccessResult.Count == Read.VariableAccessSpecification.ListOfVariable.Count)
                         {
+                            bool isInvokeIdExists = waitingMmsPdu.ContainsKey(receivedInvokeId);
+                            (Task, IResponse) response = (null, null);
+                            if (isInvokeIdExists)
+                            {
+                                waitingMmsPdu.TryGetValue(receivedInvokeId, out response);
+                            }
+                            if (response.Item2 is ReadDataSetResponse)
+                            {
+                                (response.Item2 as ReadDataSetResponse).MmsValues = new List<MmsValue>();
+                                (response.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>();
+                            }
                             IEnumerator<AccessResult> are = Read.ListOfAccessResult.GetEnumerator();
                             IEnumerator<VariableAccessSpecification.ListOfVariableSequenceType> vase = Read.VariableAccessSpecification.ListOfVariable.GetEnumerator();
                             while (are.MoveNext() && vase.MoveNext())
@@ -1309,12 +1288,79 @@ namespace lib61850net
                                 {
                                     iecs.logger.LogDebug("Node address: " + b.IecAddress);
                                     recursiveReadData(iecs, are.Current.Success, b, NodeState.Read);
+                                    if (isInvokeIdExists)
+                                    {
+                                        MmsValue mmsValue = new MmsValue(are.Current.Success)
+                                        {
+                                            TypeOfError = DataAccessErrorEnum.none,
+                                        };
+                                        ReportControlBlock rcb = null;
+                                        bool isRcbRequested = response.Item2 is RCBResponse;
+                                        if (b is NodeDO)
+                                        {
+                                            if (isRcbRequested && ((b as NodeDO).FC == FunctionalConstraintEnum.BR))
+                                            {
+                                                string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(b.IecAddress, FunctionalConstraintEnum.BR);
+                                                rcb = new ReportControlBlock()
+                                                {
+                                                    self = (NodeRCB)iecs.DataModel.brcbs.FindNodeByAddress(mmsRef),
+                                                    TypeOfError = DataAccessErrorEnum.none
+                                                };
+                                            }
+                                            else if (isRcbRequested && ((b as NodeDO).FC == FunctionalConstraintEnum.RP))
+                                            {
+                                                string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(b.IecAddress, FunctionalConstraintEnum.RP);
+                                                rcb = new ReportControlBlock()
+                                                {
+                                                    self = (NodeRCB)iecs.DataModel.urcbs.FindNodeByAddress(mmsRef),
+                                                    TypeOfError = DataAccessErrorEnum.none
+                                                };
+                                            }
+                                            //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
+                                            if (isRcbRequested)
+                                            {
+                                                Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
+                                                (response.Item2 as RCBResponse).ReportControlBlock = new ReportControlBlock();
+                                                (response.Item2 as RCBResponse).ReportControlBlock.self = rcb.self;
+                                                (response.Item2 as RCBResponse).ReportControlBlock.TypeOfError = rcb.TypeOfError;
+                                                (response.Item2 as RCBResponse).TypeOfError = rcb.TypeOfError;
+                                                (response.Item2 as RCBResponse).ReportControlBlock.ResetFlags();
+                                            }
+                                            else if (response.Item2 is ReadResponse)
+                                            {
+                                                (response.Item2 as ReadResponse).MmsValue.CopyFrom(mmsValue);
+                                                (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
+                                            }
+                                            else if (response.Item2 is SelectResponse)
+                                            {
+                                                (response.Item2 as SelectResponse).IsSelected = true;
+                                                (response.Item2 as SelectResponse).TypeOfError = DataAccessErrorEnum.none;
+                                            }
+                                            else if (response.Item2 is ReadDataSetResponse)
+                                            {
+                                                (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(mmsValue));
+                                                (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                            }
+                                            if (isRcbRequested || response.Item2 is SelectResponse)
+                                            {
+                                                response.Item1?.Start();
+                                                waitingMmsPdu.Remove(receivedInvokeId);
+                                            }
+                                        }
+                                        else if (response.Item2 is ReadDataSetResponse && b is NodeData)
+                                        {
+                                            (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(are.Current.Success));
+                                            (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                        }
+                                    }
                                 }
                             }
+
                         }
                         else
                         {
                             // Error
+                            Console.WriteLine("Error reading variables, different count of Specifications and AccessResults!");
                             iecs.logger.LogError("Error reading variables, different count of Specifications and AccessResults!");
                         }
                     }
@@ -1323,11 +1369,14 @@ namespace lib61850net
                 {
                     // reading a NVL read
                     iecs.logger.LogDebug("Read.VariableAccessSpecification.ListOfVariable != null");
+
                     if (Read.ListOfAccessResult != null)
                     {
+
                         // Find the NVL by name
                         if (Read.VariableAccessSpecification.VariableListName.Domain_specific != null)
                         {
+
                             string domain = Read.VariableAccessSpecification.VariableListName.Domain_specific.DomainID.Value;
                             string address = Read.VariableAccessSpecification.VariableListName.Domain_specific.ItemID.Value;
                             NodeBase nb = iecs.DataModel.datasets.FindNodeByAddress(domain, address, true);
@@ -1368,8 +1417,10 @@ namespace lib61850net
             }
             else    // When VariableAccessSpecification is missing, try to read to actual variable
             {
+
                 if (Read.ListOfAccessResult != null)
                 {
+
                     int i = 0;
                     // libiec61850 correction
                     // one read of a node is equal to separate reads to node children
@@ -1399,6 +1450,7 @@ namespace lib61850net
                             if (ar.Success != null)
                             {
                                 iecs.logger.LogDebug("Reading Actual variable value: " + lastOperationData[i].IecAddress);
+
                                 recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
                                 if (isInvokeIdExists)
                                 {
@@ -1410,6 +1462,7 @@ namespace lib61850net
                                     bool isRcbRequested = response.Item2 is RCBResponse;
                                     if (lastOperationData[i] is NodeDO)
                                     {
+
                                         if (isRcbRequested && ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR))
                                         {
                                             string mmsRef = IecToMmsConverter.ConvertIecAddressToMms(lastOperationData[i].IecAddress, FunctionalConstraintEnum.BR);
@@ -1431,6 +1484,7 @@ namespace lib61850net
                                       //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
                                         if (isRcbRequested)
                                         {
+                                            Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
                                             (response.Item2 as RCBResponse).ReportControlBlock = new ReportControlBlock();
                                             (response.Item2 as RCBResponse).ReportControlBlock.self = rcb.self;
                                             (response.Item2 as RCBResponse).ReportControlBlock.TypeOfError = rcb.TypeOfError;
@@ -1454,6 +1508,7 @@ namespace lib61850net
                                         }
                                         if (isRcbRequested || response.Item2 is SelectResponse)
                                         {
+
                                             response.Item1?.Start();
                                             waitingMmsPdu.Remove(receivedInvokeId);
                                         }
@@ -1482,13 +1537,16 @@ namespace lib61850net
                                 {
                                     (response.Item2 as SelectResponse).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
                                 }
-                                response.Item1?.Start();
                            //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
-                                waitingMmsPdu.Remove(receivedInvokeId);
                             }
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
                         }
                         i++;
+                    }
+                    if (response.Item1?.Status == TaskStatus.Created)
+                    {
+                        response.Item1?.Start();
+                        waitingMmsPdu.Remove(receivedInvokeId);
                     }
                     lastOperationData = null;
                 }
@@ -2316,6 +2374,7 @@ namespace lib61850net
             if (iecs.msMMSout.Length == 0)
             {
                 iecs.logger.LogError("mms.SendRead: Encoding Error!");
+                Console.WriteLine("error in sendread: encoding error!");
                 return -1;
             }
 
@@ -2345,6 +2404,7 @@ namespace lib61850net
             dst.DomainID = new Identifier(b.CommAddress.Domain);
             dst.ItemID = new Identifier(b.CommAddress.Variable);
             iecs.logger.LogDebug("SendRead: Reading with NVL: " + dst.ItemID.Value);
+            iecs.logger.LogInfo("SendRead: Reading with NVL: " + dst.ItemID.Value);
             on.selectDomain_specific(dst);
 
             rreq.VariableAccessSpecification = new VariableAccessSpecification();
