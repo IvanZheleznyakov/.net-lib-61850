@@ -598,6 +598,7 @@ namespace lib61850net
             if ((value[0] & Scsm_MMS.OptFldsEntryID) == Scsm_MMS.OptFldsEntryID) res |= ReportOptionsEnum.ENTRY_ID;
             if (value.Length < 2) return res;
             if ((value[1] & Scsm_MMS.OptFldsConfRev) == Scsm_MMS.OptFldsConfRev) res |= ReportOptionsEnum.CONF_REV;
+            if ((value[1] & Scsm_MMS.OptFldsMoreSegments) == Scsm_MMS.OptFldsMoreSegments) res |= ReportOptionsEnum.SEGMENTATION;
             return res;
         }
 
@@ -613,6 +614,7 @@ namespace lib61850net
             if ((inp & ReportOptionsEnum.BUFFER_OVERFLOW) == ReportOptionsEnum.BUFFER_OVERFLOW) res[0] |= Scsm_MMS.OptFldsOvfl;
             if ((inp & ReportOptionsEnum.ENTRY_ID) == ReportOptionsEnum.ENTRY_ID) res[0] |= Scsm_MMS.OptFldsEntryID;
             if ((inp & ReportOptionsEnum.CONF_REV) == ReportOptionsEnum.CONF_REV) res[1] |= Scsm_MMS.OptFldsConfRev;
+            if ((inp & ReportOptionsEnum.SEGMENTATION) == ReportOptionsEnum.SEGMENTATION) res[1] |= Scsm_MMS.OptFldsMoreSegments;
             return res;
         }
 

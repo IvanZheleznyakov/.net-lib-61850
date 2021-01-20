@@ -707,7 +707,10 @@ namespace lib61850net
                     if (waitingMmsPdu.ContainsKey(saveInvokeIdUntilFileIsRead))
                     {
                         waitingMmsPdu.TryGetValue(saveInvokeIdUntilFileIsRead, out (Task, IResponse) responseWithArg);
-                        (responseWithArg.Item2 as FileBuffer).Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data;
+                        (responseWithArg.Item2 as FileResponse).FileBuffer = new FileBuffer()
+                        {
+                            Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data
+                        };
                         responseWithArg.Item1?.Start();
                         waitingMmsPdu.Remove(saveInvokeIdUntilFileIsRead);
                     }
@@ -1256,6 +1259,10 @@ namespace lib61850net
         private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData, int receivedInvokeId)
         {
             iecs.logger.LogDebug("Read != null");
+            if (receivedInvokeId == 255)
+            {
+                int a = receivedInvokeId;
+            }
             if (Read.VariableAccessSpecification != null)
             {
                 iecs.logger.LogDebug("Read.VariableAccessSpecification != null");
@@ -1443,6 +1450,10 @@ namespace lib61850net
                         (response.Item2 as ReadDataSetResponse).MmsValues = new List<MmsValue>();
                         (response.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>();
                     }
+                    else if (response.Item2 is ReadResponse)
+                    {
+                        (response.Item2 as ReadResponse).MmsValue = new MmsValue();
+                    }
                     foreach (AccessResult ar in Read.ListOfAccessResult)
                     {
                         if (i <= lastOperationData.GetUpperBound(0))
@@ -1460,7 +1471,7 @@ namespace lib61850net
                                     };
                                     ReportControlBlock rcb = null;
                                     bool isRcbRequested = response.Item2 is RCBResponse;
-                                    if (lastOperationData[i] is NodeDO)
+                                    if (lastOperationData[i] is NodeDO || lastOperationData[i] is NodeData)
                                     {
 
                                         if (isRcbRequested && ((lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR))

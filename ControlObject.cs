@@ -124,7 +124,6 @@ namespace lib61850net
         /// <param name="objectReference">Ссылка (полное имя) узла управляемого объекта.</param>
         /// <param name="FC">Функциональная связь.</param>
         /// <param name="manager">Текущий экземпляр LibraryManager, в котором установлено соединение.</param>
-        /// <param name="isControlObjectCorrect">Корректно ли создан объект управления.</param>
         public ControlObject(string objectReference, FunctionalConstraintEnum FC, LibraryManager manager)
         {
             try

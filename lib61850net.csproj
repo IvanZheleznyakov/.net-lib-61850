@@ -6,4 +6,13 @@
     <Company>Meknanotronika RA</Company>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="DLL_Base">
+      <HintPath>..\testAegis\libiec61850-1.4.2.1_AnyCPU\Sasha\DLL_Base.dll</HintPath>
+    </Reference>
+    <Reference Include="DLL_Log">
+      <HintPath>..\testAegis\libiec61850-1.4.2.1_AnyCPU\Sasha\DLL_Log.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
