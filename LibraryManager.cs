@@ -41,6 +41,7 @@ namespace lib61850net
         public delegate void fileDirectoryResponseReceivedHandler(FileDirectoryResponse response);
         public delegate void fileResponseReceivedHandler(FileResponse response);
         public delegate void readDataSetResponseReceivedHandler(ReadDataSetResponse response);
+        public delegate void getVariableSpecificationReceivedHandler(MmsVariableSpecResponse response);
 
         /// <summary>
         /// Очередь из поступивших отчётов.
@@ -253,53 +254,6 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Получение данных из переменной.
-        /// </summary>
-        /// <param name="variableReference">Ссылка (полное имя) переменной.</param>
-        /// <param name="FC">Функциональная связь.</param>
-        /// <returns></returns>
-        public MmsVariableSpecification GetVariableSpecification(string variableReference, FunctionalConstraintEnum FC)
-        {
-            try
-            {
-                var result = new List<MmsVariableSpecification>();
-                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(variableReference, FC);
-             //   ReadResponse readResponse = ReadData(variableReference, FC);
-                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                return new MmsVariableSpecification((NodeData)node);
-        //        var childs = node.GetChildNodes();
-                //foreach (var ch in childs)
-                //{
-                //    result.Add(new MmsVariableSpecification((NodeData)ch));
-                //}
-
-                //return result;
-            }
-            catch (Exception ex)
-            {
-                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return null;
-            }
-        }
-
-        public MmsVariableSpecResponse testVarSpec(string name, FunctionalConstraintEnum FC)
-        {
-            try
-            {
-                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
-                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node);
-              //  worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Получение списка датасетов.
         /// </summary>
         /// <param name="ldName">Имя логического устройства.</param>
@@ -428,6 +382,62 @@ namespace lib61850net
                 (node as NodeData).DataValue = value;
                 worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
                 return responseTask;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        private MmsVariableSpecResponse lastMVSRespone;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="FC"></param>
+        /// <param name="waitingTime"></param>
+        /// <returns></returns>
+        public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 2000)
+        {
+            try
+            {
+                lastMVSRespone = null;
+                Task responseTask = GetVariableSpecificationAsync(name, FC, GetVarSpecPrivateHandler);
+                responseTask.Wait(waitingTime);
+                return lastMVSRespone;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+        private void GetVarSpecPrivateHandler(MmsVariableSpecResponse response)
+        {
+            lastMVSRespone = response;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="FC"></param>
+        /// <param name="responseHandler"></param>
+        /// <returns></returns>
+        public Task GetVariableSpecificationAsync(string name, FunctionalConstraintEnum FC, getVariableSpecificationReceivedHandler responseHandler)
+        {
+            try
+            {
+                MmsVariableSpecResponse response = new MmsVariableSpecResponse();
+                Task responseTask = new Task(() => responseHandler(response));
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node);
+                //  worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
+                return null;
             }
             catch (Exception ex)
             {

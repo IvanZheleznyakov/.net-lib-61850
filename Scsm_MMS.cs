@@ -409,6 +409,10 @@ namespace lib61850net
                 {
                     iecs.logger.LogDebug("mymmspdu.Confirmed_ResponsePDU.Service exists!");
                     NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
+                    if (mymmspdu.Confirmed_ResponsePDU.InvokeID.Value == 237)
+                    {
+                        int a = "".Length;
+                    }
 
                     if (mymmspdu.Confirmed_ResponsePDU.Service.Identify != null)
                     {
@@ -420,7 +424,7 @@ namespace lib61850net
                     }
                     else if (mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes != null)
                     {
-                        ReceiveGetVariableAccessAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes);
+                        ReceiveGetVariableAccessAttributes(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                     }
                     else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNamedVariableListAttributes != null)
                     {
@@ -1615,23 +1619,55 @@ namespace lib61850net
             }
         }
 
-        private void ReceiveGetVariableAccessAttributes(Iec61850State iecs, GetVariableAccessAttributes_Response GetVariableAccessAttributes)
+        private MmsVariableSpecification MatchDescriptionWithMms(TypeDescription typeD, string name = null)
+        {
+            MmsVariableSpecification newMVS = new MmsVariableSpecification(typeD.MmsType)
+            {
+                Name = name
+            };
+            if (typeD.MmsType == MmsTypeEnum.STRUCTURE)
+            {
+                foreach (var child in typeD.Structure.Components)
+                {
+                    newMVS.AddChild(MatchDescriptionWithMms(child.ComponentType.TypeDescription, child.ComponentName.Value));
+                }
+            }
+
+            return newMVS;
+        }
+
+        private void ReceiveGetVariableAccessAttributes(Iec61850State iecs, GetVariableAccessAttributes_Response GetVariableAccessAttributes, int invokeId)
         {
             iecs.logger.LogDebug("GetVariableAccessAttributes != null");
+            bool isInvokeIdExists = waitingMmsPdu.ContainsKey(invokeId);
+
+
             if (GetVariableAccessAttributes.TypeDescription != null)
             {
                 iecs.logger.LogDebug("GetVariableAccessAttributes.TypeDescription != null");
-                RecursiveReadTypeDescription(iecs, iecs.DataModel.ied.GetActualChildNode().GetActualChildNode(),
-                                             GetVariableAccessAttributes.TypeDescription);
-                iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;
-                if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
+
+                // если запросили спецификацию самостоятельно
+                if (isInvokeIdExists)
                 {
-                    if (iecs.DataModel.ied.NextActualChildNode() == null)
+                    waitingMmsPdu.TryGetValue(invokeId, out (Task, IResponse) taskWithResponse);
+                    (taskWithResponse.Item2 as MmsVariableSpecResponse).MmsVariableSpecification = MatchDescriptionWithMms(GetVariableAccessAttributes.TypeDescription);
+                    taskWithResponse.Item1?.Start();
+                    waitingMmsPdu.Remove(invokeId);
+                }
+                else //автоматический запрос при составлении модели
+                {
+                    RecursiveReadTypeDescription(iecs, iecs.DataModel.ied.GetActualChildNode().GetActualChildNode(),
+                                             GetVariableAccessAttributes.TypeDescription);
+                    iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;
+                    if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
                     {
-                        // End of loop
-                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
-                        iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
-                        iecs.DataModel.ied.ResetAllChildNodes();
+                        if (iecs.DataModel.ied.NextActualChildNode() == null)
+                        {
+                            // End of loop
+                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                            iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
+                            iecs.DataModel.ied.ResetAllChildNodes();
+                        }
                     }
                 }
             }
@@ -2234,10 +2270,8 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendGetVariableAccessAttributes(Iec61850State iecs, NodeBase node = null)
+        internal int SendGetVariableAccessAttributes(Iec61850State iecs, NodeBase node = null, Task responseTask = null, MmsVariableSpecResponse response = null)
         {
-            
-
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
 
@@ -2264,6 +2298,11 @@ namespace lib61850net
             vareq.selectName(on);
 
             csrreq.selectGetVariableAccessAttributes(vareq);
+
+            if (responseTask != null)
+            {
+                waitingMmsPdu.Add(InvokeID, (responseTask, response));
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 

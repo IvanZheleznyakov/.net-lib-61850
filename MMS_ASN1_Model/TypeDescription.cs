@@ -11,6 +11,7 @@ using org.bn.attributes.constraints;
 using org.bn.coders;
 using org.bn.types;
 using org.bn;
+using lib61850net;
 
 namespace MMS_ASN1_Model
 {
@@ -25,6 +26,7 @@ namespace MMS_ASN1_Model
         private ArraySequenceType array_;
         private bool array_selected = false;
 
+        internal MmsTypeEnum MmsType { get; set; } = MmsTypeEnum.UNKNOWN;
 
 
         [ASN1PreparedElement]
@@ -481,6 +483,7 @@ namespace MMS_ASN1_Model
         {
             this.array_ = val;
             this.array_selected = true;
+            MmsType = MmsTypeEnum.ARRAY;
 
 
             this.structure_selected = false;
@@ -526,6 +529,7 @@ namespace MMS_ASN1_Model
         {
             this.structure_ = val;
             this.structure_selected = true;
+            MmsType = MmsTypeEnum.STRUCTURE;
 
 
             this.array_selected = false;
@@ -576,6 +580,7 @@ namespace MMS_ASN1_Model
         {
             this.boolean_ = val;
             this.boolean_selected = true;
+            MmsType = MmsTypeEnum.BOOLEAN;
 
 
             this.array_selected = false;
@@ -621,6 +626,7 @@ namespace MMS_ASN1_Model
         {
             this.bit_string_ = val;
             this.bit_string_selected = true;
+            MmsType = MmsTypeEnum.BIT_STRING;
 
 
             this.array_selected = false;
@@ -666,6 +672,7 @@ namespace MMS_ASN1_Model
         {
             this.integer_ = val;
             this.integer_selected = true;
+            MmsType = MmsTypeEnum.INTEGER;
 
 
             this.array_selected = false;
@@ -711,6 +718,7 @@ namespace MMS_ASN1_Model
         {
             this.unsigned_ = val;
             this.unsigned_selected = true;
+            MmsType = MmsTypeEnum.UNSIGNED;
 
 
             this.array_selected = false;
@@ -756,6 +764,7 @@ namespace MMS_ASN1_Model
         {
             this.floating_point_ = val;
             this.floating_point_selected = true;
+            MmsType = MmsTypeEnum.FLOATING_POINT;
 
 
             this.array_selected = false;
@@ -801,6 +810,7 @@ namespace MMS_ASN1_Model
         {
             this.octet_string_ = val;
             this.octet_string_selected = true;
+            MmsType = MmsTypeEnum.OCTET_STRING;
 
 
             this.array_selected = false;
@@ -846,6 +856,7 @@ namespace MMS_ASN1_Model
         {
             this.visible_string_ = val;
             this.visible_string_selected = true;
+            MmsType = MmsTypeEnum.VISIBLE_STRING;
 
 
             this.array_selected = false;
@@ -896,6 +907,7 @@ namespace MMS_ASN1_Model
         {
             this.generalized_time_ = val;
             this.generalized_time_selected = true;
+            MmsType = MmsTypeEnum.GENERALIZED_TIME;
 
 
             this.array_selected = false;
@@ -941,6 +953,7 @@ namespace MMS_ASN1_Model
         {
             this.binary_time_ = val;
             this.binary_time_selected = true;
+            MmsType = MmsTypeEnum.BINARY_TIME;
 
 
             this.array_selected = false;
@@ -986,6 +999,7 @@ namespace MMS_ASN1_Model
         {
             this.bcd_ = val;
             this.bcd_selected = true;
+            MmsType = MmsTypeEnum.BCD;
 
 
             this.array_selected = false;
@@ -1036,6 +1050,7 @@ namespace MMS_ASN1_Model
         {
             this.objId_ = val;
             this.objId_selected = true;
+            MmsType = MmsTypeEnum.OBJ_ID;
 
 
             this.array_selected = false;
@@ -1081,6 +1096,7 @@ namespace MMS_ASN1_Model
         {
             this.mMSString_ = val;
             this.mMSString_selected = true;
+            MmsType = MmsTypeEnum.MMS_STRING;
 
 
             this.array_selected = false;
@@ -1126,6 +1142,7 @@ namespace MMS_ASN1_Model
         {
             this.utc_time_ = val;
             this.utc_time_selected = true;
+            MmsType = MmsTypeEnum.UTC_TIME;
 
 
             this.array_selected = false;

@@ -8,11 +8,12 @@ namespace lib61850net
 {
     public class MmsVariableSpecification
     {
-        internal NodeData self;
-        public string Name { get; internal set; }
-        public string ObjectReference { get; internal set; }
+        //    internal NodeData self;
+        public string Name { get; internal set; } = string.Empty;
+    //    public string ObjectReference { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
-        internal object DataValue { get; set; }
+        internal List<MmsVariableSpecification> childs;
+   //     internal object DataValue { get; set; }
         private int size = -1;
         public int Size
         {
@@ -33,13 +34,18 @@ namespace lib61850net
             }
         }
 
-        internal MmsVariableSpecification(NodeData node)
+        internal MmsVariableSpecification(MmsTypeEnum mmsType)
         {
-            self = node;
-            Name = self.Name;
-            ObjectReference = self.IecAddress;
-            MmsType = self.DataType;
-            DataValue = self.DataValue;
+            MmsType = mmsType;
+            if (mmsType == MmsTypeEnum.ARRAY || mmsType == MmsTypeEnum.STRUCTURE)
+            {
+                childs = new List<MmsVariableSpecification>();
+            }
+        }
+
+        internal void AddChild(MmsVariableSpecification newChild)
+        {
+            childs.Add(newChild);
         }
 
         public MmsVariableSpecification GetChildByIndex(int index)
@@ -59,91 +65,82 @@ namespace lib61850net
 
         public List<MmsVariableSpecification> GetMmsArray()
         {
-            List<MmsVariableSpecification> result = new List<MmsVariableSpecification>();
-
-            var childs = self.GetChildNodes();
-
-            foreach (var node in childs)
-            {
-                result.Add(new MmsVariableSpecification((NodeData)node));
-            }
-
-            return result;
+            return childs;
         }
 
         public List<MmsVariableSpecification> GetMmsStructure()
         {
-            return GetMmsArray();
+            return childs;
         }
 
-        public long GetBcd()
-        {
-            return (long)DataValue;
-        }
+        //public long GetBcd()
+        //{
+        //    return (long)DataValue;
+        //}
 
-        public DateTime GetBinaryTime()
-        {
-            return MmsDecoder.DecodeMmsBinaryTime((byte[])DataValue);
-        }
+        //public DateTime GetBinaryTime()
+        //{
+        //    return MmsDecoder.DecodeMmsBinaryTime((byte[])DataValue);
+        //}
 
-        public byte[] GetBitString()
-        {
-            return (byte[])DataValue;
-        }
+        //public byte[] GetBitString()
+        //{
+        //    return (byte[])DataValue;
+        //}
 
-        public bool GetBoolean()
-        {
-            return (bool)DataValue;
-        }
+        //public bool GetBoolean()
+        //{
+        //    return (bool)DataValue;
+        //}
 
-        public float GetFloat()
-        {
-            return MmsDecoder.DecodeMmsFloat((byte[])DataValue);
-        }
+        //public float GetFloat()
+        //{
+        //    return MmsDecoder.DecodeMmsFloat((byte[])DataValue);
+        //}
 
-        public double GetDouble()
-        {
-            return MmsDecoder.DecodeMmsDouble((byte[])DataValue);
-        }
+        //public double GetDouble()
+        //{
+        //    return MmsDecoder.DecodeMmsDouble((byte[])DataValue);
+        //}
 
-        public string GetGeneralizedTime()
-        {
-            return (string)DataValue;
-        }
+        //public string GetGeneralizedTime()
+        //{
+        //    return (string)DataValue;
+        //}
 
-        public long GetInteger()
-        {
-            return (long)DataValue;
-        }
+        //public long GetInteger()
+        //{
+        //    return (long)DataValue;
+        //}
 
-        public string GetMmsString()
-        {
-            return (string)DataValue;
-        }
+        //public string GetMmsString()
+        //{
+        //    return (string)DataValue;
+        //}
 
-        public string GetObjId()
-        {
-            return (string)DataValue;
-        }
+        //public string GetObjId()
+        //{
+        //    return (string)DataValue;
+        //}
 
-        public byte[] GetOctetString()
-        {
-            return (byte[])DataValue;
-        }
+        //public byte[] GetOctetString()
+        //{
+        //    return (byte[])DataValue;
+        //}
 
-        public long GetUnsigned()
-        {
-            return (long)DataValue;
-        }
+        //public long GetUnsigned()
+        //{
+        //    return (long)DataValue;
+        //}
 
-        public DateTime GetUtcTime()
-        {
-            return Scsm_MMS.ConvertFromUtcTime((byte[])DataValue, null);
-        }
+        //public DateTime GetUtcTime()
+        //{
+        //    return Scsm_MMS.ConvertFromUtcTime((byte[])DataValue, null);
+        //}
 
-        public string GetVisibleString()
-        {
-            return (string)DataValue;
-        }
+        //public string GetVisibleString()
+        //{
+        //    return (string)DataValue;
+        //}
     }
 }
