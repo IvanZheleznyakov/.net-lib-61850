@@ -7,7 +7,6 @@ namespace lib61850net
 {
     internal class Env
     {
-        internal Logger logger;
         /// <summary>
         /// Flag to read data on startup.
         /// </summary>

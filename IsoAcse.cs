@@ -27,8 +27,6 @@ namespace lib61850net
 
         private byte[] requirements_authentication = { 0x80 };
 
-        private AcseAuthenticationMechanism aAuthenticationMechanism = AcseAuthenticationMechanism.ACSE_AUTH_NONE;
-
         private enum AcseConnectionState
         {
             idle, requestIndicated, connected
@@ -45,7 +43,6 @@ namespace lib61850net
             ACSE_RELEASE_RESPONSE
         }
 
-        AcseConnectionState state;
         private long nextReference;
         private int userDataBufferIndex;
         private int userDataBufferSize;
@@ -347,7 +344,6 @@ namespace lib61850net
 
         internal void init()
         {
-            state = AcseConnectionState.idle;
             nextReference = 0;
             userDataBufferIndex = 0;
             userDataBufferSize = 0;

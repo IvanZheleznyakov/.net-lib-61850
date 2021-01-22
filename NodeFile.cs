@@ -73,24 +73,32 @@ namespace lib61850net
             return data.Length;
         }
 
+        private bool isFullNameCreated = false;
+        private string fullName;
+
         public string FullName
         {
             get
             {
-                string fn = "";
+                if (isFullNameCreated)
+                {
+                    return fullName;
+                }
+                fullName = "";
                 //NodeFile nf = this;
                 NodeBase nb = this;
                 do
                 {
-                    fn = "/" + nb.Name + fn;
-                    if (nb is NodeFile && (nb as NodeFile).isDir)
+                    fullName = "/" + nb.Name + fullName;
+                    if (nb is NodeFile && (nb as NodeFile).isDir && !fullName.EndsWith("/"))
                     {
-                        fn += "/";
+                        fullName += "/";
                     }
                     nb = nb.Parent;
                 }
                 while (nb is NodeFile);
-                return fn;
+                isFullNameCreated = true;
+                return fullName;
             }
         }
 

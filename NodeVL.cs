@@ -21,8 +21,8 @@ namespace lib61850net
 
         public bool Defined { get; set; }
 
-        public EventHandler OnDefinedSuccess;
-        public EventHandler OnDeleteSuccess;
+        //public EventHandler OnDefinedSuccess;
+        //public EventHandler OnDeleteSuccess;
 
         public NodeData urcb { get; set; }
     }

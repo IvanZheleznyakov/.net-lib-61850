@@ -335,7 +335,7 @@ namespace lib61850net
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
 
-        internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
+      //  internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
 
         internal int ReceiveData(Iec61850State iecs)
         {
@@ -711,6 +711,7 @@ namespace lib61850net
                         {
                             Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data
                         };
+
                         responseWithArg.Item1?.Start();
                         waitingMmsPdu.Remove(saveInvokeIdUntilFileIsRead);
                     }
@@ -732,7 +733,7 @@ namespace lib61850net
         {
             NodeVL nvl = (lastOperationData[0] as NodeVL);
             nvl.Defined = true;
-            nvl.OnDefinedSuccess?.Invoke(nvl, null);
+            //nvl.OnDefinedSuccess?.Invoke(nvl, null);
         }
 
         private void ReceiveDeleteNamedVariableList(Iec61850State iecs, DeleteNamedVariableList_Response dnvl, NodeBase[] lastOperationData)
@@ -745,8 +746,8 @@ namespace lib61850net
             if (dnvl.NumberDeleted.Value > 0)
             {
                 nvl.Defined = false;
-                if (nvl.OnDeleteSuccess != null)
-                    nvl.OnDeleteSuccess(nvl, null);
+                //if (nvl.OnDeleteSuccess != null)
+                //    nvl.OnDeleteSuccess(nvl, null);
             }
             else
                 Logger.getLogger().LogWarning("NVL Not deleted on server: " + nvl.Name);
@@ -1730,7 +1731,6 @@ namespace lib61850net
                 return;
             }
             iecs.logger.LogDebug("recursiveReadData: nodeAddress=" + actualNode.IecAddress + ", state=" + s.ToString());
-            actualNode.NodeState = s;
             if (data.Structure != null)
             {
                 iecs.logger.LogDebug("data.Structure != null");
@@ -1882,11 +1882,11 @@ namespace lib61850net
 
         void RecursiveReadTypeDescription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
         {
-            string address = actualNode.CommAddress.Domain + "/" + actualNode.CommAddress.Variable;
-            if (!addressNodesPairs.ContainsKey(address))
-            {
-                addressNodesPairs.Add(address, actualNode);
-            }
+          //  string address = actualNode.CommAddress.Domain + "/" + actualNode.CommAddress.Variable;
+            //if (!addressNodesPairs.ContainsKey(address))
+            //{
+            //    addressNodesPairs.Add(address, actualNode);
+            //}
             if (t == null) return;
             if (t.Structure != null)
             {
@@ -2234,7 +2234,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendGetVariableAccessAttributes(Iec61850State iecs)
+        internal int SendGetVariableAccessAttributes(Iec61850State iecs, NodeBase node = null)
         {
             
 
@@ -2247,8 +2247,16 @@ namespace lib61850net
             ObjectName on = new ObjectName();
             ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
 
-            dst.DomainID = new Identifier(iecs.DataModel.ied.GetActualChildNode().Name);
-            dst.ItemID = new Identifier(iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().Name);         // LN name e.g. MMXU0
+            if (node == null)
+            {
+                dst.DomainID = new Identifier(iecs.DataModel.ied.GetActualChildNode().Name);
+                dst.ItemID = new Identifier(iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().Name);         // LN name e.g. MMXU0
+            }
+            else
+            {
+                dst.DomainID = new Identifier(node.CommAddress.Domain);
+                dst.ItemID = new Identifier(node.CommAddress.Variable);
+            }
 
             iecs.logger.LogDebug("SendGetVariableAccessAttributes: Get Attr for: " + dst.ItemID.Value);
             on.selectDomain_specific(dst);

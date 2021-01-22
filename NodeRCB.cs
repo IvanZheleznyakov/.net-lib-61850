@@ -43,7 +43,6 @@ namespace lib61850net
                     if (!(tmpn is NodeFC))
                         parts.Add(tmpn.Name);
                     tmpn = tmpn.Parent;
-                    if (tmpn != null) iecModel = tmpn.IsIecModel;
                 } while (tmpn != null && (!(tmpn is NodeIed) || iecModel));
 
                 for (int i = parts.Count - 1; i >= 0; i--)

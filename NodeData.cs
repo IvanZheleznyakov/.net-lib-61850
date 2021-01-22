@@ -8,12 +8,9 @@ namespace lib61850net
     internal class NodeData : NodeBase
     {
         private MmsTypeEnum _dataType = MmsTypeEnum.STRUCTURE;
-        private string _bType = "";
-        private string _type = "";
         private Object _dataValue = null;
         private Object _dataParam = null;
         private Object _valueTag = null;
-        public event EventHandler ValueChanged;
 
         public NodeData(string Name)
             : base(Name)
@@ -32,24 +29,6 @@ namespace lib61850net
             }
         }
 
-        public string SCL_Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
-
-        public string SCL_FCDesc { get; set; }
-        public string SCL_DOName { get; set; }
-        public byte SCL_TrgOps { get; set; }
-        public int SCL_ArraySize { get; set; }
-        public string SCL_sAddr { get; set; }
-
-        public string SCL_BType
-        {
-            get { return _bType; }
-            set { _bType = value; }
-        }
-
         public Object DataValue
         {
             get
@@ -62,14 +41,12 @@ namespace lib61850net
                 bool fire = false;
 
                 lock (this)
+                {
                     if (_dataValue == null || !_dataValue.Equals(value))
                     {
                         _dataValue = value;
                         fire = true;
                     }
-                if (fire && ValueChanged != null)
-                {
-                    ValueChanged(this, new EventArgs());
                 }
             }
         }
@@ -132,8 +109,9 @@ namespace lib61850net
         {
             get
             {
-                if (_FC == FunctionalConstraintEnum.NONE)
+                if (_FC == FunctionalConstraintEnum.NONE && !isFCCalculated)
                 {
+                    isFCCalculated = true;
                     NodeBase nb = Parent;
                     if (nb != null) do
                         {
@@ -220,7 +198,7 @@ namespace lib61850net
                                 {
                                     case "q":       // Quality descriptor
                                         DataQuality dq = DataQuality.NONE;
-                                        dq = dq.fromBytes(bbval);
+                                        dq = dq.FromBytes(bbval);
                                         sb.Append(" [");
                                         sb.Append(dq.ToString());
                                         sb.Append("]");
@@ -400,81 +378,6 @@ namespace lib61850net
 
         public int sAddr { get; set; }
 
-        internal override void SaveModel(List<String> lines, bool fromSCL)
-        {
-            // DA(<data attribute name> <nb of array elements> <type> <FC> <trigger options> <sAddr>)[=value];
-            // Constructed>
-            // DA(<data attribute name> <nb of array elements> 27 <FC> <trigger options> <sAddr>){…}
-            if (isLeaf() || (isArray() && _childNodes[0].isLeaf()))
-            {
-                string line = "DA(" + Name;
-                int nrElem = getArraySize();
-                line += " " + nrElem + " " + MapLibiecType(DataType) + " " + MapLibiecFC(SCL_FCDesc) + " " + MapTrgOps() + " " + sAddr + ")";
-                bool writeVal = false;
-                // Some conditions for writing the value
-                if (Name == "ctlModel") writeVal = true;
-
-                // Finish the line
-                if (writeVal)
-                    line += " value=" + StringValue;
-                lines.Add(line);
-            }
-            else
-            {
-                // Constructed
-                int nrElem = 0;
-                NodeBase nextnb = this;
-
-                if (isArray())
-                {
-                    nrElem = getArraySize();
-                    // Array has got an artificial level with array members, this is not part of model definition
-                    if (_childNodes.Count > 0)
-                        nextnb = _childNodes[0];
-                }
-
-                lines.Add("DA(" + Name + " " + nrElem + " 27 " + MapLibiecFC(SCL_FCDesc) + " " + MapTrgOps() + " " + sAddr + "){");
-                foreach (NodeBase b in nextnb.GetChildNodes())
-                {
-                    b.SaveModel(lines, fromSCL);
-                }
-                lines.Add("}");
-            }
-        }
-
-        public string GetFC()
-        {
-            NodeBase b = Parent;
-            while (b != null)
-            {
-                if (b is NodeFC) return b.Name;
-                b = b.Parent;
-            }
-            return "??";
-        }
-
-        public string GetDOName()
-        {
-            List<String> dOName = new List<string>();
-            dOName.Add(Name);
-            NodeBase b = Parent;
-            while (b != null)
-            {
-                if (b is NodeFC)
-                {
-                    String ret = "";
-                    foreach (String s in dOName)
-                    {
-                        ret = "." + s + ret;
-                    }
-                    return ret;
-                }
-                dOName.Add(b.Name);
-                b = b.Parent;
-            }
-            return "";
-        }
-
         internal static int MapLibiecFC(string FC)
         {
             int fco = 0;
@@ -522,101 +425,6 @@ namespace lib61850net
 	        ENTRY_TIME = 28,
 	        PHYCOMADDR = 29
         }
-
-        int MapLibiecType(MmsTypeEnum DataType)
-        {
-            int type = 0;
-            switch (DataType)
-            {
-                case MmsTypeEnum.BOOLEAN:
-                    type = (int)LibIecDataAttributeType.BOOLEAN;
-                    break;
-                case MmsTypeEnum.FLOATING_POINT:
-                    type = (int)LibIecDataAttributeType.FLOAT32;
-                    break;
-                case MmsTypeEnum.UTC_TIME:
-                    type = (int)LibIecDataAttributeType.TIMESTAMP;
-                    break;
-                case MmsTypeEnum.BIT_STRING:
-                    type = (int)LibIecDataAttributeType.CODEDENUM;
-                    if (Name == "q")
-                        type = (int)LibIecDataAttributeType.QUALITY;
-                    break;
-                case MmsTypeEnum.INTEGER:
-                    type = (int)LibIecDataAttributeType.INT32;
-                    break;
-                case MmsTypeEnum.UNSIGNED:
-                    type = (int)LibIecDataAttributeType.INT32U;
-                    break;
-                case MmsTypeEnum.BINARY_TIME:
-                    type = (int)LibIecDataAttributeType.ENTRY_TIME;
-                    break;
-                case MmsTypeEnum.MMS_STRING:
-                    type = (int)LibIecDataAttributeType.UNICODE_STRING_255;
-                    break;
-                case MmsTypeEnum.VISIBLE_STRING:
-                    type = (int)LibIecDataAttributeType.VISIBLE_STRING_255;
-                    break;
-                case MmsTypeEnum.OCTET_STRING:
-                    type = (int)LibIecDataAttributeType.OCTET_STRING_64;
-                    break;
-            }
-            return type;
-        }
-
-        int MapTrgOps()
-        {
-            int trgOps = 0;
-
-
-            return trgOps;
-        }
-
-        public string StringValueQuality
-        {
-            get
-            {
-                string val = "";
-                if (DataValue != null) {
-                    switch (DataType) {
-                        case MmsTypeEnum.BIT_STRING:
-                            byte[] bbval = (byte[])DataValue;
-                            int blen = bbval.Length;
-                            int trail;
-
-                            if (DataParam != null)
-                                trail = (int)DataParam;
-                            else
-                                trail = 0;
-
-                            val = "";
-
-                            for (int i = 0; i < blen * 8 - trail; i++) {
-                                if (((bbval[(i / 8)] << (i % 8)) & 0x80) > 0) {
-                                    val += i.ToString("x");
-                                    
-                                }
-                            }
-                            if(val.Length > 0)
-                                val = "Q" + val;
-                            break;
-                        default:
-                            val = DataValue.ToString();
-                            break;
-                    }
-                }
-                return val;
-            }
-            set
-            {
-                if (value != null && value != "") {
-                    switch (DataType) {
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
     }   // class NodeData
 
     [Flags]
@@ -641,7 +449,7 @@ namespace lib61850net
 
     public static class DataEnumExtensions
     {
-        public static DataQuality fromBytes(this DataQuality res, byte[] value)
+        public static DataQuality FromBytes(this DataQuality res, byte[] value)
         {
             res = DataQuality.NONE;
             if (value == null || value.Length < 1) return res;
@@ -662,7 +470,7 @@ namespace lib61850net
             return res;
         }
 
-        public static byte[] toBytes(this DataQuality inp)
+        public static byte[] ToBytes(this DataQuality inp)
         {
             byte[] res = new byte[2];
 

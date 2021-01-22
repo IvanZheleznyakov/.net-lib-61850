@@ -282,6 +282,23 @@ namespace lib61850net
             }
         }
 
+        public MmsVariableSpecResponse testVarSpec(string name, FunctionalConstraintEnum FC)
+        {
+            try
+            {
+                string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
+                var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node);
+              //  worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Получение списка датасетов.
         /// </summary>
@@ -694,7 +711,7 @@ namespace lib61850net
             try
             {
                 var node = new NodeBase("");
-                if (name == "/")
+                if (name == "")
                 {
                     node = worker.iecs.DataModel.files;
                 }

@@ -17,46 +17,16 @@ namespace lib61850net
 
     internal class NodeBase : IComparable<NodeBase>
     {
-        private List<String> _fc = new List<string>();
         protected List<NodeBase> _childNodes;
         private int _actualChildNode;
         protected string _address;
         protected bool _addressLock = false;
-        internal event EventHandler StateChanged;
-        private NodeState _nodeState;
         // Persistence for SCL server library objects
-        internal object SCLServerModelObject { get; set; }
 
         internal NodeBase(string Name)
         {
             this.Name = Name;
             _childNodes = new List<NodeBase>();
-            _nodeState = NodeState.Initial;
-            IsIecModel = false;
-        }
-
-        internal NodeState NodeState
-        {
-            get
-            {
-                lock (this)
-                    return _nodeState;
-            }
-            set
-            {
-                bool fire = false;
-
-                lock (this)
-                    if (!_nodeState.Equals(value))
-                    {
-                        _nodeState = value;
-                        fire = true;
-                    }
-                if (fire && StateChanged != null)
-                {
-                    StateChanged(this, new EventArgs());
-                }
-            }
         }
 
         internal string Name { get; private set; }
@@ -64,7 +34,6 @@ namespace lib61850net
         {
             this.Name = name;
         }
-        internal string TypeId { get; set; }
 
         internal bool IsIecModel { get; set; }
 
@@ -360,7 +329,7 @@ namespace lib61850net
                 if (_addressLock)
                     return _address;
 
-                string address = "";
+                _address = "";
                 NodeBase tmpn = this;
                 List<string> parts = new List<string>();
                 bool iecModel = false;
@@ -370,39 +339,40 @@ namespace lib61850net
                     if (!(tmpn is NodeFC))
                         parts.Add(tmpn.Name);
                     tmpn = tmpn.Parent;
-                    if (tmpn != null) iecModel = tmpn.IsIecModel;
                 } while (tmpn != null && (!(tmpn is NodeIed) || iecModel));
 
                 for (int i = parts.Count - 1; i >= 0; i--)
                 {
                     //if (i == parts.Count - 4)
                     //    continue;
-                    address += parts[i];
+                    _address += parts[i];
                     if (iecModel)
                     {
                         if (i == parts.Count - 2)
                         {
                             if (i != 0)
-                                address += "/";
+                                _address += "/";
                         }
                         else if (i != 0 && i != parts.Count - 1)
                             if (parts[i - 1].Contains('/'))
-                                address += "->";
+                                _address += "->";
                             else
-                                address += ".";
+                                _address += ".";
                     }
                     else
                     {
                         if (i == parts.Count - 1)
                         {
                             if (i != 0)
-                                address += "/";
+                                _address += "/";
                         }
                         else if (i != 0)
-                            address += ".";
+                            _address += ".";
                     }
                 }
-                return address;
+
+                _addressLock = true;
+                return _address;
             }
             set
             {
@@ -411,13 +381,20 @@ namespace lib61850net
             }
         }
 
+        CommAddress pComAdr;
+        bool isComAdrCalculated = false;
+
         internal CommAddress CommAddress
         {
             get
             {
-                CommAddress commAddress = new CommAddress(); ;
+                if (isComAdrCalculated)
+                {
+                    return pComAdr;
+                }
+                pComAdr = new CommAddress();
                 NodeBase tmpn = this;
-                commAddress.owner = this;
+                pComAdr.owner = this;
 
                 List<string> parts = new List<string>();
 
@@ -427,28 +404,30 @@ namespace lib61850net
                     tmpn = tmpn.Parent;
                 } while (tmpn != null);
 
-                commAddress.Variable = "";
-                commAddress.VariablePath = "";
+                pComAdr.Variable = "";
+                pComAdr.VariablePath = "";
                 for (int i = parts.Count - 2; i >= 0; i--)
                 {
                     if (i == parts.Count - 2)
                     {
-                        commAddress.Domain = parts[i];
+                        pComAdr.Domain = parts[i];
                     }
                     else
                     {
-                        commAddress.Variable += parts[i];
+                        pComAdr.Variable += parts[i];
                         if (i == parts.Count - 3)
-                            commAddress.LogicalNode = parts[i];
+                            pComAdr.LogicalNode = parts[i];
                         if (i != 0)
-                            commAddress.Variable += "$";
+                            pComAdr.Variable += "$";
                     }
                     if (i < parts.Count - 3)
                     {
-                        commAddress.VariablePath = String.Concat(commAddress.VariablePath, "$", parts[i]);
+                        pComAdr.VariablePath = String.Concat(pComAdr.VariablePath, "$", parts[i]);
                     }
                 }
-                return commAddress;
+
+                isComAdrCalculated = true;
+                return pComAdr;
             }
         }
 

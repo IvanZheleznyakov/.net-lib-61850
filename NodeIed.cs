@@ -165,22 +165,8 @@ namespace lib61850net
 
         internal Iec61850State iecs { get; set; }
 
-        internal override void SaveModel(List<String> lines, bool fromSCL)
-        {
-            // Syntax: MODEL(<model name>){…}
-            lines.Add("MODEL(" + IedModelName + "){");
-            foreach (NodeBase b in _childNodes)
-            {
-                b.SaveModel(lines, fromSCL);
-            }
-            lines.Add("}");
-        }
-
         internal string IedModelName { get; set; }
 
         internal Iec61850Model Model { get { return model; } }
-
-        internal bool isIecTree() { return model.iec == this; }
-
     }
 }

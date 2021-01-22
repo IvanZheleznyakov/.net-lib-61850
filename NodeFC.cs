@@ -12,14 +12,5 @@ namespace lib61850net
         {
         }
 
-        internal override void SaveModel(List<String> lines, bool fromSCL)
-        {
-            // Pass saving to next level
-            foreach (NodeBase b in _childNodes)
-            {
-                b.SaveModel(lines, fromSCL);
-            }
-        }
-
     }
 }

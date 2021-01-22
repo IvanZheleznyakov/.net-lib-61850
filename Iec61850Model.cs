@@ -12,10 +12,6 @@ namespace lib61850net
         /// </summary>
         internal NodeIed ied;
         /// <summary>
-        /// Server data ordered by IEC61850 data model
-        /// </summary>
-        internal NodeIed iec;
-        /// <summary>
         /// Server named variable lists
         /// </summary>
         internal NodeIed datasets;
@@ -38,15 +34,12 @@ namespace lib61850net
         internal Iec61850Model(Iec61850State iecs)
         {
             ied = new NodeIed("ied", this);
-            iec = new NodeIed("iec", this);
             datasets = new NodeIed("datasets", this);
             urcbs = new NodeIed("urcbs", this);
             brcbs = new NodeIed("brcbs", this);
             files = new NodeIed("files", this);
             enums = new NodeIed("enums", this);
             ied.iecs = iecs;
-            iec.iecs = iecs;
-            iec.IsIecModel = true;
             datasets.iecs = iecs;
             files.iecs = iecs;
             urcbs.iecs = iecs;
@@ -60,7 +53,6 @@ namespace lib61850net
             // Set FC
             if (linkedDa is NodeData && !(linkedDa is NodeDO))
             {
-                (linkedDa as NodeData).SCL_FCDesc = fc.Name;
                 (linkedDa as NodeData).FC = (FunctionalConstraintEnum)NodeData.MapLibiecFC(fc.Name);
             }
             // Check DO / DA types
@@ -71,7 +63,6 @@ namespace lib61850net
                 // We have to create DO and add it to the iec model (target)
                 // and replace linkedDa with this object
                 NodeDO ido = new NodeDO(source.Name);
-                ido.IsIecModel = true;
                 target.RemoveChildNode(source);
                 linkedDa = target.AddChildNode(ido);
             }
