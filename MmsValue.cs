@@ -9,6 +9,8 @@ namespace lib61850net
 {
     public class MmsValue
     {
+
+        internal List<MmsValue> childs = null;
         public MmsValue()
         {
 
@@ -148,24 +150,30 @@ namespace lib61850net
 
         public List<MmsValue> GetMmsArray()
         {
-            List<MmsValue> result = new List<MmsValue>();
-            foreach (var data in asn1Data.Array)
+            if (childs == null && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
             {
-                result.Add(new MmsValue(data));
+                childs = new List<MmsValue>();
+                foreach (var data in asn1Data.Array)
+                {
+                    childs.Add(new MmsValue(data));
+                }
             }
 
-            return result;
+            return childs;
         }
 
         public List<MmsValue> GetMmsStructure()
         {
-            List<MmsValue> result = new List<MmsValue>();
-            foreach (var data in asn1Data.Structure)
+            if (childs == null && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
             {
-                result.Add(new MmsValue(data));
+                childs = new List<MmsValue>();
+                foreach (var data in asn1Data.Structure)
+                {
+                    childs.Add(new MmsValue(data));
+                }
             }
 
-            return result;
+            return childs;
         }
 
         public long GetBcd()

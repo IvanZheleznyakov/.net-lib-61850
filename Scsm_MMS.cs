@@ -335,7 +335,7 @@ namespace lib61850net
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
 
-      //  internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
+        //  internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
 
         internal int ReceiveData(Iec61850State iecs)
         {
@@ -673,8 +673,8 @@ namespace lib61850net
                     (responseEventWithArg.Item2 as FileDirectoryResponse).FileDirectories = listOfFileDirectory;
                     (responseEventWithArg.Item2 as FileDirectoryResponse).TypeOfError = FileErrorResponseEnum.none;
                     responseEventWithArg.Item1?.Start();
-                //    handlerWithParam.Item1?.Invoke(response, null);
-               //     waitingMmsPdu[invokeId]?.Invoke(response, null);
+                    //    handlerWithParam.Item1?.Invoke(response, null);
+                    //     waitingMmsPdu[invokeId]?.Invoke(response, null);
                     waitingMmsPdu.Remove(invokeId);
                 }
             }
@@ -1258,7 +1258,7 @@ namespace lib61850net
                 }
             }
 
-           // NewReportReceived?.Invoke(report);
+            // NewReportReceived?.Invoke(report);
         }
 
         private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData, int receivedInvokeId)
@@ -1340,8 +1340,10 @@ namespace lib61850net
                                             }
                                             else if (response.Item2 is ReadResponse)
                                             {
-                                                (response.Item2 as ReadResponse).MmsValue.CopyFrom(mmsValue);
+                                                (response.Item2 as ReadResponse).MmsValue = new MmsValue(mmsValue.asn1Data);
                                                 (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
+                                                response.Item1?.Start();
+                                                waitingMmsPdu.Remove(receivedInvokeId);
                                             }
                                             else if (response.Item2 is SelectResponse)
                                             {
@@ -1363,6 +1365,13 @@ namespace lib61850net
                                         {
                                             (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(are.Current.Success));
                                             (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                        }
+                                        else if (response.Item2 is ReadResponse && b is NodeData)
+                                        {
+                                            (response.Item2 as ReadResponse).MmsValue = new MmsValue(mmsValue.asn1Data);
+                                            (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
+                                            response.Item1?.Start();
+                                            waitingMmsPdu.Remove(receivedInvokeId);
                                         }
                                     }
                                 }
@@ -1409,8 +1418,16 @@ namespace lib61850net
                                     recursiveReadData(iecs, (Read.ListOfAccessResult as List<AccessResult>)[i].Success, data[i], NodeState.Read);
                                     if (isInvokeIdExists)
                                     {
-                                        response.TypeOfErrors.Add(DataAccessErrorEnum.none);
-                                        response.MmsValues.Add(new MmsValue((Read.ListOfAccessResult as List<AccessResult>)[i].Success));
+                                        if ((Read.ListOfAccessResult as List<AccessResult>)[i].Success != null)
+                                        {
+                                            response.TypeOfErrors.Add(DataAccessErrorEnum.none);
+                                            response.MmsValues.Add(new MmsValue((Read.ListOfAccessResult as List<AccessResult>)[i].Success));
+                                        }
+                                        else
+                                        {
+                                            response.TypeOfErrors.Add(DataAccessErrorEnum.objectAccessDenied);
+                                            response.MmsValues.Add(null);
+                                        }
                                     }
                                 }
 
@@ -1497,7 +1514,7 @@ namespace lib61850net
                                                 TypeOfError = DataAccessErrorEnum.none
                                             };
                                         }
-                                      //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
+                                        //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
                                         if (isRcbRequested)
                                         {
                                             Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
@@ -1553,7 +1570,7 @@ namespace lib61850net
                                 {
                                     (response.Item2 as SelectResponse).TypeOfError = (DataAccessErrorEnum)ar.Failure.Value;
                                 }
-                           //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
+                                //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
                             }
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
                         }
@@ -1918,7 +1935,7 @@ namespace lib61850net
 
         void RecursiveReadTypeDescription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
         {
-          //  string address = actualNode.CommAddress.Domain + "/" + actualNode.CommAddress.Variable;
+            //  string address = actualNode.CommAddress.Domain + "/" + actualNode.CommAddress.Variable;
             //if (!addressNodesPairs.ContainsKey(address))
             //{
             //    addressNodesPairs.Add(address, actualNode);
@@ -2080,7 +2097,7 @@ namespace lib61850net
 
         internal int SendConclude(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2109,14 +2126,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendIdentify(Iec61850State iecs)
         {
-            
+
 
             waitingMmsPdu = new Dictionary<int, (Task, IResponse)>();
             MMSpdu mymmspdu = new MMSpdu();
@@ -2146,14 +2163,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendGetNameListDomain(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2185,14 +2202,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendGetNameListVariables(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2225,14 +2242,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendGetNameListNamedVariableList(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2265,7 +2282,7 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
@@ -2320,14 +2337,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendGetNamedVariableListAttributes(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2371,14 +2388,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, null);
 
-            
+
 
             return 0;
         }
 
         internal int SendRead(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, IResponse response = null)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2438,14 +2455,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
 
         internal int SendReadVL(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, IResponse response = null)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2492,7 +2509,7 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
@@ -2765,7 +2782,7 @@ namespace lib61850net
 
         internal int SendDefineNVL(Iec61850State iecs, WriteQueueElement el)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2815,14 +2832,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, nvl);
 
-            
+
 
             return 0;
         }
 
         internal int SendDeleteNVL(Iec61850State iecs, WriteQueueElement el)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2864,14 +2881,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
 
         internal int SendFileDirectory(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, FileDirectoryResponse response = null)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -2899,6 +2916,11 @@ namespace lib61850net
 
             iecs.lastFileOperationData = el.Data;
 
+            if (el.Data == null || el.Data[0] == null)
+            {
+                int a = "".Length;
+            }
+
             csrreq.selectFileDirectory(filedreq);
 
             if (responseTask != null)
@@ -2922,7 +2944,7 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
@@ -2939,7 +2961,13 @@ namespace lib61850net
 
             filename.initValue();
             if (el.Data[0] is NodeFile)
+            {
+                if ((el.Data[0] as NodeFile).FullName.EndsWith("/"))
+                {
+                    (el.Data[0] as NodeFile).FullName = (el.Data[0] as NodeFile).FullName.Remove((el.Data[0] as NodeFile).FullName.Length - 1);
+                }
                 filename.Add((el.Data[0] as NodeFile).FullName);
+            }
             else
             {
                 iecs.logger.LogError("mms.SendFileOpen: Request not a file!");
@@ -2979,7 +3007,7 @@ namespace lib61850net
 
         internal int SendFileRead(Iec61850State iecs, WriteQueueElement el)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -3013,18 +3041,18 @@ namespace lib61850net
                 return -1;
             }
 
-            
+
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
 
         internal int SendFileDelete(Iec61850State iecs, WriteQueueElement el)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -3064,14 +3092,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
-            
+
+
             return 0;
         }
 
         internal int SendFileClose(Iec61850State iecs, WriteQueueElement el)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -3108,14 +3136,14 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, InvokeID, el.Data);
 
-            
+
 
             return 0;
         }
 
         internal int SendInitiate(Iec61850State iecs)
         {
-            
+
 
             MMSpdu mymmspdu = new MMSpdu();
             iecs.msMMSout = new MemoryStream();
@@ -3149,7 +3177,7 @@ namespace lib61850net
 
             this.Send(iecs, mymmspdu, 0, null);
 
-            
+
 
             return 0;
         }
@@ -3298,7 +3326,7 @@ namespace lib61850net
                 NodeBase[] ret = null;
                 foreach (int id in iecs.OutstandingCalls.Keys)
                 {
-                  //  iecs.OutstandingCalls.TryRemove(id, out ret);
+                    //  iecs.OutstandingCalls.TryRemove(id, out ret);
                     Logger.getLogger().LogWarning("Auto Purging Id=" + id + ", Operation data: " + ((ret == null) ? "null" : (ret[0] == null) ? "null" : ret[0].Name));
                 }
             }

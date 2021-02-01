@@ -10,10 +10,10 @@ namespace lib61850net
     {
         //    internal NodeData self;
         public string Name { get; internal set; } = string.Empty;
-    //    public string ObjectReference { get; internal set; }
+        //    public string ObjectReference { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
         internal List<MmsVariableSpecification> childs;
-   //     internal object DataValue { get; set; }
+        //     internal object DataValue { get; set; }
         private int size = -1;
         public int Size
         {
@@ -23,11 +23,11 @@ namespace lib61850net
                 {
                     if (MmsType == MmsTypeEnum.ARRAY)
                     {
-                        size = GetMmsArray().Count;
+                        size = childs.Count;
                     }
                     else if (MmsType == MmsTypeEnum.STRUCTURE)
                     {
-                        size = GetMmsStructure().Count;
+                        size = childs.Count;
                     }
                 }
                 return size;
@@ -57,10 +57,10 @@ namespace lib61850net
 
             if (MmsType == MmsTypeEnum.STRUCTURE)
             {
-                return GetMmsStructure()[index];
+                return childs[index];
             }
 
-            return GetMmsArray()[index];
+            return childs[index];
         }
 
         public List<MmsVariableSpecification> GetMmsArray()

@@ -100,6 +100,11 @@ namespace lib61850net
                 isFullNameCreated = true;
                 return fullName;
             }
+            internal set
+            {
+                isFullNameCreated = true;
+                fullName = value;
+            }
         }
 
         public void SaveFile(string FileName)

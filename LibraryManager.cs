@@ -74,7 +74,7 @@ namespace lib61850net
             }
             internal set
             {
-                
+
             }
         }
 
@@ -135,7 +135,7 @@ namespace lib61850net
                 else
                 {
                     return null;
-                }    
+                }
             }
             catch (Exception ex)
             {
@@ -319,10 +319,10 @@ namespace lib61850net
                 NodeBase urDir = worker.iecs.DataModel.urcbs.FindChildNode(ldName);
                 return urDir.GetChildNodeNames(true, false);
             }
-            catch (Exception ex) 
-            { 
-                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name); 
-                return null; 
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
             }
         }
 
@@ -399,7 +399,7 @@ namespace lib61850net
         /// <param name="FC"></param>
         /// <param name="waitingTime"></param>
         /// <returns></returns>
-        public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 2000)
+        public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
         {
             try
             {
@@ -435,9 +435,9 @@ namespace lib61850net
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node);
+                worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node, responseTask, response);
                 //  worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
-                return null;
+                return responseTask;
             }
             catch (Exception ex)
             {
@@ -466,7 +466,7 @@ namespace lib61850net
 
         private ReadDataSetResponse lastReadDataSetResponse;
 
-        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 5000)
+        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 60000)
         {
             try
             {
@@ -532,7 +532,15 @@ namespace lib61850net
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                worker.iecs.Controller.ReadData(node, responseTask, response);
+                if (node == null)
+                {
+                    response.TypeOfError = DataAccessErrorEnum.invalidAddress;
+                    responseTask.Start();
+                }
+                else
+                {
+                    worker.iecs.Controller.ReadData(node, responseTask, response);
+                }
                 return responseTask;
             }
             catch (Exception ex)
@@ -643,7 +651,7 @@ namespace lib61850net
         /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на запрос записи параметров отчёта.</returns>
-        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 2000)
+        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 30000)
         {
             try
             {
@@ -752,13 +760,13 @@ namespace lib61850net
         /// <param name="name">Полное имя файла.</param>
         /// <param name="waitingTime">Время ожидания получения файла.</param>
         /// <returns>Прочитанный файл с устройства.</returns>
-        public FileResponse GetFile(string name, int waitingTime = 5000)
+        public FileResponse GetFile(string name, int waitingTime = 100000)
         {
             try
             {
                 lastFileResponse = null;
                 Task responseTask = GetFileAsync(name, FilePrivateHandler);
-                responseTask.Wait(waitingTime);
+                responseTask?.Wait(waitingTime);
                 return lastFileResponse;
             }
             catch (Exception ex)
