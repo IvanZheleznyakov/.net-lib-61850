@@ -11,6 +11,7 @@ namespace lib61850net
     {
 
         internal List<MmsValue> childs = null;
+        internal object value;
         public MmsValue()
         {
 
@@ -27,6 +28,11 @@ namespace lib61850net
             if (asn1Data.isArraySelected())
             {
                 MmsType = MmsTypeEnum.ARRAY;
+                childs = new List<MmsValue>();
+                foreach (var newChild in asn1Data.Array)
+                {
+                    childs.Add(new MmsValue(newChild));
+                }
             }
             else if (asn1Data.isBcdSelected())
             {
@@ -78,6 +84,11 @@ namespace lib61850net
             else if (asn1Data.isStructureSelected())
             {
                 MmsType = MmsTypeEnum.STRUCTURE;
+                childs = new List<MmsValue>();
+                foreach (var newChild in asn1Data.Structure)
+                {
+                    childs.Add(new MmsValue(newChild));
+                }
             }
             else if (asn1Data.isUnsignedSelected())
             {
@@ -150,29 +161,11 @@ namespace lib61850net
 
         public List<MmsValue> GetMmsArray()
         {
-            if (childs == null && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
-            {
-                childs = new List<MmsValue>();
-                foreach (var data in asn1Data.Array)
-                {
-                    childs.Add(new MmsValue(data));
-                }
-            }
-
             return childs;
         }
 
         public List<MmsValue> GetMmsStructure()
         {
-            if (childs == null && (MmsType == MmsTypeEnum.ARRAY || MmsType == MmsTypeEnum.STRUCTURE))
-            {
-                childs = new List<MmsValue>();
-                foreach (var data in asn1Data.Structure)
-                {
-                    childs.Add(new MmsValue(data));
-                }
-            }
-
             return childs;
         }
 
