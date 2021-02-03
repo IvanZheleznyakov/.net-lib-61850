@@ -485,6 +485,11 @@ namespace lib61850net
                             (responseEventWithArg.Item2 as FileDirectoryResponse).TypeOfError = (FileErrorResponseEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.ErrorClass.File;
                             responseEventWithArg.Item1?.Start();
                         }
+                        else if (responseEventWithArg.Item2 is FileResponse)
+                        {
+                            (responseEventWithArg.Item2 as FileResponse).TypeOfError = (FileErrorResponseEnum)mymmspdu.Confirmed_ErrorPDU.ServiceError.ErrorClass.File;
+                            responseEventWithArg.Item1?.Start();
+                        }
                         //else if (responseEventWithArg.Item2 is ReadDataSetResponse)
                         //{
                         //    (responseEventWithArg.Item2 as ReadDataSetResponse).TypeOfErrors = new List<DataAccessErrorEnum>()
@@ -713,8 +718,9 @@ namespace lib61850net
                         waitingMmsPdu.TryGetValue(saveInvokeIdUntilFileIsRead, out (Task, IResponse) responseWithArg);
                         (responseWithArg.Item2 as FileResponse).FileBuffer = new FileBuffer()
                         {
-                            Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data
+                            Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data,
                         };
+                        (responseWithArg.Item2 as FileResponse).TypeOfError = FileErrorResponseEnum.none;
 
                         responseWithArg.Item1?.Start();
                         waitingMmsPdu.Remove(saveInvokeIdUntilFileIsRead);
