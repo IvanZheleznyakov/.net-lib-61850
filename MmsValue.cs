@@ -24,82 +24,95 @@ namespace lib61850net
 
         internal MmsValue(Data data)
         {
-            asn1Data = data;
-            if (asn1Data.isArraySelected())
+            if (data.isArraySelected())
             {
                 MmsType = MmsTypeEnum.ARRAY;
                 childs = new List<MmsValue>();
-                foreach (var newChild in asn1Data.Array)
+                foreach (var newChild in data.Array)
                 {
                     childs.Add(new MmsValue(newChild));
                 }
             }
-            else if (asn1Data.isBcdSelected())
+            else if (data.isBcdSelected())
             {
+                value = data.Bcd;
                 MmsType = MmsTypeEnum.BCD;
             }
-            else if (asn1Data.isBinary_timeSelected())
+            else if (data.isBinary_timeSelected())
             {
+                value = MmsDecoder.DecodeMmsBinaryTime(data.Binary_time.Value);
                 MmsType = MmsTypeEnum.BINARY_TIME;
             }
-            else if (asn1Data.isBit_stringSelected())
+            else if (data.isBit_stringSelected())
             {
+                value = data.Bit_string.Value;
                 MmsType = MmsTypeEnum.BIT_STRING;
             }
-            else if (asn1Data.isBooleanSelected())
+            else if (data.isBooleanSelected())
             {
+                value = data.Boolean;
                 MmsType = MmsTypeEnum.BOOLEAN;
             }
-            else if (asn1Data.isFloating_pointSelected())
+            else if (data.isFloating_pointSelected())
             {
-                if (asn1Data.Floating_point.Value.Length == 5)
+                if (data.Floating_point.Value.Length == 5)
                 {
+                    value = MmsDecoder.DecodeMmsFloat(data.Floating_point.Value);
                     MmsType = MmsTypeEnum.FLOATING_POINT;
                 }
                 else
                 {
+                    value = MmsDecoder.DecodeMmsDouble(data.Floating_point.Value);
                     MmsType = MmsTypeEnum.DOUBLE;
                 }
             }
-            else if (asn1Data.isGeneralized_timeSelected())
+            else if (data.isGeneralized_timeSelected())
             {
+                value = data.Generalized_time;
                 MmsType = MmsTypeEnum.GENERALIZED_TIME;
             }
-            else if (asn1Data.isIntegerSelected())
+            else if (data.isIntegerSelected())
             {
+                value = data.Integer;
                 MmsType = MmsTypeEnum.INTEGER;
             }
-            else if (asn1Data.isMMSStringSelected())
+            else if (data.isMMSStringSelected())
             {
+                value = data.MMSString.Value;
                 MmsType = MmsTypeEnum.MMS_STRING;
             }
-            else if (asn1Data.isObjIdSelected())
+            else if (data.isObjIdSelected())
             {
+                value = data.ObjId.Value;
                 MmsType = MmsTypeEnum.OBJ_ID;
             }
-            else if (asn1Data.isOctet_stringSelected())
+            else if (data.isOctet_stringSelected())
             {
+                value = data.Octet_string;
                 MmsType = MmsTypeEnum.OCTET_STRING;
             }
-            else if (asn1Data.isStructureSelected())
+            else if (data.isStructureSelected())
             {
                 MmsType = MmsTypeEnum.STRUCTURE;
                 childs = new List<MmsValue>();
-                foreach (var newChild in asn1Data.Structure)
+                foreach (var newChild in data.Structure)
                 {
                     childs.Add(new MmsValue(newChild));
                 }
             }
-            else if (asn1Data.isUnsignedSelected())
+            else if (data.isUnsignedSelected())
             {
+                value = data.Unsigned;
                 MmsType = MmsTypeEnum.UNSIGNED;
             }
-            else if (asn1Data.isUtc_timeSelected())
+            else if (data.isUtc_timeSelected())
             {
+                value = Scsm_MMS.ConvertFromUtcTime(data.Utc_time.Value, null);
                 MmsType = MmsTypeEnum.UTC_TIME;
             }
-            else if (asn1Data.isVisible_stringSelected())
+            else if (data.isVisible_stringSelected())
             {
+                value = data.Visible_string;
                 MmsType = MmsTypeEnum.VISIBLE_STRING;
             }
             else
@@ -111,11 +124,8 @@ namespace lib61850net
         internal void CopyFrom(MmsValue mmsValue)
         {
             this.TypeOfError = mmsValue.TypeOfError;
-            this.asn1Data = mmsValue.asn1Data;
             this.MmsType = mmsValue.MmsType;
         }
-
-        internal Data asn1Data;
 
         public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
@@ -171,17 +181,17 @@ namespace lib61850net
 
         public long GetBcd()
         {
-            return asn1Data.Bcd;
+            return (long)value;
         }
 
         public DateTime GetBinaryTime()
         {
-            return MmsDecoder.DecodeMmsBinaryTime(asn1Data.Binary_time.Value);
+            return (DateTime)value;
         }
 
         public byte[] GetBitString()
         {
-            return asn1Data.Bit_string.Value;
+            return (byte[])value;
         }
 
         public UInt32 GetBitStringAsInteger()
@@ -193,7 +203,7 @@ namespace lib61850net
 
             byte[] bitString = GetBitString();
 
-            UInt32 value = 0;
+            UInt32 intValue = 0;
 
             int bitPos;
 
@@ -201,11 +211,11 @@ namespace lib61850net
             {
                 if (GetBitStringBit(bitPos))
                 {
-                    value += (UInt32)(1 << bitPos);
+                    intValue += (UInt32)(1 << bitPos);
                 }
             }
 
-            return value;
+            return intValue;
 
         }
 
@@ -222,57 +232,57 @@ namespace lib61850net
 
         public bool GetBoolean()
         {
-            return asn1Data.Boolean;
+            return (bool)value;
         }
 
         public float GetFloat()
         {
-            return MmsDecoder.DecodeMmsFloat(asn1Data.Floating_point.Value);
+            return (float)value;
         }
 
         public double GetDouble()
         {
-            return MmsDecoder.DecodeMmsDouble(asn1Data.Floating_point.Value);
+            return (double)value;
         }
 
         public string GetGeneralizedTime()
         {
-            return asn1Data.Generalized_time;
+            return (string)value;
         }
 
         public long GetInteger()
         {
-            return asn1Data.Integer;
+            return (long)value;
         }
 
         public string GetMmsString()
         {
-            return asn1Data.MMSString.Value;
+            return (string)value;
         }
 
         public string GetObjId()
         {
-            return asn1Data.ObjId.Value;
+            return (string)value; 
         }
 
         public byte[] GetOctetString()
         {
-            return asn1Data.Octet_string;
+            return (byte[])value; 
         }
 
         public uint GetUnsigned()
         {
-            return (uint)asn1Data.Unsigned;
+            return (uint)value;
         }
 
         public DateTime GetUtcTime()
         {
-            return Scsm_MMS.ConvertFromUtcTime(asn1Data.Utc_time.Value, null);
+            return (DateTime)value;
         }
 
         public string GetVisibleString()
         {
-            return asn1Data.Visible_string;
+            return (string)value;
         }
     }
 }

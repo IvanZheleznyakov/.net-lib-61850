@@ -1308,10 +1308,6 @@ namespace lib61850net
                                     recursiveReadData(iecs, are.Current.Success, b, NodeState.Read);
                                     if (isInvokeIdExists)
                                     {
-                                        MmsValue mmsValue = new MmsValue(are.Current.Success)
-                                        {
-                                            TypeOfError = DataAccessErrorEnum.none,
-                                        };
                                         ReportControlBlock rcb = null;
                                         bool isRcbRequested = response.Item2 is RCBResponse;
                                         if (b is NodeDO)
@@ -1334,7 +1330,6 @@ namespace lib61850net
                                                     TypeOfError = DataAccessErrorEnum.none
                                                 };
                                             }
-                                            //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
                                             if (isRcbRequested)
                                             {
                                                 Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
@@ -1346,7 +1341,7 @@ namespace lib61850net
                                             }
                                             else if (response.Item2 is ReadResponse)
                                             {
-                                                (response.Item2 as ReadResponse).MmsValue = new MmsValue(mmsValue.asn1Data);
+                                                (response.Item2 as ReadResponse).MmsValue = new MmsValue(are.Current.Success);
                                                 (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
                                                 response.Item1?.Start();
                                                 waitingMmsPdu.Remove(receivedInvokeId);
@@ -1358,7 +1353,7 @@ namespace lib61850net
                                             }
                                             else if (response.Item2 is ReadDataSetResponse)
                                             {
-                                                (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(mmsValue));
+                                                (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(are.Current.Success));
                                                 (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
                                             }
                                             if (isRcbRequested || response.Item2 is SelectResponse)
@@ -1374,7 +1369,7 @@ namespace lib61850net
                                         }
                                         else if (response.Item2 is ReadResponse && b is NodeData)
                                         {
-                                            (response.Item2 as ReadResponse).MmsValue = new MmsValue(mmsValue.asn1Data);
+                                            (response.Item2 as ReadResponse).MmsValue = new MmsValue(are.Current.Success);
                                             (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
                                             response.Item1?.Start();
                                             waitingMmsPdu.Remove(receivedInvokeId);
