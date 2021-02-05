@@ -2515,6 +2515,164 @@ namespace lib61850net
             return 0;
         }
 
+        internal int SendWrite(Iec61850State iecs, WriteQueueElement el, MmsValue[] mmsV, Task responseTask = null, WriteResponse response = null)
+        {
+            try
+            {
+                MMSpdu mymmspdu = new MMSpdu();
+                iecs.msMMSout = new MemoryStream();
+
+                Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
+                ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
+                Write_Request wreq = new Write_Request();
+
+                List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
+                List<Data> datl = new List<Data>();
+
+                for (int i = 0; i != el.Data.Length; ++i)/* NodeData d in el.Data)*/
+                {
+                    var d = (NodeData)el.Data[i];
+                    var sendMmsValue = el.MmsValue[i];
+                    if (d != null)
+                    {
+                        VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
+                        Data dat = new Data();
+
+                        ObjectName on = new ObjectName();
+                        ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
+                        dst.DomainID = new Identifier(el.Address.Domain);
+                        dst.ItemID = new Identifier(el.Address.Variable + "$" + d.Name);
+                        on.selectDomain_specific(dst);
+
+                        vas.VariableSpecification = new VariableSpecification();
+                        vas.VariableSpecification.selectName(on);
+
+                        vasl.Add(vas);
+
+                        switch (sendMmsValue.MmsType)
+                        {
+                            case MmsTypeEnum.BOOLEAN:
+                                dat.selectBoolean((bool)sendMmsValue.Value);
+                                break;
+                            case MmsTypeEnum.VISIBLE_STRING:
+                                dat.selectVisible_string((string)sendMmsValue.Value);
+                                break;
+                            case MmsTypeEnum.OCTET_STRING:
+                                dat.selectOctet_string((byte[])sendMmsValue.Value);
+                                break;
+                            case MmsTypeEnum.UTC_TIME:
+                                UtcTime val = new UtcTime((byte[])sendMmsValue.Value);
+                                dat.selectUtc_time(val);
+                                break;
+                            case MmsTypeEnum.BIT_STRING:
+                                {
+                                    if (d.Name.EndsWith("TrgOps"))
+                                    {
+                                        dat.selectBit_string(new BitString((byte[])sendMmsValue.Value, 2/*, (int)d.DataParam*/));
+                                    }
+                                    else if (d.Name.EndsWith("OptFlds"))
+                                    {
+                                        dat.selectBit_string(new BitString((byte[])sendMmsValue.Value, 6/*, (int)d.DataParam*/));
+                                    }
+                                    else
+                                    {
+                                        dat.selectBit_string(new BitString((byte[])sendMmsValue.Value/*, (int)d.DataParam*/));
+                                    }
+                                    break;
+                                }
+                            case MmsTypeEnum.UNSIGNED:
+                                dat.selectUnsigned((long)sendMmsValue.Value);
+                                break;
+                            case MmsTypeEnum.INTEGER:
+                                dat.selectInteger((long)sendMmsValue.Value);
+                                break;
+                            case MmsTypeEnum.FLOATING_POINT:
+                                byte[] byteval;
+                                byte[] tmp;
+                                if (sendMmsValue.Value is float)
+                                {
+                                    byteval = new byte[5];
+                                    tmp = BitConverter.GetBytes((float)sendMmsValue.Value);
+                                    byteval[4] = tmp[0];
+                                    byteval[3] = tmp[1];
+                                    byteval[2] = tmp[2];
+                                    byteval[1] = tmp[3];
+                                    byteval[0] = 0x08;
+                                }
+                                else
+                                {
+                                    byteval = new byte[9];
+                                    tmp = BitConverter.GetBytes((float)sendMmsValue.Value);
+                                    byteval[8] = tmp[0];
+                                    byteval[7] = tmp[1];
+                                    byteval[6] = tmp[2];
+                                    byteval[5] = tmp[3];
+                                    byteval[4] = tmp[4];
+                                    byteval[3] = tmp[5];
+                                    byteval[2] = tmp[6];
+                                    byteval[1] = tmp[7];
+                                    byteval[0] = 0x08;      // ???????????? TEST
+                                }
+                                FloatingPoint fpval = new FloatingPoint(byteval);
+                                dat.selectFloating_point(fpval);
+                                break;
+                            default:
+                                iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
+                                return 1;
+                        }
+                        datl.Add(dat);
+
+                        iecs.logger.LogDebug("SendWrite: Writing: " + dst.ItemID.Value);
+                    }
+                    else
+                        iecs.logger.LogWarning("SendWrite: Null in data for write for: " + el.Address.Variable);
+                }
+                wreq.VariableAccessSpecification = new VariableAccessSpecification();
+                wreq.VariableAccessSpecification.selectListOfVariable(vasl);
+                wreq.ListOfData = datl;
+
+                csrreq.selectWrite(wreq);
+
+                if (responseTask != null)
+                {
+                    waitingMmsPdu.Add(InvokeID, (responseTask, response));
+                }
+
+                crreq.InvokeID = new Unsigned32(InvokeID++);
+
+                crreq.Service = csrreq;
+
+                mymmspdu.selectConfirmed_RequestPDU(crreq);
+
+                encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
+
+                if (iecs.msMMSout.Length == 0)
+                {
+                    iecs.logger.LogError("mms.SendWrite: Encoding Error!");
+                    return -1;
+                }
+
+                this.Send(iecs, mymmspdu, InvokeID, el.Data);
+
+
+
+                return 0;
+            }
+            catch
+            {
+                if (responseTask != null)
+                {
+                    (response as WriteResponse).TypeOfErrors = new List<DataAccessErrorEnum>
+                    {
+                        DataAccessErrorEnum.typeInconsistent
+                    };
+                    responseTask?.Start();
+                }
+
+                return -1;
+            }
+        }
+
         internal int SendWrite(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, WriteResponse response = null)
         {
             try

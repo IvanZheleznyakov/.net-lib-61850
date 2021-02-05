@@ -337,7 +337,7 @@ namespace lib61850net
         /// <param name="value">Записываемое значение.</param>
         /// <param name="waitingTime">Время ожидания записи данных (в миллисекундах).</param>
         /// <returns>Ответ на запрос записи данных.</returns>
-        public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, object value, int waitingTime = 2000)
+        public WriteResponse WriteData(string name, FunctionalConstraintEnum FC, MmsValue value, int waitingTime = 2000)
         {
             try
             {
@@ -366,7 +366,7 @@ namespace lib61850net
         /// <param name="value">Записываемое значение.</param>
         /// <param name="responseHandler">Пользовательский обработчик получения ответа на запись.</param>
         /// <returns>Задача, выполняющая обработчик.</returns>
-        public Task WriteDataAsync(string name, FunctionalConstraintEnum FC, object value, writeResponseReceivedHandler responseHandler)
+        public Task WriteDataAsync(string name, FunctionalConstraintEnum FC, MmsValue value, writeResponseReceivedHandler responseHandler)
         {
             try
             {
@@ -379,8 +379,8 @@ namespace lib61850net
 
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
-                (node as NodeData).DataValue = value;
-                worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
+                MmsValue[] sendindMmsValue = new MmsValue[1] { value };
+                worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response, sendindMmsValue);
                 return responseTask;
             }
             catch (Exception ex)

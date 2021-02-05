@@ -11,8 +11,14 @@ namespace lib61850net
     {
 
         internal List<MmsValue> childs = null;
-        internal object value;
-        public MmsValue()
+        private object value;
+        public MmsValue(MmsTypeEnum mmsType, object value)
+        {
+            MmsType = mmsType;
+            this.value = value;
+        }
+
+        internal MmsValue()
         {
 
         }
@@ -118,6 +124,18 @@ namespace lib61850net
             else
             {
                 MmsType = MmsTypeEnum.UNKNOWN;
+            }
+        }
+
+        internal object Value
+        {
+            get
+            {
+                return value;
+            }
+            set
+            {
+                this.value = value;
             }
         }
 

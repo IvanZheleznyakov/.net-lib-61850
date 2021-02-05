@@ -107,9 +107,10 @@ namespace lib61850net
         {
         }
 
-        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, Task responseTask = null, IResponse response = null)
+        internal void Send(NodeBase[] Data, CommAddress Address, ActionRequested Action, 
+            Task responseTask = null, IResponse response = null, MmsValue[] mmsValue = null)
         {
-            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, responseTask, response);
+            WriteQueueElement el = new WriteQueueElement(Data, Address, Action, responseTask, response, mmsValue);
             SendQueue.Enqueue(el);
             sendQueueWritten.Set();
         }

@@ -327,7 +327,16 @@ namespace lib61850net
                                 switch (el.Action)
                                 {
                                     case ActionRequested.Write:
-                                        iecs.mms.SendWrite(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
+                                        {
+                                            if (el.MmsValue == null)
+                                            {
+                                                iecs.mms.SendWrite(iecs, el, el.ResponseTask, (WriteResponse)el.Response);
+                                            }
+                                            else
+                                            {
+                                                iecs.mms.SendWrite(iecs, el, el.MmsValue, el.ResponseTask, (WriteResponse)el.Response);
+                                            }
+                                        }
                                         break;
                                     case ActionRequested.WriteAsStructure:
                                         iecs.mms.SendWriteAsStructure(iecs, el, el.ResponseTask, (WriteResponse)el.Response);

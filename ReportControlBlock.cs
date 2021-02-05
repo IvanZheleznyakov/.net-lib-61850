@@ -231,6 +231,90 @@ namespace lib61850net
             sendEntryID = false;
         }
 
+        internal (NodeData[], MmsValue[]) GetSendArrays()
+        {
+            List<NodeData> resultNodes = new List<NodeData>();
+            List<MmsValue> resultMmsV = new List<MmsValue>();
+
+            NodeBase fcn = self.FindChildNode("Resv");
+            if (sendResv && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BOOLEAN, Resv));
+            }
+            fcn = self.FindChildNode("ResvTms");
+            if (sendResvTms && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.UNSIGNED, ResvTms));
+            }
+            // Normal members
+            fcn = self.FindChildNode("RptID");
+            if (sendRptID && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.VISIBLE_STRING, RptId));
+            }
+            fcn = self.FindChildNode("DatSet");
+            if (sendDatSet && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.VISIBLE_STRING, DatSet));
+            }
+            fcn = self.FindChildNode("OptFlds");
+            if (sendOptFlds && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BIT_STRING, OptionsEnumExtensions.toBytes(OptFlds)));
+            }
+            fcn = self.FindChildNode("BufTm");
+            if (sendBufTm && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.UNSIGNED, BufTm));
+            }
+            fcn = self.FindChildNode("TrgOps");
+            if (sendTrgOps && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BIT_STRING, OptionsEnumExtensions.toBytes(TrgOps)));
+            }
+            fcn = self.FindChildNode("IntgPd");
+            if (sendIntgPd && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.UNSIGNED, IntgPd));
+            }
+            fcn = self.FindChildNode("PurgeBuf");
+            if (sendPurgeBuf && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BOOLEAN, PurgeBuf));
+            }
+            fcn = self.FindChildNode("EntryID");
+            if (sendEntryID && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.OCTET_STRING, EntryID));
+            }
+            // Activation - Must go last!!!
+            fcn = self.FindChildNode("RptEna");
+            if (sendRptEna && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BOOLEAN, RptEna));
+            }
+            // GI - Must go after activation!!!
+            fcn = self.FindChildNode("GI");
+            if (sendGI && fcn != null)
+            {
+                resultNodes.Add((NodeData)fcn);
+                resultMmsV.Add(new MmsValue(MmsTypeEnum.BOOLEAN, GI));
+            }
+
+            return (resultNodes.ToArray(), resultMmsV.ToArray());
+        }
+
         internal NodeData[] GetWriteArray()
         {
             List<NodeData> nlst = new List<NodeData>();

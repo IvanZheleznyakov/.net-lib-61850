@@ -352,13 +352,13 @@ namespace lib61850net
             return nd;
         }
 
-        internal void WriteData(NodeData data, bool reRead, Task responseTask = null, IResponse response = null)
+        internal void WriteData(NodeData data, bool reRead, Task responseTask = null, IResponse response = null, MmsValue[] mmsValue = null)
         {
             if (data != null && data.DataValue != null)
             {
                 NodeData[] ndarr = new NodeData[1];
                 ndarr[0] = data;
-                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, responseTask, response);
+                iecs.Send(ndarr, data.Parent.CommAddress, ActionRequested.Write, responseTask, response, mmsValue);
 
                 if (reRead)
                 {
@@ -374,7 +374,8 @@ namespace lib61850net
 
         internal void WriteRcb(ReportControlBlock rpar, bool reRead, Task responseTask = null, WriteResponse response = null)
         {
-            iecs.Send(rpar.GetWriteArray(), rpar.self.CommAddress, ActionRequested.Write, responseTask, response);
+            var sendArrays = rpar.GetSendArrays();
+            iecs.Send(sendArrays.Item1/*rpar.GetWriteArray()*/, rpar.self.CommAddress, ActionRequested.Write, responseTask, response, sendArrays.Item2);
             rpar.ResetFlags();
 
             if (reRead)
