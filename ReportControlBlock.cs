@@ -58,6 +58,7 @@ namespace lib61850net
         public bool IsPurgeBufPresent { get { return self.PurgeBuf_present; } }
         public bool IsResvTmsPresent { get { return self.ResvTms_present; } }
         public bool IsEntryIDPresent { get { return self.EntryID_present; } }
+        public bool IsSegmPresent { get { return self.Segmentation_present; } }
 
         public string RptId
         {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using org.bn.types;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,69 @@ namespace lib61850net
 {
     public static class MmsDecoder
     {
+        internal static BitString CreateBitStringFromInteger(int val)
+        {
+            BitArray ba = new BitArray(BitConverter.GetBytes(val));
+            byte[] byteVal = null;
+            byte lastBit = 0;
+            for (int i = ba.Length - 1; i != -1; --i)
+            {
+                if (ba[i])
+                {
+                    lastBit = (byte)(i + 1);
+                    break;
+                }
+            }
+            BitString output = null;
+            if (lastBit <= 8)
+                byteVal = new byte[] { 0 };
+            else if (lastBit <= 16)
+                byteVal = new byte[] { 0, 0 };
+            else if (lastBit <= 24)
+                byteVal = new byte[] { 0, 0, 0 };
+            else
+                byteVal = new byte[] { 0, 0, 0, 0 };
+
+            byte mask = 1;
+
+            for (int i = 0; i < lastBit; i++)
+            {
+                if ((i % 8) == 0)
+                    mask = 0x80;
+                else
+                    mask >>= 1;
+
+
+                if (ba[i])
+                {
+                    byteVal[i / 8] |= mask;
+                }
+            }
+
+            output = new BitString(byteVal);
+            output.TrailBitsCnt = byteVal.Length * 8 - ((lastBit / 8) * 8) - lastBit % 8;
+
+            return output;
+        }
+
+        internal static int GetPadding(byte[] buf)
+        {
+            // int a = BitConverter.
+            //  BitArray ba = new BitArray(BitConverter.GetBytes(a));
+            BitArray ba = new BitArray(buf);
+            byte lastBit = 0;
+            for (int i = ba.Length - 1; i != -1; --i)
+            {
+                if (ba[i])
+                {
+                    lastBit = (byte)(i + 1);
+                    break;
+                }
+            }
+
+            return (buf.Length * 8 - ((lastBit / 8) * 8) - lastBit % 8);
+        }
+
         internal static bool GetBitStringFromMmsValue(byte[] buf, int size, int bitPos)
         {
             if (bitPos < size)
@@ -49,8 +114,25 @@ namespace lib61850net
 
         public static byte[] GetBitStringFromInteger(int size, ulong value)
         {
-            byte[] result = new byte[size];
-            for (int bitPos = 0; bitPos != size; ++bitPos)
+            byte[] result;
+            if (size <= 8)
+            {
+                result = new byte[] { 0 };
+            }
+            else if (size <= 16)
+            {
+                result = new byte[] { 0, 0 };
+            }
+            else if (size <= 24)
+            {
+                result = new byte[] { 0, 0, 0 };
+            }
+            else
+            {
+                result = new byte[] { 0, 0, 0, 0 };
+            }
+
+            for (int bitPos = size - 1; bitPos != -1; --bitPos)
             {
                 SetBitStringBit(ref result, size, bitPos, ((value & 1) == 1));
                 value >>= 1;
@@ -88,16 +170,19 @@ namespace lib61850net
 
         internal static float DecodeMmsFloat(byte[] floatBuf)
         {
+            float result = 0.0F;
             byte[] tmp = new byte[4];
             tmp[0] = floatBuf[4];
             tmp[1] = floatBuf[3];
             tmp[2] = floatBuf[2];
             tmp[3] = floatBuf[1];
-            return BitConverter.ToSingle(tmp, 0);
+            result = BitConverter.ToSingle(tmp, 0);
+            return result;
         }
 
         internal static double DecodeMmsDouble(byte[] doubleBuf)
         {
+            double result = 0.0;
             byte[] tmp = new byte[8];
             tmp[0] = doubleBuf[8];
             tmp[1] = doubleBuf[7];
@@ -107,7 +192,8 @@ namespace lib61850net
             tmp[5] = doubleBuf[3];
             tmp[6] = doubleBuf[2];
             tmp[7] = doubleBuf[1];
-            return BitConverter.ToDouble(tmp, 0);
+            result = BitConverter.ToDouble(tmp, 0);
+            return result;
         }
 
         internal static DateTime DecodeAsn1Time(string stringTime)

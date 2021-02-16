@@ -407,6 +407,10 @@ namespace lib61850net
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU != null && mymmspdu.Confirmed_ResponsePDU.Service != null)
                 {
+                    if (mymmspdu.Confirmed_ResponsePDU.InvokeID.Value == 690)
+                    {
+                        int wtf = 2 + 2;
+                    }
                     iecs.logger.LogDebug("mymmspdu.Confirmed_ResponsePDU.Service exists!");
                     NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                     if (mymmspdu.Confirmed_ResponsePDU.InvokeID.Value == 237)
@@ -511,7 +515,7 @@ namespace lib61850net
             catch (Exception ex)
             {
                 iecs.sourceLogger?.SendError("lib61850net: ERROR in parsing received mmspdu: " + ex.Message);
-                Console.WriteLine("lib61850net: ERROR in parsing received mmspdu: " + ex.Message);
+            //    Console.WriteLine("lib61850net: ERROR in parsing received mmspdu: " + ex.Message);
                 iecs.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
                 return -1;
             }
@@ -583,7 +587,8 @@ namespace lib61850net
                     if (iecs.DataModel.ied.NextActualChildNode() == null)
                     {
                         // End of loop
-                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                        //   iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
                         iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
                         iecs.DataModel.ied.ResetAllChildNodes();
                     }
@@ -848,7 +853,7 @@ namespace lib61850net
                                     {
                                         rptName = list[i].Success.Visible_string;
                                         iecs.logger.LogDebug("Report Name = " + rptName);
-                                        iecs.logger.LogInfo("Report Name = " + rptName);
+                                   //     iecs.logger.LogInfo("Report Name = " + rptName);
                                         report.RptId = rptName;
                                         continue;
                                     }
@@ -860,7 +865,7 @@ namespace lib61850net
                                     {
                                         rptOpts = list[i].Success.Bit_string.Value;
                                         iecs.logger.LogDebug("Report Optional Fields = " + rptOpts[0].ToString());
-                                        iecs.logger.LogInfo("Report Optional Fields = " + rptOpts[0].ToString());
+                                 //       iecs.logger.LogInfo("Report Optional Fields = " + rptOpts[0].ToString());
                                         continue;
                                     }
                                 }
@@ -920,7 +925,7 @@ namespace lib61850net
                                             datName = list[i].Success.Visible_string;
                                             report.DataSetName = datName;
                                             iecs.logger.LogDebug("Report Data Set Name = " + datName);
-                                            iecs.logger.LogInfo("Report Data Set Name = " + datName);
+                                         //   iecs.logger.LogInfo("Report Data Set Name = " + datName);
                                             continue;
                                         }
                                     }
@@ -1065,7 +1070,7 @@ namespace lib61850net
                                                 // dataref = (dataref.Structure as List<Data>)[0];
                                                 if (list[i + datanum].Success != null)
                                                 {
-                                                    recursiveReadData(iecs, dataref, b, NodeState.Reported);
+                                                    RecursiveReadData(iecs, dataref, b, NodeState.Reported);
                                                 }
                                             }
                                             dataReferenceCount++;
@@ -1103,7 +1108,7 @@ namespace lib61850net
                                                 Data dataref = list[i].Success;
                                                 if (list[i].Success != null)
                                                 {
-                                                    recursiveReadData(iecs, dataref, nba[listmap[dataValuesCount]], NodeState.Reported);
+                                                    RecursiveReadData(iecs, dataref, nba[listmap[dataValuesCount]], NodeState.Reported);
                                                     varName = nba[listmap[dataValuesCount]].CommAddress.Domain + "/" + nba[listmap[dataValuesCount]].CommAddress.Variable;
                                                 }
                                             }
@@ -1305,7 +1310,12 @@ namespace lib61850net
                                 if (b != null)
                                 {
                                     iecs.logger.LogDebug("Node address: " + b.IecAddress);
-                                    recursiveReadData(iecs, are.Current.Success, b, NodeState.Read);
+                                    bool isNeededToBeRead = false;
+                                    if (b is NodeDO)
+                                    {
+                                        isNeededToBeRead = (b as NodeDO).FC == FunctionalConstraintEnum.BR || (b as NodeDO).FC == FunctionalConstraintEnum.RP || (b as NodeDO).FC == FunctionalConstraintEnum.CO || (b as NodeDO).FC == FunctionalConstraintEnum.CF;
+                                    }
+                                    RecursiveReadData(iecs, are.Current.Success, b, NodeState.Read, isNeededToBeRead);
                                     if (isInvokeIdExists)
                                     {
                                         ReportControlBlock rcb = null;
@@ -1332,7 +1342,7 @@ namespace lib61850net
                                             }
                                             if (isRcbRequested)
                                             {
-                                                Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
+                                            //    Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
                                                 (response.Item2 as RCBResponse).ReportControlBlock = new ReportControlBlock();
                                                 (response.Item2 as RCBResponse).ReportControlBlock.self = rcb.self;
                                                 (response.Item2 as RCBResponse).ReportControlBlock.TypeOfError = rcb.TypeOfError;
@@ -1382,7 +1392,7 @@ namespace lib61850net
                         else
                         {
                             // Error
-                            Console.WriteLine("Error reading variables, different count of Specifications and AccessResults!");
+                       //     Console.WriteLine("Error reading variables, different count of Specifications and AccessResults!");
                             iecs.logger.LogError("Error reading variables, different count of Specifications and AccessResults!");
                         }
                     }
@@ -1416,7 +1426,7 @@ namespace lib61850net
                                 for (int i = 0; i < data.Length; i++)
                                 {
                                     iecs.logger.LogDebug("Reading variable: " + data[i].IecAddress);
-                                    recursiveReadData(iecs, (Read.ListOfAccessResult as List<AccessResult>)[i].Success, data[i], NodeState.Read);
+                                    RecursiveReadData(iecs, (Read.ListOfAccessResult as List<AccessResult>)[i].Success, data[i], NodeState.Read);
                                     if (isInvokeIdExists)
                                     {
                                         if ((Read.ListOfAccessResult as List<AccessResult>)[i].Success != null)
@@ -1484,8 +1494,20 @@ namespace lib61850net
                             if (ar.Success != null)
                             {
                                 iecs.logger.LogDebug("Reading Actual variable value: " + lastOperationData[i].IecAddress);
-
-                                recursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read);
+                                bool isNeededToBeRead = false;
+                                if (lastOperationData[i] is NodeFC)
+                                {
+                                    isNeededToBeRead = (lastOperationData[i] as NodeFC).Name == "RP" || (lastOperationData[i] as NodeFC).Name == "BR" || (lastOperationData[i] as NodeFC).Name == "CO" || (lastOperationData[i] as NodeFC).Name == "CF";
+                                }
+                                else if (lastOperationData[i] is NodeDO)
+                                {
+                                    isNeededToBeRead = (lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.BR || (lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.RP || (lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.CO || (lastOperationData[i] as NodeDO).FC == FunctionalConstraintEnum.CF;
+                                }
+                                else if (lastOperationData[i] is NodeData)
+                                {
+                                    isNeededToBeRead = (lastOperationData[i] as NodeData).FC == FunctionalConstraintEnum.BR || (lastOperationData[i] as NodeData).FC == FunctionalConstraintEnum.RP || (lastOperationData[i] as NodeData).FC == FunctionalConstraintEnum.CO || (lastOperationData[i] as NodeData).FC == FunctionalConstraintEnum.CF;
+                                }
+                                RecursiveReadData(iecs, ar.Success, lastOperationData[i], NodeState.Read, isNeededToBeRead);
                                 if (isInvokeIdExists)
                                 {
                                     MmsValue mmsValue = new MmsValue(ar.Success)
@@ -1518,16 +1540,17 @@ namespace lib61850net
                                         //  responseEventWithArg.Item2 = isRcbRequested ? rcb : mmsValue;
                                         if (isRcbRequested)
                                         {
-                                            Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
+                                       //     Console.WriteLine("rcb requested on invokeid " + receivedInvokeId);
                                             (response.Item2 as RCBResponse).ReportControlBlock = new ReportControlBlock();
                                             (response.Item2 as RCBResponse).ReportControlBlock.self = rcb.self;
+                                            (response.Item2 as RCBResponse).ReportControlBlock.ObjectReference = rcb.self.IecAddress;
                                             (response.Item2 as RCBResponse).ReportControlBlock.TypeOfError = rcb.TypeOfError;
                                             (response.Item2 as RCBResponse).TypeOfError = rcb.TypeOfError;
                                             (response.Item2 as RCBResponse).ReportControlBlock.ResetFlags();
                                         }
                                         else if (response.Item2 is ReadResponse)
                                         {
-                                            (response.Item2 as ReadResponse).MmsValue.CopyFrom(mmsValue);
+                                            (response.Item2 as ReadResponse).MmsValue = mmsValue;
                                             (response.Item2 as ReadResponse).TypeOfError = DataAccessErrorEnum.none;
                                         }
                                         else if (response.Item2 is SelectResponse)
@@ -1537,7 +1560,7 @@ namespace lib61850net
                                         }
                                         else if (response.Item2 is ReadDataSetResponse)
                                         {
-                                            (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(mmsValue));
+                                            (response.Item2 as ReadDataSetResponse).MmsValues.Add(new MmsValue(ar.Success));
                                             (response.Item2 as ReadDataSetResponse).TypeOfErrors.Add(DataAccessErrorEnum.none);
                                         }
                                         if (isRcbRequested || response.Item2 is SelectResponse)
@@ -1577,11 +1600,15 @@ namespace lib61850net
                         }
                         i++;
                     }
-                    if (response.Item1?.Status == TaskStatus.Created)
+                    try
                     {
-                        response.Item1?.Start();
-                        waitingMmsPdu.Remove(receivedInvokeId);
+                        if (response.Item1?.Status == TaskStatus.Created)
+                        {
+                            response.Item1?.Start();
+                            waitingMmsPdu.Remove(receivedInvokeId);
+                        }
                     }
+                    catch { }
                     lastOperationData = null;
                 }
             }
@@ -1669,6 +1696,7 @@ namespace lib61850net
                 {
                     waitingMmsPdu.TryGetValue(invokeId, out (Task, IResponse) taskWithResponse);
                     (taskWithResponse.Item2 as MmsVariableSpecResponse).MmsVariableSpecification = MatchDescriptionWithMms(GetVariableAccessAttributes.TypeDescription);
+                    (taskWithResponse.Item2 as MmsVariableSpecResponse).TypeOfError = DataAccessErrorEnum.none;
                     taskWithResponse.Item1?.Start();
                     waitingMmsPdu.Remove(invokeId);
                 }
@@ -1682,11 +1710,23 @@ namespace lib61850net
                         if (iecs.DataModel.ied.NextActualChildNode() == null)
                         {
                             // End of loop
-                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                            //    iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
+                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
                             iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
                             iecs.DataModel.ied.ResetAllChildNodes();
                         }
                     }
+                }
+            }
+        }
+
+        private void LinkRcb(Iec61850State iecs)
+        {
+            foreach (var (nb, rcb) in listOfRCB)
+            {
+                foreach (var child in nb.GetChildNodes())
+                {
+                    rcb.LinkChildNodeByAddress(child);
                 }
             }
         }
@@ -1720,7 +1760,10 @@ namespace lib61850net
                         iecs.continueAfter = null;
                         if (iecs.DataModel.ied.NextActualChildNode() == null)
                         {
-                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;    // next state
+                         //       iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;    // next state
+                            LinkRcb(iecs);
+                            //iecs.istate = Iec61850lStateEnum.IEC61850_MAKEGUI;
+                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
                             iecs.logger.LogInfo("Reading variable specifications: [IEC61850_READ_ACCESSAT_VAR]");
                             iecs.DataModel.ied.ResetAllChildNodes();
                         }
@@ -1772,7 +1815,7 @@ namespace lib61850net
             iecs.logger.LogInfo("Reading domain (LD) names: [IEC61850_READ_NAMELIST_DOMAIN]");
         }
 
-        void recursiveReadData(Iec61850State iecs, Data data, NodeBase actualNode, NodeState s)
+        private void RecursiveReadData(Iec61850State iecs, Data data, NodeBase actualNode, NodeState s, bool isNeededToBeRead = false)
         {
             if (data == null)
             {
@@ -1784,154 +1827,157 @@ namespace lib61850net
                 iecs.logger.LogDebug("actualNode = null, returning from recursiveReadData");
                 return;
             }
-            iecs.logger.LogDebug("recursiveReadData: nodeAddress=" + actualNode.IecAddress + ", state=" + s.ToString());
-            if (data.Structure != null)
+            if (isNeededToBeRead)
             {
-                iecs.logger.LogDebug("data.Structure != null");
-                NodeBase[] nb = actualNode.GetChildNodes();
-                int i = 0;
-                foreach (Data d in data.Structure)
+                iecs.logger.LogDebug("recursiveReadData: nodeAddress=" + actualNode.IecAddress + ", state=" + s.ToString());
+                if (data.Structure != null)
                 {
-                    if (i <= nb.GetUpperBound(0))
-                        recursiveReadData(iecs, d, nb[i], s);
+                    iecs.logger.LogDebug("data.Structure != null");
+                    NodeBase[] nb = actualNode.GetChildNodes();
+                    int i = 0;
+                    foreach (Data d in data.Structure)
+                    {
+                        if (i <= nb.GetUpperBound(0))
+                            RecursiveReadData(iecs, d, nb[i], s, isNeededToBeRead);
+                        else
+                            iecs.logger.LogError("Not matching read structure: Node=" + actualNode.IecAddress);
+                        i++;
+                    }
+                }
+                else if (data.Array != null)
+                {
+                    iecs.logger.LogDebug("data.Array != null");
+                    int i = 0;
+                    NodeBase[] nb = actualNode.GetChildNodes();
+                    foreach (Data d in data.Array)
+                    {
+                        if (i <= nb.GetUpperBound(0))
+                            RecursiveReadData(iecs, d, nb[i], s, isNeededToBeRead);
+                        else
+                            iecs.logger.LogError("Not matching read array: Node=" + actualNode.Name);
+                        i++;
+                    }
+                }
+                else if (data.isIntegerSelected())
+                {
+                    iecs.logger.LogDebug("data.Integer != null");
+                    (actualNode as NodeData).DataValue = data.Integer;
+                }
+                else if (data.isBcdSelected())
+                {
+                    iecs.logger.LogDebug("data.Bcd != null");
+                    (actualNode as NodeData).DataValue = data.Bcd;
+                }
+                else if (data.isBooleanSelected())
+                {
+                    iecs.logger.LogDebug("data.Boolean != null");
+                    (actualNode as NodeData).DataValue = data.Boolean;
+                }
+                else if (data.isFloating_pointSelected())
+                {
+                    iecs.logger.LogDebug("data.Floating_point != null");
+                    if (data.Floating_point.Value.Length == 5)
+                    {
+                        float k = 0.0F;
+                        byte[] tmp = new byte[4];
+                        tmp[0] = data.Floating_point.Value[4];
+                        tmp[1] = data.Floating_point.Value[3];
+                        tmp[2] = data.Floating_point.Value[2];
+                        tmp[3] = data.Floating_point.Value[1];
+                        k = BitConverter.ToSingle(tmp, 0);
+                        (actualNode as NodeData).DataValue = k;
+                    }
+                    else if (data.Floating_point.Value.Length == 9)
+                    {
+                        double k = 0.0;
+                        byte[] tmp = new byte[8];
+                        tmp[0] = data.Floating_point.Value[8];
+                        tmp[1] = data.Floating_point.Value[7];
+                        tmp[2] = data.Floating_point.Value[6];
+                        tmp[3] = data.Floating_point.Value[5];
+                        tmp[4] = data.Floating_point.Value[4];
+                        tmp[5] = data.Floating_point.Value[3];
+                        tmp[6] = data.Floating_point.Value[2];
+                        tmp[7] = data.Floating_point.Value[1];
+                        k = BitConverter.ToDouble(tmp, 0);
+                        (actualNode as NodeData).DataValue = k;
+                    }
+                }
+                else if (data.isGeneralized_timeSelected())
+                {
+                    iecs.logger.LogDebug("data.Generalized_time != null");
+                    (actualNode as NodeData).DataValue = data.Generalized_time;
+                }
+                else if (data.isMMSStringSelected())
+                {
+                    iecs.logger.LogDebug("data.MMSString != null");
+                    (actualNode as NodeData).DataValue = data.MMSString.Value;
+                }
+                else if (data.isObjIdSelected())
+                {
+                    iecs.logger.LogDebug("data.ObjId != null");
+                    (actualNode as NodeData).DataValue = data.ObjId.Value;
+                }
+                else if (data.isOctet_stringSelected())
+                {
+                    iecs.logger.LogDebug("data.Octet_string != null");
+                    (actualNode as NodeData).DataValue = System.Text.ASCIIEncoding.ASCII.GetString(data.Octet_string);
+                }
+                else if (data.isUnsignedSelected())
+                {
+                    iecs.logger.LogDebug("data.Unsigned != null");
+                    (actualNode as NodeData).DataValue = data.Unsigned;
+                }
+                else if (data.isUtc_timeSelected())
+                {
+                    iecs.logger.LogDebug("data.Utc_time != null");
+
+                    (actualNode as NodeData).DataValue = ConvertFromUtcTime(data.Utc_time.Value, (actualNode as NodeData).DataParam);
+                }
+                else if (data.isVisible_stringSelected())
+                {
+                    iecs.logger.LogDebug("data.Visible_string != null");
+                    (actualNode as NodeData).DataValue = data.Visible_string;
+                }
+                else if (data.isBinary_timeSelected())
+                {
+                    iecs.logger.LogDebug("data.Binary_time != null");
+
+                    ulong millis;
+                    ulong days = 0;
+                    DateTime origin;
+
+                    millis = (ulong)(data.Binary_time.Value[0] << 24) +
+                             (ulong)(data.Binary_time.Value[1] << 16) +
+                             (ulong)(data.Binary_time.Value[2] << 8) +
+                             (ulong)(data.Binary_time.Value[3]);
+                    if (data.Binary_time.Value.Length == 6)
+                    {
+                        days = (ulong)(data.Binary_time.Value[4] << 8) +
+                               (ulong)(data.Binary_time.Value[5]);
+                        origin = new DateTime(1984, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                        //millis *= 1000;
+                    }
                     else
-                        iecs.logger.LogError("Not matching read structure: Node=" + actualNode.IecAddress);
-                    i++;
+                    {
+                        origin = DateTime.UtcNow.Date;
+                    }
+
+                    double dMillis = (double)(millis + days * 24 * 3600 * 1000);
+                    origin = origin.AddMilliseconds(dMillis);
+
+                    (actualNode as NodeData).DataValue = origin.ToLocalTime();
+                    (actualNode as NodeData).DataParam = data.Binary_time.Value;
+
                 }
-            }
-            else if (data.Array != null)
-            {
-                iecs.logger.LogDebug("data.Array != null");
-                int i = 0;
-                NodeBase[] nb = actualNode.GetChildNodes();
-                foreach (Data d in data.Array)
+                else if (data.isBit_stringSelected())
                 {
-                    if (i <= nb.GetUpperBound(0))
-                        recursiveReadData(iecs, d, nb[i], s);
-                    else
-                        iecs.logger.LogError("Not matching read array: Node=" + actualNode.Name);
-                    i++;
+                    iecs.logger.LogDebug("data.Bit_string != null");
+                    (actualNode as NodeData).DataValue = data.Bit_string.Value;
+                    (actualNode as NodeData).DataParam = data.Bit_string.TrailBitsCnt;
                 }
+                iecs.logger.LogDebug("recursiveReadData: successfull return");
             }
-            else if (data.isIntegerSelected())
-            {
-                iecs.logger.LogDebug("data.Integer != null");
-                (actualNode as NodeData).DataValue = data.Integer;
-            }
-            else if (data.isBcdSelected())
-            {
-                iecs.logger.LogDebug("data.Bcd != null");
-                (actualNode as NodeData).DataValue = data.Bcd;
-            }
-            else if (data.isBooleanSelected())
-            {
-                iecs.logger.LogDebug("data.Boolean != null");
-                (actualNode as NodeData).DataValue = data.Boolean;
-            }
-            else if (data.isFloating_pointSelected())
-            {
-                iecs.logger.LogDebug("data.Floating_point != null");
-                if (data.Floating_point.Value.Length == 5)
-                {
-                    float k = 0.0F;
-                    byte[] tmp = new byte[4];
-                    tmp[0] = data.Floating_point.Value[4];
-                    tmp[1] = data.Floating_point.Value[3];
-                    tmp[2] = data.Floating_point.Value[2];
-                    tmp[3] = data.Floating_point.Value[1];
-                    k = BitConverter.ToSingle(tmp, 0);
-                    (actualNode as NodeData).DataValue = k;
-                }
-                else if (data.Floating_point.Value.Length == 9)
-                {
-                    double k = 0.0;
-                    byte[] tmp = new byte[8];
-                    tmp[0] = data.Floating_point.Value[8];
-                    tmp[1] = data.Floating_point.Value[7];
-                    tmp[2] = data.Floating_point.Value[6];
-                    tmp[3] = data.Floating_point.Value[5];
-                    tmp[4] = data.Floating_point.Value[4];
-                    tmp[5] = data.Floating_point.Value[3];
-                    tmp[6] = data.Floating_point.Value[2];
-                    tmp[7] = data.Floating_point.Value[1];
-                    k = BitConverter.ToDouble(tmp, 0);
-                    (actualNode as NodeData).DataValue = k;
-                }
-            }
-            else if (data.isGeneralized_timeSelected())
-            {
-                iecs.logger.LogDebug("data.Generalized_time != null");
-                (actualNode as NodeData).DataValue = data.Generalized_time;
-            }
-            else if (data.isMMSStringSelected())
-            {
-                iecs.logger.LogDebug("data.MMSString != null");
-                (actualNode as NodeData).DataValue = data.MMSString.Value;
-            }
-            else if (data.isObjIdSelected())
-            {
-                iecs.logger.LogDebug("data.ObjId != null");
-                (actualNode as NodeData).DataValue = data.ObjId.Value;
-            }
-            else if (data.isOctet_stringSelected())
-            {
-                iecs.logger.LogDebug("data.Octet_string != null");
-                (actualNode as NodeData).DataValue = System.Text.ASCIIEncoding.ASCII.GetString(data.Octet_string);
-            }
-            else if (data.isUnsignedSelected())
-            {
-                iecs.logger.LogDebug("data.Unsigned != null");
-                (actualNode as NodeData).DataValue = data.Unsigned;
-            }
-            else if (data.isUtc_timeSelected())
-            {
-                iecs.logger.LogDebug("data.Utc_time != null");
-
-                (actualNode as NodeData).DataValue = ConvertFromUtcTime(data.Utc_time.Value, (actualNode as NodeData).DataParam);
-            }
-            else if (data.isVisible_stringSelected())
-            {
-                iecs.logger.LogDebug("data.Visible_string != null");
-                (actualNode as NodeData).DataValue = data.Visible_string;
-            }
-            else if (data.isBinary_timeSelected())
-            {
-                iecs.logger.LogDebug("data.Binary_time != null");
-
-                ulong millis;
-                ulong days = 0;
-                DateTime origin;
-
-                millis = (ulong)(data.Binary_time.Value[0] << 24) +
-                         (ulong)(data.Binary_time.Value[1] << 16) +
-                         (ulong)(data.Binary_time.Value[2] << 8) +
-                         (ulong)(data.Binary_time.Value[3]);
-                if (data.Binary_time.Value.Length == 6)
-                {
-                    days = (ulong)(data.Binary_time.Value[4] << 8) +
-                           (ulong)(data.Binary_time.Value[5]);
-                    origin = new DateTime(1984, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    //millis *= 1000;
-                }
-                else
-                {
-                    origin = DateTime.UtcNow.Date;
-                }
-
-                double dMillis = (double)(millis + days * 24 * 3600 * 1000);
-                origin = origin.AddMilliseconds(dMillis);
-
-                (actualNode as NodeData).DataValue = origin.ToLocalTime();
-                (actualNode as NodeData).DataParam = data.Binary_time.Value;
-
-            }
-            else if (data.isBit_stringSelected())
-            {
-                iecs.logger.LogDebug("data.Bit_string != null");
-                (actualNode as NodeData).DataValue = data.Bit_string.Value;
-                (actualNode as NodeData).DataParam = data.Bit_string.TrailBitsCnt;
-            }
-            iecs.logger.LogDebug("recursiveReadData: successfull return");
         }
 
         void RecursiveReadTypeDescription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
@@ -2450,7 +2496,7 @@ namespace lib61850net
             if (iecs.msMMSout.Length == 0)
             {
                 iecs.logger.LogError("mms.SendRead: Encoding Error!");
-                Console.WriteLine("error in sendread: encoding error!");
+             //   Console.WriteLine("error in sendread: encoding error!");
                 return -1;
             }
 
@@ -2566,6 +2612,8 @@ namespace lib61850net
                                 break;
                             case MmsTypeEnum.BIT_STRING:
                                 {
+                               //     dat.selectBit_string(new BitString((byte[])sendMmsValue.Value));
+                                    //  dat.selectBit_string(new BitString((byte[])sendMmsValue.Value, MmsDecoder.GetPadding((byte[])sendMmsValue.Value)));
                                     if (d.Name.EndsWith("TrgOps"))
                                     {
                                         dat.selectBit_string(new BitString((byte[])sendMmsValue.Value, 2/*, (int)d.DataParam*/));
@@ -2576,12 +2624,12 @@ namespace lib61850net
                                     }
                                     else
                                     {
-                                        dat.selectBit_string(new BitString((byte[])sendMmsValue.Value/*, (int)d.DataParam*/));
+                                        dat.selectBit_string(new BitString((byte[])sendMmsValue.Value, (int)d.DataParam));
                                     }
                                     break;
                                 }
                             case MmsTypeEnum.UNSIGNED:
-                                dat.selectUnsigned((long)sendMmsValue.Value);
+                                dat.selectUnsigned(Convert.ToInt64(sendMmsValue.Value));
                                 break;
                             case MmsTypeEnum.INTEGER:
                                 dat.selectInteger((long)sendMmsValue.Value);
@@ -3356,25 +3404,104 @@ namespace lib61850net
             iecs.iso.Send(iecs);
         }
 
-        private void AddIecAddress(Iec61850State iecs, string addr)
+        private List<(NodeBase, NodeBase)> listOfRCB = new List<(NodeBase, NodeBase)>();
+
+        private void TestAdd(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
+        {
+            switch (deep)
+            {
+                case 0:
+                    {
+                        return;
+                    }
+                case 1:
+                    {
+                        var curfc = actNode.AddChildNode(new NodeFC(addr[deep]));
+                        if (addr.Length < 3)
+                        {
+                            return;
+                        }
+                        TestAdd(iecs, addr, 2, curfc);
+                        break;
+                    }
+                case 2:
+                    {
+                        var curdo = actNode.AddChildNode(new NodeDO(addr[deep]));
+                        if (actNode is NodeFC && (actNode.Name == "RP" || actNode.Name == "BR"))
+                        {
+                            // Having RCB
+                            NodeBase nrpied;
+                            if (actNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            NodeBase nrp = new NodeRCB(curdo.CommAddress.Variable, curdo.Name);
+                            nrpied.AddChildNode(nrp);
+                            listOfRCB.Add((curdo, nrp));
+                            foreach (NodeBase nb in curdo.GetChildNodes())
+                            {
+                                nrp.LinkChildNodeByAddress(nb);
+                            }
+                        }
+                        if (addr.Length < 4)
+                        {
+                            return;
+                        }
+                        TestAdd(iecs, addr, 3, curdo);
+                        break;
+                    }
+                default:
+                    {
+                        var curdt = actNode.AddChildNode(new NodeData(addr[deep]));
+                        if (addr.Length < deep + 2)
+                        {
+                            return;
+                        }
+                        TestAdd(iecs, addr, ++deep, curdt);
+                        break;
+                    }
+            }
+        }
+
+        private void TestGlobalAdd(Iec61850State iecs, string addr)
         {
             string[] parts = addr.Split(new char[] { '$' });
+
             NodeBase curld = iecs.DataModel.ied.GetActualChildNode();
-            NodeBase curln, curfc; //, curdt;
+
             if (parts.Length < 1)
             {
                 return;
             }
-            curln = curld.AddChildNode(new NodeLN(parts[0]));
+
+            var curln = curld.AddChildNode(new NodeLN(parts[0]));
+
             if (parts.Length < 2)
             {
                 return;
             }
-            curfc = curln.AddChildNode(new NodeFC(parts[1]));
-            if (parts.Length < 3)
-            {
-                return;
-            }
+
+            TestAdd(iecs, parts, 1, curln);
+        }
+
+        private void AddIecAddress(Iec61850State iecs, string addr)
+        {
+            TestGlobalAdd(iecs, addr);
+            //string[] parts = addr.Split(new char[] { '$' });
+            //NodeBase curld = iecs.DataModel.ied.GetActualChildNode();
+            //NodeBase curln, curfc; //, curdt;
+            //if (parts.Length < 1)
+            //{
+            //    return;
+            //}
+            //curln = curld.AddChildNode(new NodeLN(parts[0]));
+            //if (parts.Length < 2)
+            //{
+            //    return;
+            //}
+            //curfc = curln.AddChildNode(new NodeFC(parts[1]));
+            //if (parts.Length < 3)
+            //{
+            //    return;
+            //}
         }
 
         internal static DateTime ConvertFromUnixTimestamp(double timestamp)

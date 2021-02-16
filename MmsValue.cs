@@ -12,10 +12,11 @@ namespace lib61850net
 
         internal List<MmsValue> childs = null;
         private object value;
-        public MmsValue(MmsTypeEnum mmsType, object value)
+        public MmsValue(MmsTypeEnum mmsType, object value, int size = 0)
         {
             MmsType = mmsType;
             this.value = value;
+            this.size = size;
         }
 
         internal MmsValue()
@@ -148,12 +149,12 @@ namespace lib61850net
         public DataAccessErrorEnum TypeOfError { get; internal set; }
         public MmsTypeEnum MmsType { get; internal set; }
 
-        private int size = -1;
+        private int size = 0;
         public int Size
         {
             get
             {
-                if (size == -1)
+                if (size == 0)
                 {
                     if (MmsType == MmsTypeEnum.ARRAY)
                     {

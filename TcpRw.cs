@@ -8,7 +8,7 @@ namespace lib61850net
 {
     internal class TcpRw
     {
-        public static void StartClient(TcpState tcps)
+        internal static void StartClient(TcpState tcps)
         {
             // Connect to a remote device.
             try
@@ -61,7 +61,7 @@ namespace lib61850net
             }
         }
 
-        public static void StopClient(TcpState tcps)
+        internal static void StopClient(TcpState tcps)
         {
             // Connect to a remote device.
             tcps?.logger.LogInfo("StopClient: Socket shutdowned.");
@@ -125,7 +125,7 @@ namespace lib61850net
             }
         }
 
-        public static void Receive(TcpState tcps)
+        internal static void Receive(TcpState tcps)
         {
             try
             {
@@ -219,6 +219,7 @@ namespace lib61850net
             catch (Exception e)
             {
                 tcps.logger.LogError(e.ToString());
+                StopClient(tcps);
             }
         }
 

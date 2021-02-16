@@ -19,14 +19,40 @@ namespace lib61850net
         internal CommandParams commandParams;
         internal string mmsReference;
 
+        private MmsTypeEnum ctlValType = MmsTypeEnum.UNKNOWN;
+
+        public MmsTypeEnum CtlValMmsType
+        {
+            get
+            {
+                if (ctlValType == MmsTypeEnum.UNKNOWN)
+                {
+                    ctlValType = (self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData).DataType;
+                }
+
+                return ctlValType;
+            }
+        }
+
         internal ControlErrorEnum ControlError { get; set; } = ControlErrorEnum.NoError;
         private ControlAddCauseEnum controlAddCauseEnum = ControlAddCauseEnum.ADD_CAUSE_NONE;
         public ControlAddCauseEnum ControlAddCause 
         {
             get
             {
-                responseComTerTask?.Wait();
-                responseComTerTask = null;
+                lock (responseComTerTask)
+                {
+                    bool isExecuted = false;
+                    if (responseComTerTask != null && responseComTerTask.Wait(5000))
+                    {
+                        isExecuted = true;
+                    }
+                    if (!isExecuted)
+                    {
+                        controlAddCauseEnum = ControlAddCauseEnum.ADD_CAUSE_TIME_LIMIT_OVER;
+                    }
+                    responseComTerTask = null;
+                }
                 return controlAddCauseEnum;
             }
             internal set
@@ -133,6 +159,16 @@ namespace lib61850net
                 this.mmsReference = mmsReference;
                 this.ObjectReference = objectReference;
                 var node = manager.worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                var responseCommand = manager.ReadData(objectReference, FC);
+                var responseCtlModel = manager.ReadData(objectReference + ".ctlModel", FunctionalConstraintEnum.CF);
+                if (responseCommand.TypeOfError != DataAccessErrorEnum.none)
+                {
+                    throw new Exception("Не удалось получить информацию о команде с устройства: " + objectReference + " " + responseCommand.TypeOfError);
+                }
+                if (responseCtlModel.TypeOfError != DataAccessErrorEnum.none)
+                {
+                    throw new Exception("Не удалось получить информацию о требующемся типе команды: " + objectReference + " " + responseCtlModel.TypeOfError);
+                }
                 self = (NodeDO)node;
                 commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(node.FindChildNode("Oper").FindChildNode("ctlVal"));
                 ControlModel = commandParams.CommandFlowFlag;
@@ -264,7 +300,7 @@ namespace lib61850net
             try
             {
                 Task responseTask = OperateAsync(ctlVal, WritePrivateHandler);
-                responseTask.Wait();
+                responseTask.Wait(120000);
                 return lastWriteResponse;
             }
             catch (Exception ex)

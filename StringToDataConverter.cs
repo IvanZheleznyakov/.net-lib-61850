@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,13 @@ namespace lib61850net
 {
     class StringToDataConverter
     {        
+
+        //public static BitString BitStrFromInt(int val)
+        //{
+        //    int[] arr = new int[1] { val };
+        //    BitArray ba = new BitArray(arr);
+        //}
+
         public BitString ConvertToBitstring(string input)
         {
             byte[] byteVal = null;

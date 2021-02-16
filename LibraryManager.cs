@@ -96,7 +96,7 @@ namespace lib61850net
                 worker.iecs.sourceLogger?.SendInfo("Соединение с " + hostName + " вернуло: " + isConnected);
                 if (!isConnected)
                 {
-                    worker.iecs.sourceLogger?.SendInfo("Самостоятельно закрываем соединение с " + hostName);
+                    worker.iecs.sourceLogger?.SendError("lib61850: слишком долгое ожидание. Самостоятельно закрываем соединение с " + hostName);
                     worker.Stop();
                 }
                 return isConnected;
@@ -192,7 +192,9 @@ namespace lib61850net
             {
                 if (worker.iecs.DataModel.ied == null || worker.iecs.DataModel.ied.GetChildCount() == 0)
                 {
-                    return null;
+                    string errorMsg = "Программная модель дерева объектов построена с ошибкой";
+                    worker?.iecs?.sourceLogger?.SendError(errorMsg);
+                    throw new Exception(errorMsg);
                 }
 
                 return worker.iecs.DataModel.ied.GetChildNodeNames(false, false);
@@ -216,7 +218,9 @@ namespace lib61850net
                 var node = worker.iecs.DataModel.ied.FindChildNode(ldName);
                 if (node == null)
                 {
-                    return null;
+                    string errorMsg = "GetLogicalDeviceDirectory: ошибка в нахождении логического устройства " + ldName;
+               //     worker?.iecs?.sourceLogger?.SendInfo(errorMsg);
+                    throw new Exception(errorMsg);
                 }
 
                 return node.GetChildNodeNames(false, false);
@@ -241,7 +245,9 @@ namespace lib61850net
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 if (node == null)
                 {
-                    return null;
+                    string errorMsg = "GetLogicalNodeDirectory: ошибка в нахождении логического узла " + lnReference + " " + FC;
+            //        worker?.iecs?.sourceLogger?.SendInfo(errorMsg);
+                    throw new Exception(errorMsg);
                 }
 
                 return node.GetChildNodeNames(false, false);
@@ -276,9 +282,9 @@ namespace lib61850net
         {
             try
             {
-                Console.WriteLine("start getting datasetnamevalues on " + datasetName);
+          //      Console.WriteLine("start getting datasetnamevalues on " + datasetName);
                 NodeBase node = worker.iecs.DataModel.datasets.FindNodeByAddress(datasetName);
-                Console.WriteLine("node in datasetname got, name : " + node.Name);
+           //     Console.WriteLine("node in datasetname got, name : " + node.Name);
                 return node.GetDataSetChildsWithFC();
             }
             catch (Exception ex)
@@ -341,7 +347,11 @@ namespace lib61850net
         {
             try
             {
-                lastWriteRespone = null;
+                lastWriteRespone = new WriteResponse()
+                {
+                    TypeOfErrors = new List<DataAccessErrorEnum>() { DataAccessErrorEnum.timeoutError },
+                    Names = null,
+                };
                 Task responseTask = WriteDataAsync(name, FC, value, WriteDataPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastWriteRespone;
@@ -399,14 +409,28 @@ namespace lib61850net
         /// <param name="FC"></param>
         /// <param name="waitingTime"></param>
         /// <returns></returns>
-        public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
+        public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 15000)
         {
             try
             {
-                lastMVSRespone = null;
+                lastMVSRespone = new MmsVariableSpecResponse()
+                {
+                    TypeOfError = DataAccessErrorEnum.timeoutError,
+                    MmsVariableSpecification = null,
+                };
                 Task responseTask = GetVariableSpecificationAsync(name, FC, GetVarSpecPrivateHandler);
-                responseTask.Wait(waitingTime);
-                return lastMVSRespone;
+                if (responseTask.Wait(waitingTime))
+                {
+                    return lastMVSRespone;
+                }
+                else
+                {
+                    return new MmsVariableSpecResponse()
+                    {
+                        MmsVariableSpecification = null,
+                        TypeOfError = DataAccessErrorEnum.timeoutError
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -466,11 +490,15 @@ namespace lib61850net
 
         private ReadDataSetResponse lastReadDataSetResponse;
 
-        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 60000)
+        public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 30000)
         {
             try
             {
-                lastReadDataSetResponse = null;
+                lastReadDataSetResponse = new ReadDataSetResponse()
+                {
+                    MmsValues = null,
+                    TypeOfErrors = new List<DataAccessErrorEnum>() { DataAccessErrorEnum.timeoutError }
+                };
                 Task responseTask = ReadDataSetValuesAsync(name, ReadDSPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastReadDataSetResponse;
@@ -496,11 +524,15 @@ namespace lib61850net
         /// <param name="FC">Функциональная связь.</param>
         /// <param name="waitingTime">Время ожидания чтения данных.</param>
         /// <returns>Результат чтения данных.</returns>
-        public ReadResponse ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 5000)
+        public ReadResponse ReadData(string name, FunctionalConstraintEnum FC, int waitingTime = 10000)
         {
             try
             {
-                lastReadResponse = null;
+                lastReadResponse = new ReadResponse()
+                {
+                    TypeOfError = DataAccessErrorEnum.timeoutError,
+                    MmsValue = null,
+                };
                 Task responseTask = ReadDataAsync(name, FC, ReadDataPrivateHandler);
                 responseTask.Wait(waitingTime);
                 return lastReadResponse;
@@ -560,7 +592,7 @@ namespace lib61850net
         {
             try
             {
-                Console.WriteLine("Creating reportcontrolblock with name" + name);
+           //     Console.WriteLine("Creating reportcontrolblock with name" + name);
                 FunctionalConstraintEnum repFC = isBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP;
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, repFC);
                 ReportControlBlock resultRcb = new ReportControlBlock();
@@ -576,14 +608,14 @@ namespace lib61850net
                 }
                 resultRcb.self = (NodeRCB)repNode;
 
-                Console.WriteLine("rcb created with " + name);
+           //     Console.WriteLine("rcb created with " + name);
 
                 return resultRcb;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                Console.WriteLine("exception on created rcb with name " + name + ": " + ex.Message);
+                worker?.iecs?.sourceLogger?.SendError("exception on created rcb with name " + name + ": " + ex.Message);
                 return null;
             }
         }
@@ -596,15 +628,15 @@ namespace lib61850net
         /// <param name="rcb">Экземпляр ReportControlBlock, соответствующий требуемому отчёту.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на обновление ReportControlBlock.</returns>
-        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 30000)
+        public RCBResponse UpdateReportControlBlock(ReportControlBlock rcb, int waitingTime = 60000)
         {
             try
             {
                 lastRCBResponse = null;
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
-                Console.WriteLine("now task waiting in updatercb with name: " + rcb.Name);
+           //     Console.WriteLine("now task waiting in updatercb with name: " + rcb.Name);
                 responseTask.Wait(waitingTime);
-                Console.WriteLine("task in updatercb finished with name " + rcb.Name);
+           //     Console.WriteLine("task in updatercb finished with name " + rcb.Name);
                 return lastRCBResponse;
             }
             catch (Exception ex)
@@ -629,13 +661,13 @@ namespace lib61850net
         {
             try
             {
-                Console.WriteLine("start update rcb with name " + rcb.Name);
+           //     Console.WriteLine("start update rcb with name " + rcb.Name);
                 RCBResponse response = new RCBResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
                 worker.iecs.Controller.ReadData(node, responseTask, response);
-                Console.WriteLine("updatercb task created on " + rcb.Name);
+            //    Console.WriteLine("updatercb task created on " + rcb.Name);
                 return responseTask;
             }
             catch (Exception ex)
@@ -651,7 +683,7 @@ namespace lib61850net
         /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на запрос записи параметров отчёта.</returns>
-        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 30000)
+        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 5000)
         {
             try
             {
@@ -791,7 +823,7 @@ namespace lib61850net
         {
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
-                Console.WriteLine("file is reading now");
+           //     Console.WriteLine("file is reading now");
                 Exception exception = new Exception("В данный момент уже происходит чтение файла.");
                 UpdateLastExceptionInfo(exception, MethodBase.GetCurrentMethod().Name);
                 return null;

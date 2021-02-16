@@ -209,5 +209,10 @@ namespace lib61850net
                     this.value = (ushort)((int)this.value & (~QUALITY_DERIVED));
             }
         }
+
+        public static implicit operator Quality(Validity v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

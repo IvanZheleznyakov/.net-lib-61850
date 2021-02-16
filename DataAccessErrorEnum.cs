@@ -21,6 +21,7 @@ namespace lib61850net
         objectNonexistent = 10,
         objectValueInvalid = 11,
 
+        timeoutError = 98,
         none = 99
     }
 }

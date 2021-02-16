@@ -31,9 +31,12 @@ namespace lib61850net
             get
             {
                 if (_addressLock)
+                {
                     return _address;
+                }
 
-                string address = "";
+                _addressLock = true;
+                _address = "";
                 NodeBase tmpn = this;
                 List<string> parts = new List<string>();
                 bool iecModel = false;
@@ -49,38 +52,40 @@ namespace lib61850net
                 {
                     //if (i == parts.Count - 4)
                     //    continue;
-                    address += parts[i];
+                    _address += parts[i];
                     if (iecModel)
                     {
                         if (i == parts.Count - 2)
                         {
                             if (i != 0)
-                                address += "/";
+                                _address += "/";
                         }
                         else if (i != 0 && i != parts.Count - 1)
                             if (parts[i - 1].Contains('/'))
-                                address += "->";
+                                _address += "->";
                             else
-                                address += ".";
+                                _address += ".";
                     }
                     else
                     {
                         if (i == parts.Count - 1)
                         {
                             if (i != 0)
-                                address += "/";
+                                _address += "/";
                         }
                         else if (i != 0)
-                            address += ".";
+                            _address += ".";
                     }
                 }
                 if (isBuffered)
                 {
-                    return address.Replace("$BR$", ".");
+                    _address = _address.Replace("$BR$", ".");
+                    return _address;
                 }
                 else
                 {
-                    return address.Replace("$RP$", ".");
+                    _address = _address.Replace("$RP$", ".");
+                    return _address;
                 }
             }
             set
@@ -577,6 +582,14 @@ namespace lib61850net
                     return true;
                 else
                     return false;
+            }
+        }
+
+        public bool Segmentation_present
+        {
+            get
+            {
+                return (NodeData)FindChildNode("Segmentation") != null;
             }
         }
         #endregion

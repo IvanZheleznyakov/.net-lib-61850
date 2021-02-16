@@ -229,12 +229,14 @@ namespace lib61850net
                     NodeBase b, c;
 
                     List<NodeData> ndar = new List<NodeData>();
+                    List<MmsValue> mmsV = new List<MmsValue>();
                     //char *nameo[] = {"$Oper$ctlVal", "$Oper$origin$orCat", "$Oper$origin$orIdent", "$Oper$ctlNum", "$Oper$T", "$Oper$Test", "$Oper$Check"};
                     if ((b = d.FindChildNode("ctlVal")) != null)
                     {
                         NodeData n = new NodeData(b.Name);
                         n.DataType = ((NodeData)b).DataType;
                         n.DataValue = cPar.ctlVal;
+                        n.DataParam = ((NodeData)b).DataParam;
                         ndar.Add(n);
                     }
                     if ((b = d.FindChildNode("origin")) != null)
@@ -354,7 +356,7 @@ namespace lib61850net
 
         internal void WriteData(NodeData data, bool reRead, Task responseTask = null, IResponse response = null, MmsValue[] mmsValue = null)
         {
-            if (data != null && data.DataValue != null)
+            if (data != null/* && data.DataValue != null*/)
             {
                 NodeData[] ndarr = new NodeData[1];
                 ndarr[0] = data;
@@ -375,7 +377,7 @@ namespace lib61850net
         internal void WriteRcb(ReportControlBlock rpar, bool reRead, Task responseTask = null, WriteResponse response = null)
         {
             var sendArrays = rpar.GetSendArrays();
-            iecs.Send(sendArrays.Item1/*rpar.GetWriteArray()*/, rpar.self.CommAddress, ActionRequested.Write, responseTask, response, sendArrays.Item2);
+            iecs.Send(sendArrays.Item1, rpar.self.CommAddress, ActionRequested.Write, responseTask, response, sendArrays.Item2);
             rpar.ResetFlags();
 
             if (reRead)
