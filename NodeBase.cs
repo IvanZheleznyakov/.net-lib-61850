@@ -35,11 +35,6 @@ namespace lib61850net
             this.Name = name;
         }
 
-        internal bool IsIecModel { get; set; }
-
-        internal object Tag { get; set; }
-        internal object TagR { get; set; }    // reserve for secondary Iec TreeView
-
         internal NodeBase Parent { get; set; }
 
         /*internal List<String> FC
@@ -394,7 +389,7 @@ namespace lib61850net
                 }
                 pComAdr = new CommAddress();
                 NodeBase tmpn = this;
-                pComAdr.owner = this;
+            //    pComAdr.owner = this;
 
                 List<string> parts = new List<string>();
 
@@ -405,7 +400,7 @@ namespace lib61850net
                 } while (tmpn != null);
 
                 pComAdr.Variable = "";
-                pComAdr.VariablePath = "";
+            //    pComAdr.VariablePath = "";
                 for (int i = parts.Count - 2; i >= 0; i--)
                 {
                     if (i == parts.Count - 2)
@@ -415,14 +410,14 @@ namespace lib61850net
                     else
                     {
                         pComAdr.Variable += parts[i];
-                        if (i == parts.Count - 3)
-                            pComAdr.LogicalNode = parts[i];
+                        //if (i == parts.Count - 3)
+                           // pComAdr.LogicalNode = parts[i];
                         if (i != 0)
                             pComAdr.Variable += "$";
                     }
                     if (i < parts.Count - 3)
                     {
-                        pComAdr.VariablePath = String.Concat(pComAdr.VariablePath, "$", parts[i]);
+                       // pComAdr.VariablePath = String.Concat(pComAdr.VariablePath, "$", parts[i]);
                     }
                 }
 
@@ -431,15 +426,15 @@ namespace lib61850net
             }
         }
 
-        internal CommAddress CommAddressDots
-        {
-            get
-            {
-                CommAddress commAddress = CommAddress;
-                commAddress.Variable = commAddress.Variable.Replace('$', '.');
-                return commAddress;
-            }
-        }
+        //internal CommAddress CommAddressDots
+        //{
+        //    get
+        //    {
+        //        CommAddress commAddress = CommAddress;
+        //        commAddress.Variable = commAddress.Variable.Replace('$', '.');
+        //        return commAddress;
+        //    }
+        //}
 
         internal Iec61850State GetIecs()
         {
@@ -486,11 +481,6 @@ namespace lib61850net
         public int CompareTo(NodeBase other)
         {
             return string.Compare(Name, other.Name, StringComparison.CurrentCultureIgnoreCase);
-        }
-
-        internal virtual void SaveModel(List<String> lines, bool fromSCL)
-        {
-            return;
         }
 
         internal void GetAllLeaves(List<NodeBase> leaves)

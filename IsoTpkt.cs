@@ -32,6 +32,7 @@ namespace lib61850net
                 {
                     iecs.kstate = IsoTpktState.TPKT_RECEIVE_START;
                     tcps.logger.LogError("iec61850tpktState.IEC61850_RECEIVE_ERROR\n");
+                    tcps.sourceLogger?.SendError("lib61850net: iec61850tpktState.IEC61850_RECEIVE_ERROR\n");
                     break;
                 }
                 switch (iecs.kstate)
@@ -44,6 +45,7 @@ namespace lib61850net
                         }
                         else
                         {
+                            tcps.sourceLogger?.SendError("lib61850net: Synchronization lost: TPKT START / VERSION!\n");
                             tcps.logger.LogError("Synchronization lost: TPKT START / VERSION!\n");
                             iecs.kstate = IsoTpktState.TPKT_RECEIVE_ERROR;
                         }
@@ -55,6 +57,7 @@ namespace lib61850net
                         }
                         else
                         {
+                            tcps.sourceLogger?.SendError("lib61850net: Synchronization lost: TPKT RES!\n");
                             tcps.logger.LogError("Synchronization lost: TPKT RES!\n");
                             iecs.kstate = IsoTpktState.TPKT_RECEIVE_ERROR;
                         }
@@ -71,6 +74,7 @@ namespace lib61850net
                         }
                         else
                         {
+                            tcps.sourceLogger?.SendError("lib61850net: Synchronization lost: TPKT TPDU too long!\n");
                             tcps.logger.LogError("Synchronization lost: TPKT TPDU too long!\n");
                             iecs.kstate = IsoTpktState.TPKT_RECEIVE_ERROR;
                         }
@@ -92,6 +96,7 @@ namespace lib61850net
                         }
                         break;
                     default:
+                        tcps.sourceLogger?.SendError("lib61850net: iecs.tstate: unknown state!\n");
                         tcps.logger.LogError("iecs.tstate: unknown state!\n");
                         break;
                 }	// switch

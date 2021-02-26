@@ -63,18 +63,6 @@ namespace lib61850net
             }
         }
 
-        public object ValueTag
-        {
-            get
-            {
-                return _valueTag;
-            }
-            set
-            {
-                _valueTag = value;
-            }
-        }
-
         internal override NodeBase FindNodeByValue(MmsTypeEnum dataType, object dataValue, ref NodeBase ContinueAfter)
         {
             if (dataValue == null)

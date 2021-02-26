@@ -683,13 +683,17 @@ namespace lib61850net
         /// <param name="rcbPar">Пользовательские параметры отчёта.</param>
         /// <param name="waitingTime">Время ожидания получения ответа.</param>
         /// <returns>Ответ на запрос записи параметров отчёта.</returns>
-        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 5000)
+        public WriteResponse SetReportControlBlock(ReportControlBlock rcbPar, int waitingTime = 15000)
         {
             try
             {
                 lastWriteRespone = null;
                 Task responseTask = SetReportControlBlockAsync(rcbPar, WriteDataPrivateHandler);
                 responseTask.Wait(waitingTime);
+                if (lastWriteRespone != null)
+                {
+                    rcbPar.ResetFlags();
+                }
                 return lastWriteRespone;
             }
             catch (Exception ex)
@@ -711,7 +715,7 @@ namespace lib61850net
             {
                 WriteResponse response = new WriteResponse();
                 Task responseTask = new Task(() => responseHandler(response));
-                worker.iecs.Controller.WriteRcb(rcbPar, true, responseTask, response);
+                worker.iecs.Controller.WriteRcb(rcbPar, false, responseTask, response);
                 return responseTask;
             }
             catch (Exception ex)

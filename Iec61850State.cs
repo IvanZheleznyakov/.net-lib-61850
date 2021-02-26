@@ -88,15 +88,13 @@ namespace lib61850net
         internal NodeBase[] lastFileOperationData = null;
         internal ConcurrentDictionary<int, NodeBase[]> OutstandingCalls;
 
-        internal MMSCaptureDb CaptureDb;
+      //  internal MMSCaptureDb CaptureDb;
         internal Iec61850Controller Controller;
-
-        internal SourceMsg_t sourceLogger;
 
         internal Iec61850State(SourceMsg_t logger = null)
         {
             DataModel = new Iec61850Model(this);
-            CaptureDb = new MMSCaptureDb(this);
+         //   CaptureDb = new MMSCaptureDb(this);
             iso = new IsoLayers(this);
             OutstandingCalls = new ConcurrentDictionary<int, NodeBase[]>(2, 10);
             Controller = new Iec61850Controller(this, DataModel);

@@ -50,15 +50,15 @@ namespace lib61850net
         {
             //Console.WriteLine(string.Format("{0}: {1}", severity.ToString(), message));
 
-            try
-            {
-                string msg = string.Format("[{0}.{1}] {2}: {3}", DateTime.Now, DateTime.Now.Millisecond.ToString("D3"), severity.ToString(), message);
-                writer.WriteLine(msg);
-                writer.Flush();
-                if (OnLogMessage != null)
-                    OnLogMessage(msg); //, null, null);
-            }
-            catch { }
+            //try
+            //{
+            //    string msg = string.Format("[{0}.{1}] {2}: {3}", DateTime.Now, DateTime.Now.Millisecond.ToString("D3"), severity.ToString(), message);
+            //    writer.WriteLine(msg);
+            //    writer.Flush();
+            //    if (OnLogMessage != null)
+            //        OnLogMessage(msg); //, null, null);
+            //}
+            //catch { }
         }
 
         internal void LogDebug(string message)
@@ -69,13 +69,13 @@ namespace lib61850net
 
         internal void LogDebugBuffer(string message, byte[] buffer, long logFrom, long logLength)
         {
-            if (verbosity == Severity.Debug)
-            {
-                string s = message + " (Len=" + logLength + ")>";
-                for (long i = logFrom; i < logFrom + logLength; i++)
-                    s += String.Format("{0:x2} ", buffer[i]);
-                Log(Severity.Debug, s);
-            }
+            //if (verbosity == Severity.Debug)
+            //{
+            //    string s = message + " (Len=" + logLength + ")>";
+            //    for (long i = logFrom; i < logFrom + logLength; i++)
+            //        s += String.Format("{0:x2} ", buffer[i]);
+            //    Log(Severity.Debug, s);
+            //}
         }
 
         internal void LogReport (string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)

@@ -196,6 +196,7 @@ namespace lib61850net
                                             {
                                                 // Timeout expired
                                                 iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_DOMAIN;
+                                                iecs.sourceLogger?.SendWarning("lib61850net: MMS Identify message not supported by server, although declared in ServicesSupportedCalled bitstring");
                                                 iecs.logger.LogWarning("MMS Identify message not supported by server, although declared in ServicesSupportedCalled bitstring");
                                             }
                                             break;
@@ -227,7 +228,7 @@ namespace lib61850net
                                                 {
                                                     Domain = null,
                                                     Variable = null,
-                                                    owner = null
+                                                    //owner = null
                                                 };
                                                 NodeBase[] data = new NodeBase[1];
                                                 // Issue reads by FC level

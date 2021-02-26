@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace lib61850net
 {
@@ -79,7 +80,8 @@ namespace lib61850net
         IDecoder decoder = CoderFactory.getInstance().newDecoder("BER");
         IEncoder encoder = CoderFactory.getInstance().newEncoder("BER");
 
-        int InvokeID = 0;
+        internal int InvokeID { get; private set; } = 0;
+        internal ConcurrentDictionary<int, NodeBase> dictionaryOfControlBlocks = new ConcurrentDictionary<int, NodeBase>();
         int MaxCalls = int.MaxValue;
 
         bool[] ServiceSupportOptions = new bool[96];
@@ -351,25 +353,27 @@ namespace lib61850net
                 MMSpdu mymmspdu = null;
                 try
                 {
-                    MMSCapture cap = null;
-                    byte[] pkt = iecs.msMMS.ToArray();
-                    if (iecs.CaptureDb.CaptureActive) cap = new MMSCapture(pkt, iecs.msMMS.Position, pkt.Length, MMSCapture.CaptureDirection.In);
+                    //MMSCapture cap = null;
+                //    byte[] pkt = iecs.msMMS.ToArray();
+                    //if (iecs.CaptureDb.CaptureActive) cap = new MMSCapture(pkt, iecs.msMMS.Position, pkt.Length, MMSCapture.CaptureDirection.In);
                     ////////////////// Decoding
                     mymmspdu = decoder.decode<MMSpdu>(iecs.msMMS);
                     ////////////////// Decoding
-                    if (iecs.CaptureDb.CaptureActive && mymmspdu != null)
-                    {
-                        cap.MMSPdu = mymmspdu;
-                        iecs.CaptureDb.AddPacket(cap);
-                    }
+                    //if (iecs.CaptureDb.CaptureActive && mymmspdu != null)
+                    //{
+                    //    cap.MMSPdu = mymmspdu;
+                    //    iecs.CaptureDb.AddPacket(cap);
+                    //}
                 }
                 catch (Exception e)
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
                     iecs.logger.LogError("mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
                 }
 
                 if (mymmspdu == null)
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: mms.ReceiveData: Parsing Error!");
                     iecs.logger.LogError("mms.ReceiveData: Parsing Error!");
 
                     // Workaround - we can continue when reading-in the model also if one read fails
@@ -379,6 +383,7 @@ namespace lib61850net
                         NodeBase logNode = iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().GetActualChildNode();
                         if (logNode != null)
                         {
+                            iecs.sourceLogger?.SendWarning("lib61850net: mms.ReceiveData: Error reading " + logNode.IecAddress + " in IEC61850_READ_MODEL_DATA_WAIT, data values not actual in the subtree!");
                             iecs.logger.LogWarning("mms.ReceiveData: Error reading " + logNode.IecAddress + " in IEC61850_READ_MODEL_DATA_WAIT, data values not actual in the subtree!");
                         }
                         // Should be possible in this phase: only 1 request can be pending in the discovery phase
@@ -407,16 +412,8 @@ namespace lib61850net
                 }
                 else if (mymmspdu.Confirmed_ResponsePDU != null && mymmspdu.Confirmed_ResponsePDU.Service != null)
                 {
-                    if (mymmspdu.Confirmed_ResponsePDU.InvokeID.Value == 690)
-                    {
-                        int wtf = 2 + 2;
-                    }
                     iecs.logger.LogDebug("mymmspdu.Confirmed_ResponsePDU.Service exists!");
                     NodeBase[] operData = removeCall(iecs, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
-                    if (mymmspdu.Confirmed_ResponsePDU.InvokeID.Value == 237)
-                    {
-                        int a = "".Length;
-                    }
 
                     if (mymmspdu.Confirmed_ResponsePDU.Service.Identify != null)
                     {
@@ -503,10 +500,12 @@ namespace lib61850net
                         waitingMmsPdu.Remove(mymmspdu.Confirmed_ErrorPDU.InvokeID.Value);
                     }
 
+                    iecs.sourceLogger?.SendError("lib61850net: Confirmed_ErrorPDU received - requested operation not possible!!");
                     iecs.logger.LogError("Confirmed_ErrorPDU received - requested operation not possible!!");
                 }
                 else
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: Not implemented PDU received!!");
                     iecs.logger.LogError("Not implemented PDU received!!");
                 }
 
@@ -577,6 +576,7 @@ namespace lib61850net
                 operation = "UnconfirmedPDU";
                 reason = ((RejectPDU_rejectReason_unconfirmedPDU)mymmspdu.RejectPDU.RejectReason.UnconfirmedPDU).ToString();
             }
+            iecs.sourceLogger?.SendError("lib61850net: RejectPDU received - requested operation " + operation + " rejected!! Reason code: " + reason);
             iecs.logger.LogError("RejectPDU received - requested operation " + operation + " rejected!! Reason code: " + reason);
 
             if (iecs.istate == Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR_WAIT)
@@ -616,6 +616,7 @@ namespace lib61850net
         private void ReceiveFileDirectory(Iec61850State iecs, FileDirectory_Response dir, int invokeId)
         {
             List<FileDirectory> listOfFileDirectory = new List<FileDirectory>();
+            iecs.sourceLogger?.SendInfo("FileDirectory PDU received!!");
             iecs.logger.LogInfo("FileDirectory PDU received!!");
             if (dir.ListOfDirectoryEntry != null)
             {
@@ -672,7 +673,10 @@ namespace lib61850net
                         listOfFileDirectory.Add(fileDirectory);
                     }
                     else
+                    {
+                        iecs.sourceLogger?.SendInfo("lib61850net: FileDirectory PDU received!!");
                         iecs.logger.LogInfo("Empty FileName in FileDirectory PDU!!");
+                    }
                 }
                 if (iecs.lastFileOperationData[0] is NodeFile)
                     (iecs.lastFileOperationData[0] as NodeFile).FileReady = true;
@@ -689,17 +693,23 @@ namespace lib61850net
                 }
             }
             else
+            {
+                iecs.sourceLogger?.SendInfo("lib61850net: No file in FileDirectory PDU!!");
                 iecs.logger.LogInfo("No file in FileDirectory PDU!!");
+            }
         }
 
         private void ReceiveFileOpen(Iec61850State iecs, FileOpen_Response fileopn)
         {
             iecs.logger.LogInfo("FileOpen PDU received!!");
+            iecs.sourceLogger?.SendInfo("lib61850net: FileOpen PDU received!!");
             if (iecs.lastFileOperationData[0] is NodeFile)
             {
                 ReadFileStateChanged?.Invoke(true);
                 (iecs.lastFileOperationData[0] as NodeFile).frsmId = fileopn.FrsmID.Value;
                 iecs.fstate = FileTransferState.FILE_OPENED;
+                iecs.sourceLogger?.SendInfo("lib61850net: FileOpened: " + (iecs.lastFileOperationData[0] as NodeFile).FullName +
+                    " Size: " + fileopn.FileAttributes.SizeOfFile.Value.ToString());
                 iecs.logger.LogInfo("FileOpened: " + (iecs.lastFileOperationData[0] as NodeFile).FullName +
                     " Size: " + fileopn.FileAttributes.SizeOfFile.Value.ToString());
             }
@@ -840,6 +850,7 @@ namespace lib61850net
                 {
                     if (Report.ListOfAccessResult != null)
                     {
+                     //   iecs.sourceLogger?.SendInfo("Пришел отчёт");
                         iecs.logger.LogDebug("Report.ListOfAccessResult != null");
                         list = (List<AccessResult>)Report.ListOfAccessResult;
                         for (int i = 0; i < list.Count; i++)
@@ -1169,8 +1180,11 @@ namespace lib61850net
                             }
                         }
                     }
+                 //   iecs.sourceLogger?.SendInfo("Обработка отчёта завершена: rptid " + report.RptId + " ds: " + report.DataSetName + " count: " + report.DataValues.Length);
                     Task newReportTask = new Task(() => reportReceivedEventHandler(report));
+                 //   iecs.sourceLogger?.SendInfo("Создали таск для " + report.RptId + ": " + newReportTask.Status + " handler: " + reportReceivedEventHandler.Method.Name);
                     newReportTask.Start();
+                 //   iecs.sourceLogger?.SendInfo("Отправили сигнал " + report.RptId + " status task: " + newReportTask.Status);
                 }
             }
             else if (Report != null && Report.VariableAccessSpecification != null && Report.VariableAccessSpecification.isListOfVariableSelected())
@@ -1392,7 +1406,8 @@ namespace lib61850net
                         else
                         {
                             // Error
-                       //     Console.WriteLine("Error reading variables, different count of Specifications and AccessResults!");
+                            //     Console.WriteLine("Error reading variables, different count of Specifications and AccessResults!");
+                            iecs.sourceLogger?.SendError("lib61850net: Error reading variables, different count of Specifications and AccessResults!");
                             iecs.logger.LogError("Error reading variables, different count of Specifications and AccessResults!");
                         }
                     }
@@ -1596,6 +1611,7 @@ namespace lib61850net
                                 }
                                 //     waitingMmsPdu[receivedInvokeId]?.Invoke(response, null);
                             }
+                            iecs.sourceLogger?.SendError("lib61850net: Not matching read structure in ReceiveRead");
                             iecs.logger.LogError("Not matching read structure in ReceiveRead");
                         }
                         i++;
@@ -1681,6 +1697,109 @@ namespace lib61850net
             return newMVS;
         }
 
+        private void RecursiveCommandParDesription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
+        {
+            if (t == null) return;
+            if (t.Structure != null)
+            {
+                iecs.logger.LogDebug("t.Structure != null");
+                if (t.Structure.Components != null) foreach (TypeDescription.StructureSequenceType.ComponentsSequenceType s in t.Structure.Components)
+                    {
+                        iecs.logger.LogDebug(s.ComponentName.Value);
+                        var newActNode = actualNode.FindChildNode(s.ComponentName.Value);
+                        //NodeBase newActualNode;
+                        //// DO or DA?
+                        //bool isDO = false;
+                        //if (actualNode is NodeFC) isDO = true;  // Safe to say under FC must be a DO
+                        //if (isDO)
+                        //    newActualNode = new NodeDO(s.ComponentName.Value);
+                        //else
+                        //    newActualNode = new NodeData(s.ComponentName.Value);
+                        //newActualNode = actualNode.AddChildNode(newActualNode);
+                        RecursiveCommandParDesription(iecs, newActNode, s.ComponentType.TypeDescription);
+                    }
+            }
+            else if (t.Array != null)
+            {
+                //iecs.logger.LogDebug("t.Array != null");
+                //if (actualNode is NodeData && !(actualNode is NodeDO))
+                //    (actualNode as NodeData).DataType = MmsTypeEnum.ARRAY;
+                //for (int i = 0; i < t.Array.NumberOfElements.Value; i++)
+                //{
+                //    NodeData newActualNode = new NodeData("[" + i.ToString() + "]");
+                //    actualNode.AddChildNode(newActualNode);
+                //    RecursiveReadTypeDescription(iecs, newActualNode, t.Array.ElementType.TypeDescription);
+                //}
+            }
+            else if (t.Integer != null)
+            {
+                iecs.logger.LogDebug("t.Integer != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.INTEGER;
+            }
+            else if (t.Bcd != null)
+            {
+                iecs.logger.LogDebug("t.Bcd != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.BCD;
+            }
+            else if (t.Boolean != null)
+            {
+                iecs.logger.LogDebug("t.Boolean != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.BOOLEAN;
+            }
+            else if (t.Floating_point != null)
+            {
+                iecs.logger.LogDebug("t.Floating_point != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.FLOATING_POINT;
+            }
+            else if (t.Generalized_time != null)
+            {
+                iecs.logger.LogDebug("t.Generalized_time != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.GENERALIZED_TIME;
+            }
+            else if (t.MMSString != null)
+            {
+                iecs.logger.LogDebug("t.MMSString != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.MMS_STRING;
+            }
+            else if (t.ObjId != null)
+            {
+                iecs.logger.LogDebug("t.ObjId != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.OBJ_ID;
+            }
+            else if (t.Octet_string != null)
+            {
+                iecs.logger.LogDebug("t.Octet_string != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.OCTET_STRING;
+            }
+            else if (t.Unsigned != null)
+            {
+                iecs.logger.LogDebug("t.Unsigned != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.UNSIGNED;
+            }
+            else if (t.Utc_time != null)
+            {
+                iecs.logger.LogDebug("t.Utc_time != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.UTC_TIME;
+            }
+            else if (t.Visible_string != null)
+            {
+                iecs.logger.LogDebug("t.Visible_string != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.VISIBLE_STRING;
+            }
+            else if (t.isBinary_timeSelected())
+            {
+                iecs.logger.LogDebug("t.Binary_time != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.BINARY_TIME;
+            }
+            else if (t.isBit_stringSelected())
+            {
+                iecs.logger.LogDebug("t.Bit_string != null");
+                (actualNode as NodeData).DataType = MmsTypeEnum.BIT_STRING;
+            }
+        }
+
+        private ConcurrentQueue<NodeFC> queueOfActualNodeFC = new ConcurrentQueue<NodeFC>();
+
         private void ReceiveGetVariableAccessAttributes(Iec61850State iecs, GetVariableAccessAttributes_Response GetVariableAccessAttributes, int invokeId)
         {
             iecs.logger.LogDebug("GetVariableAccessAttributes != null");
@@ -1690,10 +1809,15 @@ namespace lib61850net
             if (GetVariableAccessAttributes.TypeDescription != null)
             {
                 iecs.logger.LogDebug("GetVariableAccessAttributes.TypeDescription != null");
-
                 // если запросили спецификацию самостоятельно
                 if (isInvokeIdExists)
                 {
+                    if (dictionaryOfControlBlocks.ContainsKey(invokeId))
+                    {
+                        NodeBase comNode;
+                        dictionaryOfControlBlocks.TryRemove(invokeId, out comNode);
+                        RecursiveCommandParDesription(iecs, comNode, GetVariableAccessAttributes.TypeDescription);
+                    }
                     waitingMmsPdu.TryGetValue(invokeId, out (Task, IResponse) taskWithResponse);
                     (taskWithResponse.Item2 as MmsVariableSpecResponse).MmsVariableSpecification = MatchDescriptionWithMms(GetVariableAccessAttributes.TypeDescription);
                     (taskWithResponse.Item2 as MmsVariableSpecResponse).TypeOfError = DataAccessErrorEnum.none;
@@ -1702,19 +1826,15 @@ namespace lib61850net
                 }
                 else //автоматический запрос при составлении модели
                 {
-                    RecursiveReadTypeDescription(iecs, iecs.DataModel.ied.GetActualChildNode().GetActualChildNode(),
+                    NodeFC nodeFCToRead;
+                    queueOfActualNodeFC.TryDequeue(out nodeFCToRead);
+                    RecursiveReadTypeDescription(iecs, nodeFCToRead,
                                              GetVariableAccessAttributes.TypeDescription);
                     iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;
-                    if (iecs.DataModel.ied.GetActualChildNode().NextActualChildNode() == null)
+                    if (queueOfReportsFC.Count == 0)
                     {
-                        if (iecs.DataModel.ied.NextActualChildNode() == null)
-                        {
-                            // End of loop
-                            //    iecs.istate = Iec61850lStateEnum.IEC61850_READ_MODEL_DATA;
-                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
-                            iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
-                            iecs.DataModel.ied.ResetAllChildNodes();
-                        }
+                        iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
+                        iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
                     }
                 }
             }
@@ -1760,10 +1880,10 @@ namespace lib61850net
                         iecs.continueAfter = null;
                         if (iecs.DataModel.ied.NextActualChildNode() == null)
                         {
-                         //       iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;    // next state
-                            LinkRcb(iecs);
+                                iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;    // next state
+                       //     LinkRcb(iecs);
                             //iecs.istate = Iec61850lStateEnum.IEC61850_MAKEGUI;
-                            iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
+                        //    iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
                             iecs.logger.LogInfo("Reading variable specifications: [IEC61850_READ_ACCESSAT_VAR]");
                             iecs.DataModel.ied.ResetAllChildNodes();
                         }
@@ -1838,9 +1958,15 @@ namespace lib61850net
                     foreach (Data d in data.Structure)
                     {
                         if (i <= nb.GetUpperBound(0))
+                        {
+                            //     var newActNode = actualNode.FindChildNode()
                             RecursiveReadData(iecs, d, nb[i], s, isNeededToBeRead);
+                        }
                         else
+                        {
                             iecs.logger.LogError("Not matching read structure: Node=" + actualNode.IecAddress);
+                            iecs.sourceLogger?.SendError("lib61850net: Not matching read structure: Node=" + actualNode.IecAddress);
+                        }
                         i++;
                     }
                 }
@@ -1854,7 +1980,10 @@ namespace lib61850net
                         if (i <= nb.GetUpperBound(0))
                             RecursiveReadData(iecs, d, nb[i], s, isNeededToBeRead);
                         else
+                        {
+                            iecs.sourceLogger?.SendError("lib61850net: Not matching read array: Node=" + actualNode.Name);
                             iecs.logger.LogError("Not matching read array: Node=" + actualNode.Name);
+                        }
                         i++;
                     }
                 }
@@ -1979,6 +2108,8 @@ namespace lib61850net
                 iecs.logger.LogDebug("recursiveReadData: successfull return");
             }
         }
+
+        internal ConcurrentQueue<NodeBase> QueueOfCommandNodes { get; set; } = new ConcurrentQueue<NodeBase>();
 
         void RecursiveReadTypeDescription(Iec61850State iecs, NodeBase actualNode, TypeDescription t)
         {
@@ -2135,6 +2266,7 @@ namespace lib61850net
             else
             {
                 iecs.logger.LogError("mms.ReceiveInitiate: not an Initiate_ResponsePDU");
+                iecs.sourceLogger?.SendError("lib61850net: mms.ReceiveInitiate: not an Initiate_ResponsePDU");
                 return -1;
             }
             return 0;
@@ -2167,6 +2299,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendIdentify: Encoding Error!");
                 iecs.logger.LogError("mms.SendIdentify: Encoding Error!");
                 return -1;
             }
@@ -2204,6 +2337,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendIdentify: Encoding Error!");
                 iecs.logger.LogError("mms.SendIdentify: Encoding Error!");
                 return -1;
             }
@@ -2243,6 +2377,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendGetNameListDomain: Encoding Error!");
                 iecs.logger.LogError("mms.SendGetNameListDomain: Encoding Error!");
                 return -1;
             }
@@ -2283,6 +2418,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendGetNameListVariables: Encoding Error!");
                 iecs.logger.LogError("mms.SendGetNameListVariables: Encoding Error!");
                 return -1;
             }
@@ -2323,6 +2459,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendGetNameListVariables: Encoding Error!");
                 iecs.logger.LogError("mms.SendGetNameListVariables: Encoding Error!");
                 return -1;
             }
@@ -2345,10 +2482,23 @@ namespace lib61850net
             ObjectName on = new ObjectName();
             ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
 
-            if (node == null)
+            if (queueOfReportsFC.Count > 0)
             {
-                dst.DomainID = new Identifier(iecs.DataModel.ied.GetActualChildNode().Name);
-                dst.ItemID = new Identifier(iecs.DataModel.ied.GetActualChildNode().GetActualChildNode().Name);         // LN name e.g. MMXU0
+                NodeFC actNode;
+                queueOfReportsFC.TryDequeue(out actNode);
+                queueOfActualNodeFC.Enqueue(actNode);
+                dst.DomainID = new Identifier(actNode.Parent.Parent.Name); // actual LD name
+                dst.ItemID = new Identifier(actNode.Parent.Name + "$" + actNode.Name); // e.g. LLN0$RP
+            }
+            else if (node == null)
+            {
+                iecs.istate = Iec61850lStateEnum.IEC61850_READ_ACCESSAT_VAR;
+                if (queueOfReportsFC.Count == 0)
+                {
+                    iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;
+                    iecs.logger.LogInfo("Reading variable values: [IEC61850_READ_MODEL_DATA]");
+                    return 0;
+                }
             }
             else
             {
@@ -2378,6 +2528,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendGetVariableAccessAttributes: Encoding Error!");
                 iecs.logger.LogError("mms.SendGetVariableAccessAttributes: Encoding Error!");
                 return -1;
             }
@@ -2429,6 +2580,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendGetNamedVariableListAttributes: Encoding Error!");
                 iecs.logger.LogError("mms.SendGetNamedVariableListAttributes: Encoding Error!");
                 return -1;
             }
@@ -2495,6 +2647,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendRead: Encoding Error!");
                 iecs.logger.LogError("mms.SendRead: Encoding Error!");
              //   Console.WriteLine("error in sendread: encoding error!");
                 return -1;
@@ -2550,6 +2703,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendRead: Encoding Error!");
                 iecs.logger.LogError("mms.SendRead: Encoding Error!");
                 return -1;
             }
@@ -2665,6 +2819,7 @@ namespace lib61850net
                                 dat.selectFloating_point(fpval);
                                 break;
                             default:
+                                iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Cannot send unknown datatype!");
                                 iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
                                 return 1;
                         }
@@ -2696,6 +2851,7 @@ namespace lib61850net
 
                 if (iecs.msMMSout.Length == 0)
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Encoding Error!");
                     iecs.logger.LogError("mms.SendWrite: Encoding Error!");
                     return -1;
                 }
@@ -2808,6 +2964,7 @@ namespace lib61850net
                                 dat.selectFloating_point(fpval);
                                 break;
                             default:
+                                iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Cannot send unknown datatype!");
                                 iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
                                 return 1;
                         }
@@ -2816,7 +2973,10 @@ namespace lib61850net
                         iecs.logger.LogDebug("SendWrite: Writing: " + dst.ItemID.Value);
                     }
                     else
+                    {
+                        iecs.sourceLogger?.SendWarning("lib61850net: SendWrite: Null in data for write for: " + el.Address.Variable);
                         iecs.logger.LogWarning("SendWrite: Null in data for write for: " + el.Address.Variable);
+                    }
                 }
                 wreq.VariableAccessSpecification = new VariableAccessSpecification();
                 wreq.VariableAccessSpecification.selectListOfVariable(vasl);
@@ -2839,6 +2999,7 @@ namespace lib61850net
 
                 if (iecs.msMMSout.Length == 0)
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Encoding Error!");
                     iecs.logger.LogError("mms.SendWrite: Encoding Error!");
                     return -1;
                 }
@@ -2917,6 +3078,7 @@ namespace lib61850net
 
                 if (iecs.msMMSout.Length == 0)
                 {
+                    iecs.sourceLogger?.SendError("lib61850net: mms.SendWriteAsStructure: Encoding Error!");
                     iecs.logger.LogError("mms.SendWriteAsStructure: Encoding Error!");
                     return -1;
                 }
@@ -2978,6 +3140,7 @@ namespace lib61850net
                         dat_Struct.selectStructure(datList_Struct2);
                         break;
                     default:
+                        iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Cannot send unknown datatype!");
                         iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
                         //return 1;
                         break;
@@ -3012,7 +3175,7 @@ namespace lib61850net
             }
 
             NodeBase[] nvl = new NodeBase[1];
-            nvl[0] = el.Address.owner;
+          //  nvl[0] = el.Address.owner;
             //iecs.lastOperationData = nvl;
 
             nvlreq.ListOfVariable = dnvl;
@@ -3033,6 +3196,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendDefineNVL: Encoding Error!");
                 iecs.logger.LogError("mms.SendDefineNVL: Encoding Error!");
                 return -1;
             }
@@ -3082,6 +3246,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendDeleteNVL: Encoding Error!");
                 iecs.logger.LogError("mms.SendDeleteNVL: Encoding Error!");
                 return -1;
             }
@@ -3145,6 +3310,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendFileDirectory: Encoding Error!");
                 iecs.logger.LogError("mms.SendFileDirectory: Encoding Error!");
                 return -1;
             }
@@ -3177,6 +3343,7 @@ namespace lib61850net
             }
             else
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendFileOpen: Request not a file!");
                 iecs.logger.LogError("mms.SendFileOpen: Request not a file!");
                 return -1;
             }
@@ -3203,6 +3370,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendFileOpen: Encoding Error!");
                 iecs.logger.LogError("mms.SendFileOpen: Encoding Error!");
                 return -1;
             }
@@ -3226,6 +3394,7 @@ namespace lib61850net
                 filerreq.Value = new Integer32((el.Data[0] as NodeFile).frsmId);
             else
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendReadFile: Request not a file!");
                 iecs.logger.LogError("mms.SendReadFile: Request not a file!");
                 return -1;
             }
@@ -3244,6 +3413,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendFileRead: Encoding Error!");
                 iecs.logger.LogError("mms.SendFileRead: Encoding Error!");
                 return -1;
             }
@@ -3319,6 +3489,7 @@ namespace lib61850net
                 filecreq.Value = new Integer32((el.Data[0] as NodeFile).frsmId);
             else
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendCloseFile: Request not a file!");
                 iecs.logger.LogError("mms.SendCloseFile: Request not a file!");
                 return -1;
             }
@@ -3378,6 +3549,7 @@ namespace lib61850net
 
             if (iecs.msMMSout.Length == 0)
             {
+                iecs.sourceLogger?.SendError("lib61850net: mms.SendInitiate: Encoding Error!");
                 iecs.logger.LogError("mms.SendInitiate: Encoding Error!");
                 return -1;
             }
@@ -3391,20 +3563,26 @@ namespace lib61850net
 
         private void Send(Iec61850State iecs, MMSpdu pdu, int InvokeIdInc, NodeBase[] OperationData)
         {
-            if (iecs.CaptureDb.CaptureActive)
-            {
-                MMSCapture cap;
-                iecs.msMMSout.Seek(0, SeekOrigin.Begin);
-                iecs.msMMSout.Read(iecs.sendBuffer, 0, (int)iecs.msMMSout.Length);
-                cap = new MMSCapture(iecs.sendBuffer, 0, iecs.msMMSout.Length, MMSCapture.CaptureDirection.Out);
-                cap.MMSPdu = pdu;
-                iecs.CaptureDb.AddPacket(cap);
-            }
+            //if (iecs.CaptureDb.CaptureActive)
+            //{
+            //    MMSCapture cap;
+            //    iecs.msMMSout.Seek(0, SeekOrigin.Begin);
+            //    iecs.msMMSout.Read(iecs.sendBuffer, 0, (int)iecs.msMMSout.Length);
+            //    cap = new MMSCapture(iecs.sendBuffer, 0, iecs.msMMSout.Length, MMSCapture.CaptureDirection.Out);
+            //    cap.MMSPdu = pdu;
+            //    iecs.CaptureDb.AddPacket(cap);
+            //}
             insertCall(iecs, InvokeIdInc, OperationData);
             iecs.iso.Send(iecs);
         }
 
+
         private List<(NodeBase, NodeBase)> listOfRCB = new List<(NodeBase, NodeBase)>();
+        
+        /// <summary>
+        /// Здесь хранятся узлы с функциональной связью RP или BR, которые ожидают очереди на получение спецификации при построении модели.
+        /// </summary>
+        private ConcurrentQueue<NodeFC> queueOfReportsFC = new ConcurrentQueue<NodeFC>();
 
         private void TestAdd(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
         {
@@ -3426,21 +3604,29 @@ namespace lib61850net
                     }
                 case 2:
                     {
-                        var curdo = actNode.AddChildNode(new NodeDO(addr[deep]));
-                        if (actNode is NodeFC && (actNode.Name == "RP" || actNode.Name == "BR"))
+                        // здесь мы обрабатываем ситуацию, когда встречаем параметры отчёта или блоки команд управления,
+                        // добавляем их в отдельную очередь, чтобы затем прочитать у них спецификацию
+                        // для этого сравниваем имя узла, его логический узел и логическое устройство
+                        if (actNode is NodeFC && (actNode.Name == "RP" || actNode.Name == "BR" || actNode.Name == "CO"))
                         {
-                            // Having RCB
-                            NodeBase nrpied;
-                            if (actNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            NodeBase nrp = new NodeRCB(curdo.CommAddress.Variable, curdo.Name);
-                            nrpied.AddChildNode(nrp);
-                            listOfRCB.Add((curdo, nrp));
-                            foreach (NodeBase nb in curdo.GetChildNodes())
+                            if (queueOfReportsFC.Count(el => el.Name == actNode.Name && el.Parent.Name == actNode.Parent.Name && el.Parent.Parent.Name == actNode.Parent.Parent.Name) == 0)
                             {
-                                nrp.LinkChildNodeByAddress(nb);
+                                queueOfReportsFC.Enqueue(actNode as NodeFC); 
                             }
+                            // Having RCB
+                            //NodeBase nrpied;
+                            //if (actNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            //else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            //NodeBase nrp = new NodeRCB(curdo.CommAddress.Variable, curdo.Name);
+                            //nrpied.AddChildNode(nrp);
+                            //listOfRCB.Add((curdo, nrp));
+                            //foreach (NodeBase nb in curdo.GetChildNodes())
+                            //{
+                            //    nrp.LinkChildNodeByAddress(nb);
+                            //}
+                            return;
                         }
+                        var curdo = actNode.AddChildNode(new NodeDO(addr[deep]));
                         if (addr.Length < 4)
                         {
                             return;
@@ -3482,8 +3668,91 @@ namespace lib61850net
             TestAdd(iecs, parts, 1, curln);
         }
 
+        private NodeBase currentNodeToAdd;
+
+        private void NewTestAdd(string addr)
+        {
+            if (currentNodeToAdd is NodeLD)
+            {
+                var newNode = currentNodeToAdd.AddChildNode(new NodeLN(addr));
+                currentNodeToAdd = newNode;
+            }
+            else if (currentNodeToAdd is NodeLN)
+            {
+                var newNode = currentNodeToAdd.AddChildNode(new NodeFC(addr));
+                currentNodeToAdd = newNode;
+            }
+            else if (currentNodeToAdd is NodeFC)
+            {
+                if ((currentNodeToAdd.Name == "RP" || currentNodeToAdd.Name == "BR" || currentNodeToAdd.Name == "CO"))
+                {
+                    if (queueOfReportsFC.Count(el => el.Name == currentNodeToAdd.Name && el.Parent.Name == currentNodeToAdd.Parent.Name && el.Parent.Parent.Name == currentNodeToAdd.Parent.Parent.Name) == 0)
+                    {
+                        queueOfReportsFC.Enqueue(currentNodeToAdd as NodeFC);
+                    }
+                    return;
+                }
+                var newNode = currentNodeToAdd.AddChildNode(new NodeDO(addr));
+                currentNodeToAdd = newNode;
+            }
+            else
+            {
+                var newNode = currentNodeToAdd.AddChildNode(new NodeData(addr));
+                currentNodeToAdd = newNode;
+            }
+        }
+
+        private void NewTestGlobalAdd(Iec61850State iecs, string addr)
+        {
+            string[] parts = addr.Split(new char[] { '$' });
+            if (parts.Length < 2)
+            {
+                var curld = iecs.DataModel.ied.GetActualChildNode();
+                currentNodeToAdd = curld.AddChildNode(new NodeLN(addr));
+                return;
+            }
+
+            if (currentNodeToAdd != null)
+            {
+                if (addr.StartsWith(currentNodeToAdd.CommAddress.Variable))
+                {
+                    NewTestAdd(parts.Last());
+                }
+                else
+                {
+                    NodeBase cursor = currentNodeToAdd;
+                    while (cursor.Parent != null)
+                    {
+                        cursor = cursor.Parent;
+                        if (addr.StartsWith(cursor.CommAddress.Variable))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (cursor.Parent == null)
+                    {
+                        currentNodeToAdd = iecs.DataModel.ied.GetActualChildNode();
+                    }
+                    else
+                    {
+                        currentNodeToAdd = cursor;
+                    }
+
+                    NewTestAdd(parts.Last());
+                }
+            }
+            //NodeBase curld = iecs.DataModel.ied.GetActualChildNode();
+            //NodeBase curln;
+            //if (!addr.Contains("$"))
+            //{
+            //    curln = curld.AddChildNode(new NodeLN(addr));
+            //}
+        }
+
         private void AddIecAddress(Iec61850State iecs, string addr)
         {
+            //NewTestGlobalAdd(iecs, addr);
             TestGlobalAdd(iecs, addr);
             //string[] parts = addr.Split(new char[] { '$' });
             //NodeBase curld = iecs.DataModel.ied.GetActualChildNode();

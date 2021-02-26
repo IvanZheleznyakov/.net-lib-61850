@@ -155,61 +155,70 @@ namespace lib61850net
 
         internal int Receive(Iec61850State iecs)
         {
-            iecs.logger.LogDebug("Iso.Receive");
-            IsoCotp.CotpReceiveResult res = isoCotp.Receive(iecs);
-            byte[] buffer = iecs.msMMS.GetBuffer();
-            long len = iecs.msMMS.Length;
-            iecs.logger.LogDebugBuffer("Rec buffer", buffer, 0, len);
-            if (res == IsoCotp.CotpReceiveResult.DATA)
+            try
             {
-                // Incoming data
-                iecs.logger.LogDebug(String.Format("Calling isoSess.parseMessage with data len {0}", iecs.msMMS.Length));
-                IsoSess.IsoSessionIndication sess = isoSess.parseMessage(buffer, (int)len);
-                if (sess == IsoSess.IsoSessionIndication.SESSION_DATA)
+                iecs.logger.LogDebug("Iso.Receive");
+                IsoCotp.CotpReceiveResult res = isoCotp.Receive(iecs);
+                byte[] buffer = iecs.msMMS.GetBuffer();
+                long len = iecs.msMMS.Length;
+                iecs.logger.LogDebugBuffer("Rec buffer", buffer, 0, len);
+                if (res == IsoCotp.CotpReceiveResult.DATA)
                 {
-                    int dataPos = isoPres.parseUserData(buffer, (int)isoSess.UserDataIndex, (int)(len - isoSess.UserDataIndex));
-                    if (dataPos > 0)
+                    // Incoming data
+                    iecs.logger.LogDebug(String.Format("Calling isoSess.parseMessage with data len {0}", iecs.msMMS.Length));
+                    IsoSess.IsoSessionIndication sess = isoSess.parseMessage(buffer, (int)len);
+                    if (sess == IsoSess.IsoSessionIndication.SESSION_DATA)
                     {
-                        // Adjust the stream position to the MMS message start
-                        iecs.msMMS.Seek(dataPos, SeekOrigin.Begin);
-                        iecs.mms.ReceiveData(iecs);
+                        int dataPos = isoPres.parseUserData(buffer, (int)isoSess.UserDataIndex, (int)(len - isoSess.UserDataIndex));
+                        if (dataPos > 0)
+                        {
+                            // Adjust the stream position to the MMS message start
+                            iecs.msMMS.Seek(dataPos, SeekOrigin.Begin);
+                            iecs.mms.ReceiveData(iecs);
+                        }
+                        else
+                        {
+                            iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
+                        }
+                    }
+                    else if (sess == IsoSess.IsoSessionIndication.SESSION_CONNECT)
+                    {
+                        iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
+                        int dataPosPres = isoPres.parseAcceptMessage(buffer, isoSess.UserDataIndex, (int)(len - isoSess.UserDataIndex));
+                        if (dataPosPres > 0)
+                        {
+                            IsoAcse.AcseIndication acseRes = isoAcse.parseMessage(buffer, isoPres.UserDataIndex, (int)(len - isoPres.UserDataIndex));
+                            if (acseRes == IsoAcse.AcseIndication.ACSE_ASSOCIATE)
+                            {
+                                iecs.msMMS.Seek(isoAcse.UserDataIndex, SeekOrigin.Begin);
+                                iecs.logger.LogDebug("Read at " + isoAcse.UserDataIndex);
+                                iecs.mms.ReceiveData(iecs);
+                                iecs.ostate = IsoProtocolState.OSI_CONNECTED;
+                            }
+                        }
                     }
                     else
                     {
                         iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
                     }
+                    iecs.msMMS = new MemoryStream();
                 }
-                else if (sess == IsoSess.IsoSessionIndication.SESSION_CONNECT)
+                else if (res == IsoCotp.CotpReceiveResult.INIT)
                 {
-                    iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
-                    int dataPosPres = isoPres.parseAcceptMessage(buffer, isoSess.UserDataIndex, (int)(len - isoSess.UserDataIndex));
-                    if (dataPosPres > 0)
-                    {
-                        IsoAcse.AcseIndication acseRes = isoAcse.parseMessage(buffer, isoPres.UserDataIndex, (int)(len - isoPres.UserDataIndex));
-                        if (acseRes == IsoAcse.AcseIndication.ACSE_ASSOCIATE)
-                        {
-                            iecs.msMMS.Seek(isoAcse.UserDataIndex, SeekOrigin.Begin);
-                            iecs.logger.LogDebug("Read at " + isoAcse.UserDataIndex);
-                            iecs.mms.ReceiveData(iecs);
-                            iecs.ostate = IsoProtocolState.OSI_CONNECTED;
-                        }
-                    }
+                    iecs.ostate = IsoProtocolState.OSI_CONNECT_PRES;
                 }
-                else
+                else if (res == IsoCotp.CotpReceiveResult.ERROR)
                 {
                     iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
                 }
-                iecs.msMMS = new MemoryStream();
+                return 0;
             }
-            else if (res == IsoCotp.CotpReceiveResult.INIT)
+            catch (Exception ex)
             {
-                iecs.ostate = IsoProtocolState.OSI_CONNECT_PRES;
+                iecs?.sourceLogger?.SendError("lib61850net: ошибка в обработке принятия пакета по COTP " + ex.Message);
+                iecs.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
+                return -1;
             }
-            else if (res == IsoCotp.CotpReceiveResult.ERROR)
-            {
-                iecs.ostate = IsoProtocolState.OSI_STATE_SHUTDOWN;
-            }
-            return 0;
         }
 
         internal int Send(Iec61850State iecs)

@@ -378,7 +378,7 @@ namespace lib61850net
         {
             var sendArrays = rpar.GetSendArrays();
             iecs.Send(sendArrays.Item1, rpar.self.CommAddress, ActionRequested.Write, responseTask, response, sendArrays.Item2);
-            rpar.ResetFlags();
+       //     rpar.ResetFlags();
 
             if (reRead)
             {

@@ -21,13 +21,22 @@ namespace lib61850net
 
         private MmsTypeEnum ctlValType = MmsTypeEnum.UNKNOWN;
 
+        bool isTypeCalculated = false;
+
         public MmsTypeEnum CtlValMmsType
         {
             get
             {
-                if (ctlValType == MmsTypeEnum.UNKNOWN)
+                if (isTypeCalculated)
                 {
-                    ctlValType = (self.FindChildNode("Oper").FindChildNode("ctlVal") as NodeData).DataType;
+                    return ctlValType;
+                }
+
+                var readResp = libraryManager.ReadData(ObjectReference + ".Oper.ctlVal", FunctionalConstraintEnum.CO);
+                if (readResp != null && readResp.TypeOfError == DataAccessErrorEnum.none)
+                {
+                    ctlValType = readResp.MmsValue.MmsType;
+                    isTypeCalculated = true;
                 }
 
                 return ctlValType;
@@ -168,6 +177,12 @@ namespace lib61850net
                 if (responseCtlModel.TypeOfError != DataAccessErrorEnum.none)
                 {
                     throw new Exception("Не удалось получить информацию о требующемся типе команды: " + objectReference + " " + responseCtlModel.TypeOfError);
+                }
+                libraryManager.worker.iecs.mms.dictionaryOfControlBlocks.TryAdd(libraryManager.worker.iecs.mms.InvokeID, node);
+                var responseComBlock = libraryManager.GetVariableSpecification(objectReference, FC);
+                if (responseComBlock == null || responseComBlock.TypeOfError != DataAccessErrorEnum.none)
+                {
+                    throw new Exception("Не удалось получить спецификацию команды: " + objectReference + " " + responseComBlock?.TypeOfError);
                 }
                 self = (NodeDO)node;
                 commandParams = libraryManager.worker.iecs.Controller.PrepareSendCommand(node.FindChildNode("Oper").FindChildNode("ctlVal"));

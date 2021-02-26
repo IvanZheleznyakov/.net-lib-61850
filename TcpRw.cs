@@ -57,6 +57,7 @@ namespace lib61850net
             catch (Exception e)
             {
                 StopClient(tcps);
+                tcps.sourceLogger?.SendError("lib61850net: ошибка при запуске клиента: " + e.ToString());
                 tcps.logger.LogError(e.ToString());
             }
         }
@@ -94,6 +95,7 @@ namespace lib61850net
             } 
             catch (Exception e)
             {
+                tcps.sourceLogger?.SendError("lib61850net: ошибка при закрытии соединения: " + e.ToString());
                 tcps.logger.LogError("Closing: " + e.ToString());
             }
         }
@@ -121,6 +123,7 @@ namespace lib61850net
             catch (Exception e)
             {
                 StopClient(tcps);
+                tcps.sourceLogger?.SendError("lib61850net: connectcallback error " + e.ToString());
                 tcps.logger.LogError(e.ToString());
             }
         }
@@ -137,6 +140,7 @@ namespace lib61850net
             catch (Exception e)
             {
                 StopClient(tcps);
+                tcps.sourceLogger?.SendError("lib61850net: receive data error " + e.ToString());
                 tcps.logger.LogError(e.ToString());
             }
         }
@@ -155,6 +159,7 @@ namespace lib61850net
                         //socket not connected, close it if it's still running
                         tcps.workSocket.Close();
                         tcps.workSocket = null;
+                        tcps.sourceLogger?.SendError("lib61850net: Socket disconnected (detected in ReceiveCallback)");
                         tcps.logger.LogError("Socket disconnected (detected in ReceiveCallback)");
                         tcps.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
                     }
@@ -166,6 +171,7 @@ namespace lib61850net
                             //Console.WriteLine("ReceiveCallback: Data received {0}",
                             //    tcps.recvBytes.ToString());
                         } catch (Exception e) {
+                            tcps.sourceLogger?.SendError("lib61850net: endReceive error " + e.Message);
                             tcps.logger.LogError(e.Message);
                         }
 
@@ -174,6 +180,7 @@ namespace lib61850net
                         }
                         catch (Exception e)
                         {
+                            tcps.sourceLogger?.SendError("lib61850net: isotpkt.parse error " + e.Message);
                             tcps.logger.LogError(e.Message);
                         }
                         // Signal that the data has been received.
@@ -198,6 +205,7 @@ namespace lib61850net
             }
             catch (Exception e)
             {
+                tcps.sourceLogger?.SendError("lib61850net: send data error " + e.Message);
                 tcps.logger.LogError(e.ToString());
             }
         }
@@ -219,6 +227,7 @@ namespace lib61850net
             catch (Exception e)
             {
                 tcps.logger.LogError(e.ToString());
+                tcps.sourceLogger?.SendError("lib61850net: sendcallback error " + e.Message);
                 StopClient(tcps);
             }
         }

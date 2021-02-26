@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLL_Log;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
@@ -7,6 +8,8 @@ namespace lib61850net
 {
     internal class TcpState
     {
+        internal SourceMsg_t sourceLogger;
+
         /// <summary>
         ///  logger.
         /// </summary>
