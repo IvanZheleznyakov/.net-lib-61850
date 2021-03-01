@@ -421,7 +421,7 @@ namespace lib61850net
                     }
                     else if (mymmspdu.Confirmed_ResponsePDU.Service.GetNameList != null)
                     {
-                        ReceiveGetNameList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNameList);
+                        ReceiveGetNameList(iecs, mymmspdu.Confirmed_ResponsePDU.Service.GetNameList, mymmspdu.Confirmed_ResponsePDU.InvokeID.Value);
                     }
                     else if (mymmspdu.Confirmed_ResponsePDU.Service.GetVariableAccessAttributes != null)
                     {
@@ -1851,7 +1851,7 @@ namespace lib61850net
             }
         }
 
-        private void ReceiveGetNameList(Iec61850State iecs, GetNameList_Response GetNameList)
+        private void ReceiveGetNameList(Iec61850State iecs, GetNameList_Response GetNameList, int receivedInvokeId)
         {
             switch (iecs.istate)
             {
@@ -1918,6 +1918,32 @@ namespace lib61850net
                             iecs.istate = Iec61850lStateEnum.IEC61850_READ_NAMELIST_NAMED_VARIABLE_LIST;         // next logical device
                     }
                     break;
+                default:
+                    {
+                        if (waitingMmsPdu.ContainsKey(receivedInvokeId))
+                        {
+                            (Task, IResponse) responseWithTask;
+                            waitingMmsPdu.TryGetValue(receivedInvokeId, out responseWithTask);
+                            (responseWithTask.Item2 as DeviceDirectoryResponse).DirectoryNames = new List<string>();
+                            if (GetNameList.ListOfIdentifier != null)
+                            {
+                                foreach (Identifier i in GetNameList.ListOfIdentifier)
+                                {
+                                    (responseWithTask.Item2 as DeviceDirectoryResponse).DirectoryNames.Add(i.Value);
+                                    iecs.continueAfter = null;
+                                }
+                                (responseWithTask.Item2 as DeviceDirectoryResponse).TypeOfError = DataAccessErrorEnum.none;
+                            }
+                            else
+                            {
+                                (responseWithTask.Item2 as DeviceDirectoryResponse).TypeOfError = DataAccessErrorEnum.invalidAddress;
+                            }
+
+                            responseWithTask.Item1?.Start();
+                            waitingMmsPdu.Remove(receivedInvokeId);
+                        }
+                        break;
+                    }
             }
         }
 
@@ -2389,7 +2415,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendGetNameListVariables(Iec61850State iecs)
+        internal int SendGetNameListVariables(Iec61850State iecs, string ldName = null, Task responseTask = null, DeviceDirectoryResponse response = null)
         {
 
 
@@ -2403,10 +2429,22 @@ namespace lib61850net
             nlreq.ObjectClass = new ObjectClass();
             nlreq.ObjectClass.selectBasicObjectClass(ObjectClass.ObjectClass__basicObjectClass_namedVariable);
             nlreq.ObjectScope = new GetNameList_Request.ObjectScopeChoiceType();
-            nlreq.ObjectScope.selectDomainSpecific(new Identifier(iecs.DataModel.ied.GetActualChildNode().Name));
+            if (ldName != null)
+            {
+                nlreq.ObjectScope.selectDomainSpecific(new Identifier(ldName));
+            }
+            else
+            {
+                nlreq.ObjectScope.selectDomainSpecific(new Identifier(iecs.DataModel.ied.GetActualChildNode().Name));
+            }
             nlreq.ContinueAfter = iecs.continueAfter;
 
             csrreq.selectGetNameList(nlreq);
+
+            if (responseTask != null)
+            {
+                waitingMmsPdu.Add(InvokeID, (responseTask, response));
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 
@@ -2430,7 +2468,7 @@ namespace lib61850net
             return 0;
         }
 
-        internal int SendGetNameListNamedVariableList(Iec61850State iecs)
+        internal int SendGetNameListNamedVariableList(Iec61850State iecs, string ldName = null, Task responseTask = null, DeviceDirectoryResponse response = null)
         {
 
 
@@ -2444,10 +2482,22 @@ namespace lib61850net
             nlreq.ObjectClass = new ObjectClass();
             nlreq.ObjectClass.selectBasicObjectClass(ObjectClass.ObjectClass__basicObjectClass_namedVariableList);
             nlreq.ObjectScope = new GetNameList_Request.ObjectScopeChoiceType();
-            nlreq.ObjectScope.selectDomainSpecific(new Identifier(iecs.DataModel.ied.GetActualChildNode().Name));
+            if (ldName != null)
+            {
+                nlreq.ObjectScope.selectDomainSpecific(new Identifier(ldName));
+            }
+            else
+            {
+                nlreq.ObjectScope.selectDomainSpecific(new Identifier(iecs.DataModel.ied.GetActualChildNode().Name));
+            }
             nlreq.ContinueAfter = iecs.continueAfter;
 
             csrreq.selectGetNameList(nlreq);
+
+            if (responseTask != null)
+            {
+                waitingMmsPdu.Add(InvokeID, (responseTask, response));
+            }
 
             crreq.InvokeID = new Unsigned32(InvokeID++);
 

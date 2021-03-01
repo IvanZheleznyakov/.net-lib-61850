@@ -259,6 +259,34 @@ namespace lib61850net
             }
         }
 
+        public async Task<DeviceDirectoryResponse> GetDatasetsAsync_NoModel(string ldName)
+        {
+            try
+            {
+                DeviceDirectoryResponse response = new DeviceDirectoryResponse()
+                {
+                    TypeOfError = DataAccessErrorEnum.timeoutError
+                };
+                Task responseTask = new Task(() => privateDirResponseHandler(response));
+                worker.iecs.mms.SendGetNameListNamedVariableList(worker.iecs, ldName, responseTask, response);
+                return await Task.Run(() => privateDirResponseHandler(response));
+            }
+            catch (Exception ex)
+            {
+                UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                return null;
+            }
+        }
+
+    //    public 
+
+        private DeviceDirectoryResponse privateDirResponseHandler(DeviceDirectoryResponse response)
+        {
+            return response;
+        }
+
+        private DeviceDirectoryResponse lastDirectoryResponse = null;
+
         /// <summary>
         /// Получение списка датасетов.
         /// </summary>

@@ -47,6 +47,8 @@ namespace lib61850net
                         {
                             tcps.sourceLogger?.SendError("lib61850net: Synchronization lost: TPKT START / VERSION!\n");
                             tcps.logger.LogError("Synchronization lost: TPKT START / VERSION!\n");
+                            // давайте-ка разорвем соединение от греха подальше, если уже произошла ошибка синхронизации по TPKT
+                            iecs.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
                             iecs.kstate = IsoTpktState.TPKT_RECEIVE_ERROR;
                         }
                         break;
