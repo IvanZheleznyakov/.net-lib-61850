@@ -25,7 +25,9 @@ using org.bn.attributes.constraints;
 using org.bn.metadata;
 using org.bn.metadata.constraints;
 using org.bn.types;
-
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.IO;
 
 namespace org.bn.coders
 {
@@ -51,6 +53,157 @@ namespace org.bn.coders
             else
                 return false;
         }
+        //public static T getAttribute<T>(ICustomAttributeProvider field)
+        //{
+        //    return (T)GetAttributeOptions<T>(field).Item2;
+        //    //object[] attrs = field.GetCustomAttributes(typeof(T), false);
+        //    //if (attrs != null && attrs.Length > 0)
+        //    //{
+        //    //    T attribute = (T)attrs[0];
+        //    //    return attribute;
+        //    //}
+        //    //else
+        //    //    return default(T);
+        //}
+
+        //private static (bool, object) GetAttributeOptions<T>(ICustomAttributeProvider field)
+        //{
+        //    string fullName = field.ToString();
+        //    string reflectedType;
+        //    if (field is PropertyInfo && (field as PropertyInfo).ReflectedType != null)
+        //    {
+        //        reflectedType = (field as PropertyInfo).ReflectedType.FullName;
+        //    }
+        //    else
+        //    {
+        //        reflectedType = "";
+        //    }
+        //    Type type = typeof(T);
+        //    string typeName = type.FullName;
+        //    //if (fullName == "org.bn.types.BitString Value" && typeName == "org.bn.attributes.constraints.ASN1SizeConstraint")
+        //    //{
+        //    //    int a = "stophere".Length;
+        //    //}
+        //    ConcurrentDictionary<string, (bool, object)> refList;
+        //    ConcurrentDictionary<string, ConcurrentDictionary<string, (bool, object)>> typeNameList;
+        //    (bool, object) outValue;
+        //    if (!testDict.TryGetValue(fullName, out typeNameList))
+        //    {
+        //        object[] attrs = field.GetCustomAttributes(type, false);
+        //        outValue.Item1 = attrs != null && attrs.Length > 0;
+        //        outValue.Item2 = outValue.Item1 ? (T)attrs[0] : default(T);
+        //        refList = new ConcurrentDictionary<string, (bool, object)>();
+        //        refList.TryAdd(reflectedType, outValue);
+        //        typeNameList = new ConcurrentDictionary<string, ConcurrentDictionary<string, (bool, object)>>();
+        //        typeNameList.TryAdd(typeName, refList);
+        //        testDict.TryAdd(fullName, typeNameList);
+        //    }
+        //    else
+        //    {
+        //        if (!typeNameList.TryGetValue(typeName, out refList))
+        //        {
+        //            object[] attrs = field.GetCustomAttributes(type, false);
+        //            outValue.Item1 = attrs != null && attrs.Length > 0;
+        //            outValue.Item2 = outValue.Item1 ? (T)attrs[0] : default(T);
+        //            refList = new ConcurrentDictionary<string, (bool, object)>();
+        //            refList.TryAdd(reflectedType, outValue);
+        //            typeNameList.TryAdd(typeName, refList);
+        //        }
+        //        else
+        //        {
+        //            if (!refList.TryGetValue(reflectedType, out outValue))
+        //            {
+        //                object[] attrs = field.GetCustomAttributes(type, false);
+        //                outValue.Item1 = attrs != null && attrs.Length > 0;
+        //                outValue.Item2 = outValue.Item1 ? (T)attrs[0] : default(T);
+        //                refList.TryAdd(reflectedType, outValue);
+        //            }
+        //            else
+        //            {
+        //                refList.TryGetValue(reflectedType, out outValue);
+        //            }
+        //        }
+        //    }
+        //    //(string, string, string) keyPair = (fullName, typeName, reflectedType);
+        //    //if (isAttrPresent.ContainsKey(keyPair))
+        //    //{
+        //    //    isAttrPresent.TryGetValue(keyPair, out outValue);
+        //    //}
+        //    //else
+        //    //{
+        //    //    object[] attrs = field.GetCustomAttributes(type, false);
+        //    //    outValue.Item1 = attrs != null && attrs.Length > 0;
+        //    //    outValue.Item2 = outValue.Item1 ? (T)attrs[0] : default(T);
+        //    //    isAttrPresent.TryAdd(keyPair, outValue);
+        //    //}
+
+        //    return outValue;
+        //}
+
+        //internal static ConcurrentDictionary<(string, string, string), (bool, object)> isAttrPresent = new ConcurrentDictionary<(string, string, string), (bool, object)>();
+        //internal static SortedList<string, SortedList<string, SortedList<string, (bool, object)>>> testList = new SortedList<string, SortedList<string, SortedList<string, (bool, object)>>>();
+        //internal static ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentDictionary<string, (bool, object)>>> testDict = new ConcurrentDictionary<string, ConcurrentDictionary<string, ConcurrentDictionary<string, (bool, object)>>>();
+
+        ////public static bool isAttributePresent<T>(ICustomAttributeProvider field)
+        ////{
+        ////    return GetAttributeOptions<T>(field).Item1;
+        ////    string fullName = field.ToString();
+        ////    string reflectedType;
+        ////    if (field is PropertyInfo && (field as PropertyInfo).ReflectedType != null)
+        ////    {
+        ////        reflectedType = (field as PropertyInfo).ReflectedType.FullName;
+        ////    }
+        ////    else
+        ////    {
+        ////        reflectedType = "";
+        ////    }
+        ////    Type type = typeof(T);
+        ////    string typeName = type.FullName;
+        ////    if (fullName == "org.bn.types.BitString Value" && typeName == "org.bn.attributes.constraints.ASN1SizeConstraint")
+        ////    {
+        ////        int a = "stophere".Length;
+        ////    }
+        ////    (string, string, string) keyPair = (fullName, typeName, reflectedType);
+        ////    (bool, object) outValue;
+        ////    if (isAttrPresent.ContainsKey(keyPair))
+        ////    {
+        ////        isAttrPresent.TryGetValue(keyPair, out outValue);
+        ////    }
+        ////    else
+        ////    {
+        ////        object[] attrs = field.GetCustomAttributes(type, false);
+        ////        outValue.Item1 = attrs != null && attrs.Length > 0;
+        ////        outValue.Item2 = outValue.Item1 ? (T)attrs[0] : default(T);
+        ////        isAttrPresent.TryAdd(keyPair, outValue);
+        ////    }
+        ////    //////     Debug.WriteLine(fullName + " " + type.FullName + " " + isPresent.ToString());
+        ////    //     Console.WriteLine(fullName + " " + typeName + " " + isPresent.ToString());
+        ////    return outValue.Item1;
+        ////    var fs = File.Open(@"C:\Users\zheleznyakov_ie\Desktop\narims\otl.txt", FileMode.OpenOrCreate);
+        ////    bool ret = attrs != null && attrs.Length > 0;
+        ////    Console.WriteLine(fullName + " " + typeName + " " + ret.ToString());
+        ////    using (StreamWriter sw = new StreamWriter(fs))
+        ////    {
+        ////        sw.WriteLine(fullName + " " + type.FullName + " " + ret.ToString());
+        ////    }
+        ////    fs.Close();
+        ////    if (ret)
+        ////    {
+        ////        //            Debug.WriteLine(""/*field.ToString() + " " +*/ /*(typeof(T)).FullName + " " +*/ /*true.ToString()*/);
+        ////        return true;
+        ////    }
+        ////    else
+        ////    {
+        ////        //             Debug.WriteLine(""/*field.ToString() + " " +*/ /*(typeof(T)).FullName + " " +*/ /*false.ToString()*/);
+        ////        return false;
+        ////    }
+
+        ////    object[] attrs = field.GetCustomAttributes(typeof(T), false);
+        ////    if (attrs != null && attrs.Length > 0)
+        ////        return true;
+        ////    else
+        ////        return false;
+        ////}
 
         public static int getIntegerLength(int val)
         {

@@ -367,6 +367,35 @@ namespace lib61850net
                 }
                 catch (Exception e)
                 {
+                    int? vtu = Scsm_MMS_Worker.GetVTUIndex();
+                    if (vtu != null)
+                    {
+                        try
+                        {
+                            DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\Malformed Pdu");
+                            if (!di.Exists)
+                            {
+                                di.Create();
+                            }
+
+                            string fileName = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + " Device_" + vtu + ".err";
+
+                            var fs = File.Create(di.FullName + "\\" + fileName);
+                            fs.Close();
+                            byte[] buf = new byte[iecs.msMMS.Length];
+                            iecs.msMMS.Read(buf, 0, (int)iecs.msMMS.Length);
+                            File.WriteAllBytes(di.FullName + "\\" + fileName, buf);
+                            //using (StreamWriter sw = new StreamWriter(fs))
+                            //{
+
+                            //    sw.Write(buf);
+                            //    sw.Flush();
+                            //}
+
+                            //      fs.Close();
+                        }
+                        catch { }
+                    }
                     iecs.sourceLogger?.SendError("lib61850net: mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
                     iecs.logger.LogError("mms.ReceiveData: Malformed MMS Packet received!!!: " + e.Message);
                 }
@@ -2925,6 +2954,154 @@ namespace lib61850net
 
                 return -1;
             }
+        }
+
+        internal int SendWrite(Iec61850State iecs, string name, Task responseTask, WriteResponse response)
+        {
+            //try
+            //{
+            //    MMSpdu mymmspdu = new MMSpdu();
+            //    iecs.msMMSout = new MemoryStream();
+
+            //    Confirmed_RequestPDU crreq = new Confirmed_RequestPDU();
+            //    ConfirmedServiceRequest csrreq = new ConfirmedServiceRequest();
+            //    Write_Request wreq = new Write_Request();
+
+            //    List<VariableAccessSpecification.ListOfVariableSequenceType> vasl = new List<VariableAccessSpecification.ListOfVariableSequenceType>();
+            //    List<Data> datl = new List<Data>();
+
+            //    foreach (NodeData d in el.Data)
+            //    {
+            //        if (d != null)
+            //        {
+            //            VariableAccessSpecification.ListOfVariableSequenceType vas = new VariableAccessSpecification.ListOfVariableSequenceType();
+            //            Data dat = new Data();
+
+            //            ObjectName on = new ObjectName();
+            //            ObjectName.Domain_specificSequenceType dst = new ObjectName.Domain_specificSequenceType();
+            //            dst.DomainID = new Identifier(el.Address.Domain);
+            //            dst.ItemID = new Identifier(el.Address.Variable + "$" + d.Name);
+            //            on.selectDomain_specific(dst);
+
+            //            vas.VariableSpecification = new VariableSpecification();
+            //            vas.VariableSpecification.selectName(on);
+
+            //            vasl.Add(vas);
+
+            //            switch (d.DataType)
+            //            {
+            //                case MmsTypeEnum.BOOLEAN:
+            //                    dat.selectBoolean((bool)d.DataValue);
+            //                    break;
+            //                case MmsTypeEnum.VISIBLE_STRING:
+            //                    dat.selectVisible_string((string)d.DataValue);
+            //                    break;
+            //                case MmsTypeEnum.OCTET_STRING:
+            //                    dat.selectOctet_string((byte[])d.DataValue);
+            //                    break;
+            //                case MmsTypeEnum.UTC_TIME:
+            //                    UtcTime val = new UtcTime((byte[])d.DataValue);
+            //                    dat.selectUtc_time(val);
+            //                    break;
+            //                case MmsTypeEnum.BIT_STRING:
+            //                    dat.selectBit_string(new BitString((byte[])d.DataValue, (int)d.DataParam));
+            //                    break;
+            //                case MmsTypeEnum.UNSIGNED:
+            //                    dat.selectUnsigned((long)d.DataValue);
+            //                    break;
+            //                case MmsTypeEnum.INTEGER:
+            //                    dat.selectInteger((long)d.DataValue);
+            //                    break;
+            //                case MmsTypeEnum.FLOATING_POINT:
+            //                    byte[] byteval;
+            //                    byte[] tmp;
+            //                    if (d.DataValue is float)
+            //                    {
+            //                        byteval = new byte[5];
+            //                        tmp = BitConverter.GetBytes((float)d.DataValue);
+            //                        byteval[4] = tmp[0];
+            //                        byteval[3] = tmp[1];
+            //                        byteval[2] = tmp[2];
+            //                        byteval[1] = tmp[3];
+            //                        byteval[0] = 0x08;
+            //                    }
+            //                    else
+            //                    {
+            //                        byteval = new byte[9];
+            //                        tmp = BitConverter.GetBytes((float)d.DataValue);
+            //                        byteval[8] = tmp[0];
+            //                        byteval[7] = tmp[1];
+            //                        byteval[6] = tmp[2];
+            //                        byteval[5] = tmp[3];
+            //                        byteval[4] = tmp[4];
+            //                        byteval[3] = tmp[5];
+            //                        byteval[2] = tmp[6];
+            //                        byteval[1] = tmp[7];
+            //                        byteval[0] = 0x08;      // ???????????? TEST
+            //                    }
+            //                    FloatingPoint fpval = new FloatingPoint(byteval);
+            //                    dat.selectFloating_point(fpval);
+            //                    break;
+            //                default:
+            //                    iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Cannot send unknown datatype!");
+            //                    iecs.logger.LogError("mms.SendWrite: Cannot send unknown datatype!");
+            //                    return 1;
+            //            }
+            //            datl.Add(dat);
+
+            //            iecs.logger.LogDebug("SendWrite: Writing: " + dst.ItemID.Value);
+            //        }
+            //        else
+            //        {
+            //            iecs.sourceLogger?.SendWarning("lib61850net: SendWrite: Null in data for write for: " + el.Address.Variable);
+            //            iecs.logger.LogWarning("SendWrite: Null in data for write for: " + el.Address.Variable);
+            //        }
+            //    }
+            //    wreq.VariableAccessSpecification = new VariableAccessSpecification();
+            //    wreq.VariableAccessSpecification.selectListOfVariable(vasl);
+            //    wreq.ListOfData = datl;
+
+            //    csrreq.selectWrite(wreq);
+
+            //    if (responseTask != null)
+            //    {
+            //        waitingMmsPdu.Add(InvokeID, (responseTask, response));
+            //    }
+
+            //    crreq.InvokeID = new Unsigned32(InvokeID++);
+
+            //    crreq.Service = csrreq;
+
+            //    mymmspdu.selectConfirmed_RequestPDU(crreq);
+
+            //    encoder.encode<MMSpdu>(mymmspdu, iecs.msMMSout);
+
+            //    if (iecs.msMMSout.Length == 0)
+            //    {
+            //        iecs.sourceLogger?.SendError("lib61850net: mms.SendWrite: Encoding Error!");
+            //        iecs.logger.LogError("mms.SendWrite: Encoding Error!");
+            //        return -1;
+            //    }
+
+            //    this.Send(iecs, mymmspdu, InvokeID, el.Data);
+
+
+
+            //    return 0;
+            //}
+            //catch
+            //{
+            //    if (responseTask != null)
+            //    {
+            //        (response as WriteResponse).TypeOfErrors = new List<DataAccessErrorEnum>
+            //        {
+            //            DataAccessErrorEnum.typeInconsistent
+            //        };
+            //        responseTask?.Start();
+            //    }
+
+            return -1;
+            //}
         }
 
         internal int SendWrite(Iec61850State iecs, WriteQueueElement el, Task responseTask = null, WriteResponse response = null)

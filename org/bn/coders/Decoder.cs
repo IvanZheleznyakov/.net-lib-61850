@@ -22,6 +22,8 @@ using System.IO;
 using org.bn.attributes;
 using org.bn.metadata;
 using org.bn.types;
+using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace org.bn.coders
 {	
@@ -33,9 +35,14 @@ namespace org.bn.coders
             ElementInfo elemInfo = new ElementInfo();
             elemInfo.AnnotatedClass = objectClass;
             object objectInstance = null;
-            if (CoderUtils.isImplements(objectClass,(typeof(IASN1PreparedElement))))
+            bool isImplements = CoderUtils.isImplements(objectClass, (typeof(IASN1PreparedElement)));
+            if (isImplements)
             {
                 objectInstance = createInstanceForElement(objectClass, elemInfo);
+            }
+            else
+            {
+                Debug.WriteLine("IsImplements is false, typeOf(T) = " + objectClass.Name);
             }
 
             if (objectInstance!=null && objectInstance is IASN1PreparedElement)
@@ -49,10 +56,10 @@ namespace org.bn.coders
                 return (T)decodeClassType(decodeTag(stream), objectClass, elemInfo, stream).Value;
             }            
         }
-		
-		public virtual DecodedObject<object> decodeClassType(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
+
+        public virtual DecodedObject<object> decodeClassType(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
 		{
-            if(CoderUtils.isImplements(objectClass,typeof(IASN1PreparedElement))) 
+            if(CoderUtils.isImplements(objectClass, typeof(IASN1PreparedElement))) 
             {
                 return decodePreparedElement(decodedTag, objectClass,elementInfo, stream);
             }

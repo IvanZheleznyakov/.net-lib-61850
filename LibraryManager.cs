@@ -57,9 +57,9 @@ namespace lib61850net
         /// <summary>
         /// Конструктор класса, инициализирующий необходимые внутренние поля.
         /// </summary>
-        public LibraryManager(SourceMsg_t logger = null)
+        public LibraryManager(SourceMsg_t logger = null, int? vtu = null)
         {
-            worker = new Scsm_MMS_Worker(logger);
+            worker = new Scsm_MMS_Worker(logger, vtu);
         }
 
         public TcpProtocolState TcpState
@@ -172,6 +172,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return false;
+                }
                 worker.iecs.mms.reportReceivedEventHandler = eventHandler;
                 return true;
             }
@@ -263,6 +267,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 DeviceDirectoryResponse response = new DeviceDirectoryResponse()
                 {
                     TypeOfError = DataAccessErrorEnum.timeoutError
@@ -360,6 +368,10 @@ namespace lib61850net
             }
         }
 
+        //public async Task<WriteResponse> WriteDataAsync_NoModel(string name, FunctionalConstraintEnum FC, MmsValue value, int waitingTime = 2000)
+        //{
+
+        //}
 
         private WriteResponse lastWriteRespone;
 
@@ -375,6 +387,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastWriteRespone = new WriteResponse()
                 {
                     TypeOfErrors = new List<DataAccessErrorEnum>() { DataAccessErrorEnum.timeoutError },
@@ -408,6 +424,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 //Action<Response, object> responseAction = (response, param) =>
                 //{
                 //    responseHandler(response.Item1, response.Item2);
@@ -441,6 +461,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastMVSRespone = new MmsVariableSpecResponse()
                 {
                     TypeOfError = DataAccessErrorEnum.timeoutError,
@@ -483,6 +507,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 MmsVariableSpecResponse response = new MmsVariableSpecResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
@@ -502,6 +530,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 ReadDataSetResponse response = new ReadDataSetResponse();
                 Task responseTask = new Task(() => responseHandler(response));
 
@@ -522,6 +554,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastReadDataSetResponse = new ReadDataSetResponse()
                 {
                     MmsValues = null,
@@ -556,6 +592,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastReadResponse = new ReadResponse()
                 {
                     TypeOfError = DataAccessErrorEnum.timeoutError,
@@ -588,6 +628,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 ReadResponse response = new ReadResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
@@ -620,7 +664,11 @@ namespace lib61850net
         {
             try
             {
-           //     Console.WriteLine("Creating reportcontrolblock with name" + name);
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
+                //     Console.WriteLine("Creating reportcontrolblock with name" + name);
                 FunctionalConstraintEnum repFC = isBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP;
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, repFC);
                 ReportControlBlock resultRcb = new ReportControlBlock();
@@ -660,6 +708,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastRCBResponse = null;
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
            //     Console.WriteLine("now task waiting in updatercb with name: " + rcb.Name);
@@ -689,7 +741,11 @@ namespace lib61850net
         {
             try
             {
-           //     Console.WriteLine("start update rcb with name " + rcb.Name);
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
+                //     Console.WriteLine("start update rcb with name " + rcb.Name);
                 RCBResponse response = new RCBResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP);
@@ -715,6 +771,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastWriteRespone = null;
                 Task responseTask = SetReportControlBlockAsync(rcbPar, WriteDataPrivateHandler);
                 responseTask.Wait(waitingTime);
@@ -741,6 +801,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 WriteResponse response = new WriteResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 worker.iecs.Controller.WriteRcb(rcbPar, false, responseTask, response);
@@ -765,6 +829,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastFileDirectoryResponse = null;
                 Task responseTask = GetFileDirectoryAsync(name, FileDirectoryPrivateHandler);
                 responseTask.Wait(waitingTime);
@@ -792,6 +860,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 var node = new NodeBase("");
                 if (name == "")
                 {
@@ -828,6 +900,10 @@ namespace lib61850net
         {
             try
             {
+                if (TcpState != TcpProtocolState.TCP_CONNECTED)
+                {
+                    return null;
+                }
                 lastFileResponse = null;
                 Task responseTask = GetFileAsync(name, FilePrivateHandler);
                 responseTask?.Wait(waitingTime);
@@ -853,6 +929,10 @@ namespace lib61850net
         /// <returns>Задача, выполняющая обработчик.</returns>
         public Task GetFileAsync(string name, fileResponseReceivedHandler responseHandler)
         {
+            if (TcpState != TcpProtocolState.TCP_CONNECTED)
+            {
+                return null;
+            }
             if (worker.IsFileReadingNow || worker.iecs.fstate == FileTransferState.FILE_OPENED || worker.iecs.fstate == FileTransferState.FILE_READ)
             {
            //     Console.WriteLine("file is reading now");

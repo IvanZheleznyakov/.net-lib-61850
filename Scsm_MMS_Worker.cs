@@ -24,6 +24,12 @@ namespace lib61850net
         internal Iec61850State iecs;
         Logger logger = Logger.getLogger();
         //SourceMsg_t srcLogger = SourceMsgLogger.
+        private static int? indexVTU;
+
+        internal static int? GetVTUIndex()
+        {
+            return indexVTU;
+        }
 
         internal bool IsFileReadingNow { get; set; } = false;
 
@@ -34,11 +40,12 @@ namespace lib61850net
 
         internal bool modelCreated = false;
 
-        internal Scsm_MMS_Worker(SourceMsg_t logger = null)
+        internal Scsm_MMS_Worker(SourceMsg_t logger = null, int? vtu = null)
         {
             _env = Env.getEnv();
             iecs = new Iec61850State(logger);
             iecs.mms.ReadFileStateChanged += Mms_ReadFileStateChanged;
+            Scsm_MMS_Worker.indexVTU = vtu;
         }
 
         private void Mms_ReadFileStateChanged(bool isReading)
