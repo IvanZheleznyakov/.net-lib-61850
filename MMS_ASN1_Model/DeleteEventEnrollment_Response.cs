@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private Unsigned32  val;
 
         
-        [ASN1ElementAtr ( Name = "DeleteEventEnrollment-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "DeleteEventEnrollment-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Unsigned32 Value
         {

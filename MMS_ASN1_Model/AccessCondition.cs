@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "never" )]
     
-        [ASN1ElementAtr ( Name = "never", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "never", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public NullObject Never
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "semaphore", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "semaphore", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier Semaphore
         {
@@ -70,7 +70,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "association", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "association", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ApplicationReference Association
         {
@@ -88,7 +88,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "none" )]
     
-        [ASN1ElementAtr ( Name = "none", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "none", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject None
         {
@@ -148,7 +148,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "user", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "user", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public UserChoiceType User
         {
@@ -164,7 +164,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "password", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "password", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Authentication_value Password
         {
@@ -183,7 +183,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "joint", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "joint", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "joint", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<AccessCondition> Joint
         {
@@ -202,7 +202,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "alternate", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "alternate", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alternate", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<AccessCondition> Alternate
         {

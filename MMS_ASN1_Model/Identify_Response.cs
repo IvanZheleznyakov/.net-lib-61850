@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private MMSString vendorName_;
 
-        [ASN1ElementAtr(Name = "vendorName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "vendorName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
         public MMSString VendorName
         {
             get { return vendorName_; }
@@ -32,7 +32,7 @@ namespace MMS_ASN1_Model
 
         private MMSString modelName_;
 
-        [ASN1ElementAtr(Name = "modelName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "modelName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
         public MMSString ModelName
         {
             get { return modelName_; }
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model
 
         private MMSString revision_;
 
-        [ASN1ElementAtr(Name = "revision", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "revision", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
         public MMSString Revision
         {
             get { return revision_; }
@@ -54,7 +54,7 @@ namespace MMS_ASN1_Model
 
         [ASN1ObjectIdentifier(Name = "listOfAbstractSyntaxes")]
         //[ASN1SequenceOf(Name = "listOfAbstractSyntaxes", IsSetOf = false)]
-        [ASN1ElementAtr(Name = "listOfAbstractSyntaxes", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "listOfAbstractSyntaxes", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
         public System.Collections.Generic.ICollection<ObjectIdentifier> ListOfAbstractSyntaxes
         {
             get { return listOfAbstractSyntaxes_; }

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private EC_State currentState_ ;
 	
-        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public EC_State CurrentState
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned32 numberOfEventEnrollments_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfEventEnrollments", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfEventEnrollments", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumberOfEventEnrollments
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model {
         private bool  enabled_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool Enabled
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  timeOfLastTransitionToActive_present = false ;
 	
-        [ASN1ElementAtr ( Name = "timeOfLastTransitionToActive", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeOfLastTransitionToActive", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public EventTime TimeOfLastTransitionToActive
         {
@@ -76,7 +76,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  timeOfLastTransitionToIdle_present = false ;
 	
-        [ASN1ElementAtr ( Name = "timeOfLastTransitionToIdle", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeOfLastTransitionToIdle", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public EventTime TimeOfLastTransitionToIdle
         {

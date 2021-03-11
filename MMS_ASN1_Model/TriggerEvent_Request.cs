@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventConditionName_ ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  priority_present = false ;
 	
-        [ASN1ElementAtr ( Name = "priority", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "priority", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Priority Priority
         {

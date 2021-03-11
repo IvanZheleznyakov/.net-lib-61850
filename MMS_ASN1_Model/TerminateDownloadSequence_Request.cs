@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier domainName_ ;
 	
-        [ASN1ElementAtr ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier DomainName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  discard_present = false ;
 	
-        [ASN1ElementAtr ( Name = "discard", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "discard", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ServiceError Discard
         {

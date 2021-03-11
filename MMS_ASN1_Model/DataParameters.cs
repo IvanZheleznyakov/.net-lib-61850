@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
         private bool  bit_string_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "bit-string", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "bit-string", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long Bit_string
         {
@@ -39,7 +39,7 @@ namespace MMS_ASN1_Model {
         private bool  integer_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "integer", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "integer", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Integer
         {
@@ -54,7 +54,7 @@ namespace MMS_ASN1_Model {
         private bool  unsigned_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "unsigned", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unsigned", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long Unsigned
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
 	private long total_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "total", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "total", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public long Total
         {
@@ -88,7 +88,7 @@ namespace MMS_ASN1_Model {
 	private long exponent_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "exponent", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "exponent", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public long Exponent
         {
@@ -111,7 +111,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "floating-point", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "floating-point", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Floating_pointSequenceType Floating_point
         {
@@ -126,7 +126,7 @@ namespace MMS_ASN1_Model {
         private bool  octet_string_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "octet-string", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "octet-string", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public long Octet_string
         {
@@ -141,7 +141,7 @@ namespace MMS_ASN1_Model {
         private bool  visible_string_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "visible-string", IsOptional =  true , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "visible-string", IsOptional =  true , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public long Visible_string
         {
@@ -156,7 +156,7 @@ namespace MMS_ASN1_Model {
         private bool  binary_time_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "binary-time", IsOptional =  true , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "binary-time", IsOptional =  true , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public bool Binary_time
         {
@@ -171,7 +171,7 @@ namespace MMS_ASN1_Model {
         private bool  bcd_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "bcd", IsOptional =  true , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "bcd", IsOptional =  true , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public long Bcd
         {
@@ -186,7 +186,7 @@ namespace MMS_ASN1_Model {
         private bool  mmsString_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "mmsString", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "mmsString", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public long MmsString
         {

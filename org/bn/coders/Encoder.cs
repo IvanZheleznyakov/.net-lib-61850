@@ -1,27 +1,25 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
-using System;
-using System.Reflection;
-using System.IO;
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
 using org.bn.attributes;
 using org.bn.metadata;
 using org.bn.types;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace org.bn.coders
 {
@@ -41,15 +39,14 @@ namespace org.bn.coders
             }
             else 
             {
-                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(obj.GetType());
+                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(obj.GetType());
 			    sizeOfEncodedBytes = encodeClassType(obj, stream, elemInfo);
             }
-
 
 			if (sizeOfEncodedBytes == 0)
 			{
 				throw new System.ArgumentException("Unable to find any supported annotation for class type: " + obj.GetType().ToString());
-			};
+			}
 		}
 		
 		public virtual int encodeClassType(object obj, System.IO.Stream stream, ElementInfo elementInfo)
@@ -133,7 +130,7 @@ namespace org.bn.coders
 				resultSize += encodeNull(obj, stream, elementInfo);
 			}
 			else
-            if (elementInfo.isAttributePresent<ASN1ElementAtr>())
+            if (elementInfo.isAttributePresent<ASN1Element>())
 			{
 				resultSize += encodeElement(obj, stream, elementInfo);
 			}
@@ -141,8 +138,8 @@ namespace org.bn.coders
 				resultSize += encodeCSElement(obj, stream, elementInfo);
 			return resultSize;
 		}
-
-        public virtual int encodeCSElement(object obj, System.IO.Stream stream, ElementInfo info)
+		
+		public virtual int encodeCSElement(object obj, System.IO.Stream stream, ElementInfo info)
 		{
 			if (obj.GetType().Equals(typeof(string)))
 			{
@@ -217,8 +214,8 @@ namespace org.bn.coders
             );        
         }
 
-
-        public virtual object invokeGetterMethodForField(PropertyInfo field, object obj, ElementInfo info)
+			
+		public virtual object invokeGetterMethodForField(PropertyInfo field, object obj, ElementInfo info)
 		{
             MethodInfo method = null;
             if (info!=null && info.hasPreparedInfo())
@@ -240,9 +237,9 @@ namespace org.bn.coders
             }
             return field.GetValue(obj, null);
 		}
-
-
-        public virtual bool invokeSelectedMethodForField(PropertyInfo field, object obj, ElementInfo info)
+		
+		
+		public virtual bool invokeSelectedMethodForField(PropertyInfo field, object obj, ElementInfo info)
 		{
             if (info!=null && info.hasPreparedInfo())
             {
@@ -254,8 +251,8 @@ namespace org.bn.coders
                 return (bool)method.Invoke(obj, null);
             }
 		}
-
-        public virtual int encodeSequence(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+		
+		public virtual int encodeSequence(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			int resultSize = 0;
             PropertyInfo[] fields = elementInfo.getProperties(obj.GetType());
@@ -267,34 +264,49 @@ namespace org.bn.coders
 			return resultSize;
 		}
 
-        public virtual int encodeSequenceField(object obj, int fieldIdx, PropertyInfo field, System.IO.Stream stream, ElementInfo elementInfo)
+        /// <param name="obj">The encoded sequence</param>
+        /// <param name="fieldIdx">Index of the sequence field to be encoded</param>
+        /// <param name="field">Field of the encoded sequence to be encoded</param>
+        /// <param name="stream"></param>
+        /// <param name="elementInfo">ElementInfo for the encoded sequence</param>
+		public virtual int encodeSequenceField(object obj, int fieldIdx, PropertyInfo field, System.IO.Stream stream, ElementInfo elementInfo)
 		{
             ElementInfo info = new ElementInfo();
             info.AnnotatedClass = field;
-
             if (elementInfo.hasPreparedInfo())
             {
                 info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
             }
             else
-                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+            {
+                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
+            }
 
-			int resultSize = 0;
-            if (CoderUtils.isNullField (field, info))
+            if (CoderUtils.isNullField(field, info))
 			{
 				return encodeNull(obj, stream, elementInfo);
 			}
 			else
 			{
 				object invokeObjResult = invokeGetterMethodForField(field, obj, info);
-				if (invokeObjResult != null)
-				{
-					resultSize += encodeClassType(invokeObjResult, stream, info);
-				}
-				else
-					CoderUtils.checkForOptionalField(field, info);
+                if (invokeObjResult == null)
+                {
+                    CoderUtils.checkForOptionalField(field, info);
+                    return 0;
+                }
+                else if (CoderUtils.isDefaultField(field, info))
+                {
+                    // skip the field if the current value equals to the default value (this is optional for BER, but mandatory for DER)
+                    object newSequenceInstance = Activator.CreateInstance(obj.GetType());
+                    CoderUtils.initDefaultValues(newSequenceInstance);
+                    object defaultFieldValue = invokeGetterMethodForField(field, newSequenceInstance, info);
+                    return CoderUtils.AreEqual(defaultFieldValue, invokeObjResult) ? 0 : encodeClassType(invokeObjResult, stream, info);
+                }
+                else
+                {
+                    return encodeClassType(invokeObjResult, stream, info);
+                }
 			}
-			return resultSize;
 		}
 
         protected ElementInfo getChoiceSelectedElement(Object obj, ElementInfo elementInfo) {
@@ -311,7 +323,7 @@ namespace org.bn.coders
                     info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx));
                 }
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
             
                 if (invokeSelectedMethodForField(field, obj, info)) {
                     break;
@@ -327,8 +339,8 @@ namespace org.bn.coders
             }        
             return info;
         }
-
-        public virtual int encodeChoice(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+		
+		public virtual int encodeChoice(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
             int resultSize = 0;
             ElementInfo info = getChoiceSelectedElement(obj, elementInfo);
@@ -336,13 +348,12 @@ namespace org.bn.coders
             resultSize+=encodeClassType(invokeObjResult, stream, info);
             return resultSize;
 		}
-
-
-        public virtual int encodeEnum(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+		
+		
+		public virtual int encodeEnum(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			int resultSize = 0;
-			PropertyInfo field = 
-                obj.GetType().GetProperty("Value");
+			PropertyInfo field = obj.GetType().GetProperty("Value");
 			object result = invokeGetterMethodForField(field, obj, null);
             Type enumClass = null;
 			
@@ -371,29 +382,29 @@ namespace org.bn.coders
 			resultSize += encodeEnumItem(result, enumClass, stream, elementInfo);
 			return resultSize;
 		}
-
-        public abstract int encodeEnumItem(object enumConstant, Type enumClass, System.IO.Stream stream, ElementInfo elementInfo);
-
-        public virtual int encodeElement(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+		
+		public abstract int encodeEnumItem(object enumConstant, Type enumClass, System.IO.Stream stream, ElementInfo elementInfo);		
+		
+		public virtual int encodeElement(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			elementInfo.AnnotatedClass = obj.GetType();
 			return encodeClassType(obj, stream, elementInfo);
 		}
-
-        public virtual int encodeBoxedType(object obj, System.IO.Stream stream, ElementInfo elementInfo)
+		
+		public virtual int encodeBoxedType(object obj, System.IO.Stream stream, ElementInfo elementInfo)
 		{
 			PropertyInfo field = obj.GetType().GetProperty("Value");
 			elementInfo.AnnotatedClass = field;
 
             if (elementInfo.ASN1ElementInfo == null)
             {
-                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
             }
             else
             {
                 if (!elementInfo.ASN1ElementInfo.HasTag)
                 {
-                    ASN1ElementAtr fieldInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                    ASN1Element fieldInfo = CoderUtils.getAttribute<ASN1Element>(field);
                     if (fieldInfo!=null && fieldInfo.HasTag)
                     {
                         elementInfo.ASN1ElementInfo.HasTag = true;
@@ -412,24 +423,24 @@ namespace org.bn.coders
                 return encodeClassType(invokeGetterMethodForField(field, obj, elementInfo), stream, elementInfo);
 			}
 		}
-
-        public abstract int encodeBoolean(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-
-        public abstract int encodeAny(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-
-        public abstract int encodeNull(object obj, System.IO.Stream stream, ElementInfo elementInfo);
-
-        public abstract int encodeInteger(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+		
+		public abstract int encodeBoolean(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+		
+		public abstract int encodeAny(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+		
+		public abstract int encodeNull(object obj, System.IO.Stream stream, ElementInfo elementInfo);
+		
+		public abstract int encodeInteger(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeReal(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
-        public abstract int encodeOctetString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+		public abstract int encodeOctetString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeBitString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
-
-        public abstract int encodeString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
-
-        public abstract int encodeSequenceOf(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+		
+		public abstract int encodeString(object obj, System.IO.Stream steam, ElementInfo elementInfo);
+		
+		public abstract int encodeSequenceOf(object obj, System.IO.Stream steam, ElementInfo elementInfo);
 
         public abstract int encodeObjectIdentifier(Object obj, System.IO.Stream stream, ElementInfo elementInfo);
 	}

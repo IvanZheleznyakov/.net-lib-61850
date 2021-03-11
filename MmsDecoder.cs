@@ -49,7 +49,8 @@ namespace lib61850net
                 }
             }
 
-            output = new BitString(byteVal);
+            output = new BitString();
+            output.Value = byteVal;
             output.TrailBitsCnt = byteVal.Length * 8 - ((lastBit / 8) * 8) - lastBit % 8;
 
             return output;

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString loadDataOctet_ ;
 	
-        [ASN1ElementAtr ( Name = "loadDataOctet", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "loadDataOctet", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString LoadDataOctet
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "loadDataSyntax", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "loadDataSyntax", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "loadDataSyntax", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectIdentifier> LoadDataSyntax
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
 	private long maxUploads_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "maxUploads", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "maxUploads", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long MaxUploads
         {

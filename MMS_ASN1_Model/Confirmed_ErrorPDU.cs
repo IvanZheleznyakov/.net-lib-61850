@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Unsigned32 invokeID_ ;
 	
-        [ASN1ElementAtr ( Name = "invokeID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "invokeID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 InvokeID
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  modifierPosition_present = false ;
 	
-        [ASN1ElementAtr ( Name = "modifierPosition", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "modifierPosition", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 ModifierPosition
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
           
 	private ServiceError serviceError_ ;
 	
-        [ASN1ElementAtr ( Name = "serviceError", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "serviceError", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ServiceError ServiceError
         {

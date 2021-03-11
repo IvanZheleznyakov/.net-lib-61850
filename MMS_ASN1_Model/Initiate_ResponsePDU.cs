@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model
 
         private bool localDetailCalled_present = false;
 
-        [ASN1ElementAtr(Name = "localDetailCalled", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "localDetailCalled", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Integer32 LocalDetailCalled
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
 
         private Integer16 negotiatedMaxServOutstandingCalling_;
 
-        [ASN1ElementAtr(Name = "negotiatedMaxServOutstandingCalling", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "negotiatedMaxServOutstandingCalling", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public Integer16 NegotiatedMaxServOutstandingCalling
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model
 
         private Integer16 negotiatedMaxServOutstandingCalled_;
 
-        [ASN1ElementAtr(Name = "negotiatedMaxServOutstandingCalled", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "negotiatedMaxServOutstandingCalled", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Integer16 NegotiatedMaxServOutstandingCalled
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model
 
         private bool negotiatedDataStructureNestingLevel_present = false;
 
-        [ASN1ElementAtr(Name = "negotiatedDataStructureNestingLevel", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "negotiatedDataStructureNestingLevel", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Integer8 NegotiatedDataStructureNestingLevel
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model
 
             private Integer16 negotiatedVersionNumber_;
 
-            [ASN1ElementAtr(Name = "negotiatedVersionNumber", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+            [ASN1Element(Name = "negotiatedVersionNumber", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
             public Integer16 NegotiatedVersionNumber
             {
@@ -94,7 +94,7 @@ namespace MMS_ASN1_Model
 
             private ParameterSupportOptions negotiatedParameterCBB_;
 
-            [ASN1ElementAtr(Name = "negotiatedParameterCBB", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "negotiatedParameterCBB", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public ParameterSupportOptions NegotiatedParameterCBB
             {
@@ -106,7 +106,7 @@ namespace MMS_ASN1_Model
 
             private ServiceSupportOptions servicesSupportedCalled_;
 
-            [ASN1ElementAtr(Name = "servicesSupportedCalled", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+            [ASN1Element(Name = "servicesSupportedCalled", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
             public ServiceSupportOptions ServicesSupportedCalled
             {
@@ -118,7 +118,7 @@ namespace MMS_ASN1_Model
 
             private AdditionalSupportOptions additionalSupportedCalled_;
 
-            [ASN1ElementAtr(Name = "additionalSupportedCalled", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+            [ASN1Element(Name = "additionalSupportedCalled", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
             public AdditionalSupportOptions AdditionalSupportedCalled
             {
@@ -130,7 +130,7 @@ namespace MMS_ASN1_Model
 
             private AdditionalCBBOptions additionalCbbSupportedCalled_;
 
-            [ASN1ElementAtr(Name = "additionalCbbSupportedCalled", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
+            [ASN1Element(Name = "additionalCbbSupportedCalled", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
             public AdditionalCBBOptions AdditionalCbbSupportedCalled
             {
@@ -143,7 +143,7 @@ namespace MMS_ASN1_Model
             private string privilegeClassIdentityCalled_;
             [ASN1String(Name = "",
                 StringType = UniversalTags.VisibleString, IsUCS = false)]
-            [ASN1ElementAtr(Name = "privilegeClassIdentityCalled", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+            [ASN1Element(Name = "privilegeClassIdentityCalled", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
             public string PrivilegeClassIdentityCalled
             {
@@ -168,7 +168,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "initResponseDetail", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1Element(Name = "initResponseDetail", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public InitResponseDetailSequenceType InitResponseDetail
         {

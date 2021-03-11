@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier unitControl_ ;
 	
-        [ASN1ElementAtr ( Name = "unitControl", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unitControl", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier UnitControl
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "domains", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "domains", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domains", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> Domains
         {
@@ -51,7 +51,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "programInvocations", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "programInvocations", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocations", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> ProgramInvocations
         {

@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "controlElements", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "controlElements", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "controlElements", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ControlElement> ControlElements
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier Domain
         {
@@ -66,7 +66,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long UlsmID
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocation
         {
@@ -161,7 +161,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "nextElement", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "nextElement", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NextElementChoiceType NextElement
         {

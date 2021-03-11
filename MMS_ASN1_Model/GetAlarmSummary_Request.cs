@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private bool enrollmentsOnly_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "enrollmentsOnly", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+        [ASN1Element(Name = "enrollmentsOnly", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
         public bool EnrollmentsOnly
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
         private bool activeAlarmsOnly_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "activeAlarmsOnly", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1Element(Name = "activeAlarmsOnly", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
 
         public bool ActiveAlarmsOnly
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model
         private long acknowledgementFilter_;
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "acknowledgementFilter", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
+        [ASN1Element(Name = "acknowledgementFilter", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
 
         public long AcknowledgementFilter
         {
@@ -69,7 +69,7 @@ namespace MMS_ASN1_Model
 
             private Unsigned8 mostSevere_;
 
-            [ASN1ElementAtr(Name = "mostSevere", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+            [ASN1Element(Name = "mostSevere", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
             public Unsigned8 MostSevere
             {
@@ -81,7 +81,7 @@ namespace MMS_ASN1_Model
 
             private Unsigned8 leastSevere_;
 
-            [ASN1ElementAtr(Name = "leastSevere", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "leastSevere", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public Unsigned8 LeastSevere
             {
@@ -106,7 +106,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "severityFilter", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = true)]
+        [ASN1Element(Name = "severityFilter", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = true)]
 
         public SeverityFilterSequenceType SeverityFilter
         {
@@ -120,7 +120,7 @@ namespace MMS_ASN1_Model
 
         private bool continueAfter_present = false;
 
-        [ASN1ElementAtr(Name = "continueAfter", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1Element(Name = "continueAfter", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public ObjectName ContinueAfter
         {

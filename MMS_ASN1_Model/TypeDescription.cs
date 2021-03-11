@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
 
             private bool packed_;
             [ASN1Boolean(Name = "packed")]
-            [ASN1ElementAtr(Name = "packed", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+            [ASN1Element(Name = "packed", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
             public bool Packed
             {
                 get { return packed_; }
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model
 
             private Unsigned32 numberOfElements_;
 
-            [ASN1ElementAtr(Name = "numberOfElements", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "numberOfElements", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
             public Unsigned32 NumberOfElements
             {
                 get { return numberOfElements_; }
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model
 
             private TypeSpecification elementType_;
 
-            [ASN1ElementAtr(Name = "elementType", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+            [ASN1Element(Name = "elementType", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
             public TypeSpecification ElementType
             {
                 get { return elementType_; }
@@ -85,7 +85,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "array", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "array", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
         public ArraySequenceType Array
         {
             get { return array_; }
@@ -108,7 +108,7 @@ namespace MMS_ASN1_Model
             private bool packed_;
             [ASN1Boolean(Name = "")]
 
-            [ASN1ElementAtr(Name = "packed", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+            [ASN1Element(Name = "packed", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
             public bool Packed
             {
@@ -129,7 +129,7 @@ namespace MMS_ASN1_Model
 
                 private bool componentName_present = false;
 
-                [ASN1ElementAtr(Name = "componentName", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
+                [ASN1Element(Name = "componentName", IsOptional = true, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
                 public Identifier ComponentName
                 {
@@ -141,7 +141,7 @@ namespace MMS_ASN1_Model
 
                 private TypeSpecification componentType_;
 
-                [ASN1ElementAtr(Name = "componentType", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+                [ASN1Element(Name = "componentType", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
                 public TypeSpecification ComponentType
                 {
@@ -174,7 +174,7 @@ namespace MMS_ASN1_Model
             [ASN1SequenceOf(Name = "components", IsSetOf = false)]
 
 
-            [ASN1ElementAtr(Name = "components", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "components", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public System.Collections.Generic.ICollection<ComponentsSequenceType> Components
             {
@@ -202,7 +202,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "structure", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "structure", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public StructureSequenceType Structure
         {
@@ -220,7 +220,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Null(Name = "boolean")]
 
-        [ASN1ElementAtr(Name = "boolean", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "boolean", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public NullObject Boolean
         {
@@ -236,7 +236,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "bit-string", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1Element(Name = "bit-string", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public Integer32 Bit_string
         {
@@ -252,7 +252,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "integer", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1Element(Name = "integer", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public Unsigned8 Integer
         {
@@ -268,7 +268,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "unsigned", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
+        [ASN1Element(Name = "unsigned", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
         public Unsigned8 Unsigned
         {
@@ -291,7 +291,7 @@ namespace MMS_ASN1_Model
 
             private Unsigned8 format_width_;
 
-            [ASN1ElementAtr(Name = "format-width", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1Element(Name = "format-width", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public Unsigned8 Format_width
             {
@@ -303,7 +303,7 @@ namespace MMS_ASN1_Model
 
             private Unsigned8 exponent_width_;
 
-            [ASN1ElementAtr(Name = "exponent-width", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1Element(Name = "exponent-width", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public Unsigned8 Exponent_width
             {
@@ -328,7 +328,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "floating-point", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1Element(Name = "floating-point", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public Floating_pointSequenceType Floating_point
         {
@@ -344,7 +344,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "octet-string", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
+        [ASN1Element(Name = "octet-string", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
 
         public Integer32 Octet_string
         {
@@ -360,7 +360,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "visible-string", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
+        [ASN1Element(Name = "visible-string", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
 
         public Integer32 Visible_string
         {
@@ -378,7 +378,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Null(Name = "generalized-time")]
 
-        [ASN1ElementAtr(Name = "generalized-time", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
+        [ASN1Element(Name = "generalized-time", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
 
         public NullObject Generalized_time
         {
@@ -395,7 +395,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Boolean(Name = "binary-time")]
 
-        [ASN1ElementAtr(Name = "binary-time", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
+        [ASN1Element(Name = "binary-time", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
 
         public bool Binary_time
         {
@@ -411,7 +411,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "bcd", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
+        [ASN1Element(Name = "bcd", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
 
         public Unsigned8 Bcd
         {
@@ -429,7 +429,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Null(Name = "objId")]
 
-        [ASN1ElementAtr(Name = "objId", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
+        [ASN1Element(Name = "objId", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
 
         public NullObject ObjId
         {
@@ -445,7 +445,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "mMSString", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
+        [ASN1Element(Name = "mMSString", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
 
         public Integer32 MMSString
         {
@@ -461,7 +461,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "utc-time", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
+        [ASN1Element(Name = "utc-time", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
 
         public UtcTime Utc_time
         {

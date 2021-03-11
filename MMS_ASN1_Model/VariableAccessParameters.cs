@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString uninterruptibleAccess_ ;
 	
-        [ASN1ElementAtr ( Name = "uninterruptibleAccess", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "uninterruptibleAccess", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString UninterruptibleAccess
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
 	private bool singleMode_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "singleMode", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "singleMode", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public bool SingleMode
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
 	private bool unnamedMode_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "unnamedMode", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unnamedMode", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool UnnamedMode
         {

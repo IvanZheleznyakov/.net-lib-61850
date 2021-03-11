@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName journalName_ ;
 	
-        [ASN1ElementAtr ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName JournalName
         {

@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private Identifier programInvocationName_;
 
-        [ASN1ElementAtr(Name = "programInvocationName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "programInvocationName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Identifier ProgramInvocationName
         {
@@ -38,7 +38,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfDomainNames", IsSetOf = false)]
 
 
-        [ASN1ElementAtr(Name = "listOfDomainNames", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "listOfDomainNames", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<Identifier> ListOfDomainNames
         {
@@ -51,7 +51,7 @@ namespace MMS_ASN1_Model
         private bool reusable_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "reusable", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
+        [ASN1Element(Name = "reusable", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
 
         public bool Reusable
         {
@@ -66,7 +66,7 @@ namespace MMS_ASN1_Model
         private bool monitorType_present = false;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "monitorType", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "monitorType", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public bool MonitorType
         {

@@ -1,21 +1,19 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ Original sources are available at www.latestbit.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 using System;
 using System.Reflection;
 using org.bn.attributes;
@@ -25,23 +23,23 @@ namespace org.bn.coders
 {	
 	public class ElementInfo
 	{
-        private ASN1ElementAtr element;
-        private ICustomAttributeProvider parentAnnotatedClass;
+        private ASN1Element element;
+        private MemberInfo parentAnnotatedClass;
 
-        public ICustomAttributeProvider ParentAnnotatedClass
+        public MemberInfo ParentAnnotatedClass
         {
             get { return parentAnnotatedClass; }
             set { parentAnnotatedClass = value; }
         }
 
-        public ASN1ElementAtr ASN1ElementInfo
+        public ASN1Element ASN1ElementInfo
         {
             get { return element; }
             set { element = value; }
         }
-        private ICustomAttributeProvider annotatedClass;
+        private MemberInfo annotatedClass;
 
-        public ICustomAttributeProvider AnnotatedClass
+        public MemberInfo AnnotatedClass
         {
             get { return annotatedClass; }
             set { annotatedClass = value; }
@@ -71,6 +69,10 @@ namespace org.bn.coders
             get { return preparedInstance; }
             set { preparedInstance = value; }
         }
+        public bool hasPreparedInstance()
+        {
+            return this.preparedInstance != null;
+        }
         
         private ASN1ElementMetadata preparedElementMetadata;
         public ASN1ElementMetadata PreparedASN1ElementInfo
@@ -99,22 +101,22 @@ namespace org.bn.coders
         {
         }
 
-        public bool isAttributePresent<T>() 
+        public bool isAttributePresent<T>() where T : Attribute
         {
             return CoderUtils.isAttributePresent<T>(annotatedClass);
         }
 
-        public T getAttribute<T>()
+        public T getAttribute<T>() where T : Attribute
         {
             return CoderUtils.getAttribute<T>(annotatedClass);
         }
 
-        public bool isParentAttributePresent<T>()
+        public bool isParentAttributePresent<T>() where T : Attribute
         {
             return CoderUtils.isAttributePresent<T>(parentAnnotatedClass);
         }
 
-        public T getParentAttribute<T>()
+        public T getParentAttribute<T>() where T : Attribute
         {
             return CoderUtils.getAttribute<T>(parentAnnotatedClass);
         }

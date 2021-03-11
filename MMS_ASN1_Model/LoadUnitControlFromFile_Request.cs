@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier unitControlName_ ;
 	
-        [ASN1ElementAtr ( Name = "unitControlName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unitControlName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier UnitControlName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private FileName fileName_ ;
 	
-        [ASN1ElementAtr ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public FileName FileName
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  thirdParty_present = false ;
 	
-        [ASN1ElementAtr ( Name = "thirdParty", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "thirdParty", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ThirdParty
         {

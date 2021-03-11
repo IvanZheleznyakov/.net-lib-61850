@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ProgramInvocationState  val;
 
         
-        [ASN1ElementAtr ( Name = "Reset-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "Reset-Error", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ProgramInvocationState Value
         {

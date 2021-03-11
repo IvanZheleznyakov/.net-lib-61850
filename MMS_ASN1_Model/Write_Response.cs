@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
 
 
 
-            [ASN1ElementAtr(Name = "failure", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+            [ASN1Element(Name = "failure", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
             public DataAccessError Failure
             {
@@ -54,7 +54,7 @@ namespace MMS_ASN1_Model
 
             [ASN1Null(Name = "success")]
 
-            [ASN1ElementAtr(Name = "success", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "success", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public NullObject Success
             {

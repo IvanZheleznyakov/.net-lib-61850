@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private StatusResponse  val;
 
         
-        [ASN1ElementAtr ( Name = "VMDReset-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "VMDReset-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public StatusResponse Value
         {

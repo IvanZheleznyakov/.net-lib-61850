@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private long input_time_out_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "input-time-out", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "input-time-out", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long Input_time_out
         {

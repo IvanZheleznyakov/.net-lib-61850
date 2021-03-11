@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Unsigned32 sizeOfFile_ ;
 	
-        [ASN1ElementAtr ( Name = "sizeOfFile", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "sizeOfFile", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 SizeOfFile
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
         private bool  lastModified_present = false ;
 	[ASN1String( Name = "", 
         StringType = UniversalTags.GeneralizedTime , IsUCS = false )]
-        [ASN1ElementAtr ( Name = "lastModified", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "lastModified", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public string LastModified
         {

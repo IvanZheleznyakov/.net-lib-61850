@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private bool mmsDeletable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public bool MmsDeletable
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
           
 	private ScatteredAccessDescription scatteredAccessDescription_ ;
 	
-        [ASN1ElementAtr ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ScatteredAccessDescription ScatteredAccessDescription
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  accessControlList_present = false ;
 	
-        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {

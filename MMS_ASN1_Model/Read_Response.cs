@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  variableAccessSpecification_present = false ;
 	
-        [ASN1ElementAtr ( Name = "variableAccessSpecification", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "variableAccessSpecification", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public VariableAccessSpecification VariableAccessSpecification
         {
@@ -38,7 +38,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfAccessResult", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfAccessResult", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfAccessResult", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<AccessResult> ListOfAccessResult
         {

@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventConditionName_ ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
         private bool  enabled_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public bool Enabled
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  priority_present = false ;
 	
-        [ASN1ElementAtr ( Name = "priority", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "priority", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Priority Priority
         {
@@ -65,7 +65,7 @@ namespace MMS_ASN1_Model {
         private bool  alarmSummaryReports_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "alarmSummaryReports", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alarmSummaryReports", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public bool AlarmSummaryReports
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  evaluationInterval_present = false ;
 	
-        [ASN1ElementAtr ( Name = "evaluationInterval", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "evaluationInterval", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public Unsigned32 EvaluationInterval
         {

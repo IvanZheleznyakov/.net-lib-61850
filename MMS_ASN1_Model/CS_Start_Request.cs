@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "normal" )]
     
-        [ASN1ElementAtr ( Name = "normal", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "normal", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject Normal
         {
@@ -61,7 +61,7 @@ namespace MMS_ASN1_Model {
         private bool  startLocation_present = false ;
 	[ASN1String( Name = "", 
         StringType =  UniversalTags.VisibleString , IsUCS = false )]
-        [ASN1ElementAtr ( Name = "startLocation", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "startLocation", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public string StartLocation
         {
@@ -73,7 +73,7 @@ namespace MMS_ASN1_Model {
           
 	private StartCount startCount_ ;
 	
-        [ASN1ElementAtr ( Name = "startCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
+        [ASN1Element ( Name = "startCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
     
         public StartCount StartCount
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "controlling", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "controlling", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ControllingSequenceType Controlling
         {
@@ -163,7 +163,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "CS-Start-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "CS-Start-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public CS_Start_RequestChoiceType Value
         {

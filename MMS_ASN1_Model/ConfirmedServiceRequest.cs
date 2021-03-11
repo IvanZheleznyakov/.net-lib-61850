@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "status", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "status", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Status_Request Status
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getNameList", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "getNameList", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public GetNameList_Request GetNameList
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "identify", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "identify", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Identify_Request Identify
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "rename", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "rename", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Rename_Request Rename
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "read", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1Element(Name = "read", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public Read_Request Read
         {
@@ -107,7 +107,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "write", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1Element(Name = "write", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public Write_Request Write
         {
@@ -123,7 +123,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getVariableAccessAttributes", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
+        [ASN1Element(Name = "getVariableAccessAttributes", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
         public GetVariableAccessAttributes_Request GetVariableAccessAttributes
         {
@@ -139,7 +139,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineNamedVariable", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineNamedVariable", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public DefineNamedVariable_Request DefineNamedVariable
         {
@@ -155,7 +155,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineScatteredAccess", IsOptional = false, HasTag = true, Tag = 8, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineScatteredAccess", IsOptional = false, HasTag = true, Tag = 8, HasDefaultValue = false)]
 
         public DefineScatteredAccess_Request DefineScatteredAccess
         {
@@ -171,7 +171,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getScatteredAccessAttributes", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
+        [ASN1Element(Name = "getScatteredAccessAttributes", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
 
         public GetScatteredAccessAttributes_Request GetScatteredAccessAttributes
         {
@@ -187,7 +187,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteVariableAccess", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteVariableAccess", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
 
         public DeleteVariableAccess_Request DeleteVariableAccess
         {
@@ -203,7 +203,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineNamedVariableList", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineNamedVariableList", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
 
         public DefineNamedVariableList_Request DefineNamedVariableList
         {
@@ -219,7 +219,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getNamedVariableListAttributes", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
+        [ASN1Element(Name = "getNamedVariableListAttributes", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
 
         public GetNamedVariableListAttributes_Request GetNamedVariableListAttributes
         {
@@ -235,7 +235,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteNamedVariableList", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteNamedVariableList", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
 
         public DeleteNamedVariableList_Request DeleteNamedVariableList
         {
@@ -251,7 +251,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineNamedType", IsOptional = false, HasTag = true, Tag = 14, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineNamedType", IsOptional = false, HasTag = true, Tag = 14, HasDefaultValue = false)]
 
         public DefineNamedType_Request DefineNamedType
         {
@@ -267,7 +267,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getNamedTypeAttributes", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
+        [ASN1Element(Name = "getNamedTypeAttributes", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
 
         public GetNamedTypeAttributes_Request GetNamedTypeAttributes
         {
@@ -283,7 +283,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteNamedType", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteNamedType", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
 
         public DeleteNamedType_Request DeleteNamedType
         {
@@ -299,7 +299,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "input", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
+        [ASN1Element(Name = "input", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
 
         public Input_Request Input
         {
@@ -315,7 +315,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "output", IsOptional = false, HasTag = true, Tag = 18, HasDefaultValue = false)]
+        [ASN1Element(Name = "output", IsOptional = false, HasTag = true, Tag = 18, HasDefaultValue = false)]
 
         public Output_Request Output
         {
@@ -331,7 +331,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "takeControl", IsOptional = false, HasTag = true, Tag = 19, HasDefaultValue = false)]
+        [ASN1Element(Name = "takeControl", IsOptional = false, HasTag = true, Tag = 19, HasDefaultValue = false)]
 
         public TakeControl_Request TakeControl
         {
@@ -347,7 +347,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "relinquishControl", IsOptional = false, HasTag = true, Tag = 20, HasDefaultValue = false)]
+        [ASN1Element(Name = "relinquishControl", IsOptional = false, HasTag = true, Tag = 20, HasDefaultValue = false)]
 
         public RelinquishControl_Request RelinquishControl
         {
@@ -363,7 +363,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineSemaphore", IsOptional = false, HasTag = true, Tag = 21, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineSemaphore", IsOptional = false, HasTag = true, Tag = 21, HasDefaultValue = false)]
 
         public DefineSemaphore_Request DefineSemaphore
         {
@@ -379,7 +379,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteSemaphore", IsOptional = false, HasTag = true, Tag = 22, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteSemaphore", IsOptional = false, HasTag = true, Tag = 22, HasDefaultValue = false)]
 
         public DeleteSemaphore_Request DeleteSemaphore
         {
@@ -395,7 +395,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportSemaphoreStatus", IsOptional = false, HasTag = true, Tag = 23, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportSemaphoreStatus", IsOptional = false, HasTag = true, Tag = 23, HasDefaultValue = false)]
 
         public ReportSemaphoreStatus_Request ReportSemaphoreStatus
         {
@@ -411,7 +411,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportPoolSemaphoreStatus", IsOptional = false, HasTag = true, Tag = 24, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportPoolSemaphoreStatus", IsOptional = false, HasTag = true, Tag = 24, HasDefaultValue = false)]
 
         public ReportPoolSemaphoreStatus_Request ReportPoolSemaphoreStatus
         {
@@ -427,7 +427,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportSemaphoreEntryStatus", IsOptional = false, HasTag = true, Tag = 25, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportSemaphoreEntryStatus", IsOptional = false, HasTag = true, Tag = 25, HasDefaultValue = false)]
 
         public ReportSemaphoreEntryStatus_Request ReportSemaphoreEntryStatus
         {
@@ -443,7 +443,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "initiateDownloadSequence", IsOptional = false, HasTag = true, Tag = 26, HasDefaultValue = false)]
+        [ASN1Element(Name = "initiateDownloadSequence", IsOptional = false, HasTag = true, Tag = 26, HasDefaultValue = false)]
 
         public InitiateDownloadSequence_Request InitiateDownloadSequence
         {
@@ -459,7 +459,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "downloadSegment", IsOptional = false, HasTag = true, Tag = 27, HasDefaultValue = false)]
+        [ASN1Element(Name = "downloadSegment", IsOptional = false, HasTag = true, Tag = 27, HasDefaultValue = false)]
 
         public DownloadSegment_Request DownloadSegment
         {
@@ -475,7 +475,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "terminateDownloadSequence", IsOptional = false, HasTag = true, Tag = 28, HasDefaultValue = false)]
+        [ASN1Element(Name = "terminateDownloadSequence", IsOptional = false, HasTag = true, Tag = 28, HasDefaultValue = false)]
 
         public TerminateDownloadSequence_Request TerminateDownloadSequence
         {
@@ -491,7 +491,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "initiateUploadSequence", IsOptional = false, HasTag = true, Tag = 29, HasDefaultValue = false)]
+        [ASN1Element(Name = "initiateUploadSequence", IsOptional = false, HasTag = true, Tag = 29, HasDefaultValue = false)]
 
         public InitiateUploadSequence_Request InitiateUploadSequence
         {
@@ -507,7 +507,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "uploadSegment", IsOptional = false, HasTag = true, Tag = 30, HasDefaultValue = false)]
+        [ASN1Element(Name = "uploadSegment", IsOptional = false, HasTag = true, Tag = 30, HasDefaultValue = false)]
 
         public UploadSegment_Request UploadSegment
         {
@@ -523,7 +523,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "terminateUploadSequence", IsOptional = false, HasTag = true, Tag = 31, HasDefaultValue = false)]
+        [ASN1Element(Name = "terminateUploadSequence", IsOptional = false, HasTag = true, Tag = 31, HasDefaultValue = false)]
 
         public TerminateUploadSequence_Request TerminateUploadSequence
         {
@@ -539,7 +539,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "requestDomainDownload", IsOptional = false, HasTag = true, Tag = 32, HasDefaultValue = false)]
+        [ASN1Element(Name = "requestDomainDownload", IsOptional = false, HasTag = true, Tag = 32, HasDefaultValue = false)]
 
         public RequestDomainDownload_Request RequestDomainDownload
         {
@@ -555,7 +555,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "requestDomainUpload", IsOptional = false, HasTag = true, Tag = 33, HasDefaultValue = false)]
+        [ASN1Element(Name = "requestDomainUpload", IsOptional = false, HasTag = true, Tag = 33, HasDefaultValue = false)]
 
         public RequestDomainUpload_Request RequestDomainUpload
         {
@@ -571,7 +571,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "loadDomainContent", IsOptional = false, HasTag = true, Tag = 34, HasDefaultValue = false)]
+        [ASN1Element(Name = "loadDomainContent", IsOptional = false, HasTag = true, Tag = 34, HasDefaultValue = false)]
 
         public LoadDomainContent_Request LoadDomainContent
         {
@@ -587,7 +587,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "storeDomainContent", IsOptional = false, HasTag = true, Tag = 35, HasDefaultValue = false)]
+        [ASN1Element(Name = "storeDomainContent", IsOptional = false, HasTag = true, Tag = 35, HasDefaultValue = false)]
 
         public StoreDomainContent_Request StoreDomainContent
         {
@@ -603,7 +603,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteDomain", IsOptional = false, HasTag = true, Tag = 36, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteDomain", IsOptional = false, HasTag = true, Tag = 36, HasDefaultValue = false)]
 
         public DeleteDomain_Request DeleteDomain
         {
@@ -619,7 +619,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getDomainAttributes", IsOptional = false, HasTag = true, Tag = 37, HasDefaultValue = false)]
+        [ASN1Element(Name = "getDomainAttributes", IsOptional = false, HasTag = true, Tag = 37, HasDefaultValue = false)]
 
         public GetDomainAttributes_Request GetDomainAttributes
         {
@@ -635,7 +635,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "createProgramInvocation", IsOptional = false, HasTag = true, Tag = 38, HasDefaultValue = false)]
+        [ASN1Element(Name = "createProgramInvocation", IsOptional = false, HasTag = true, Tag = 38, HasDefaultValue = false)]
 
         public CreateProgramInvocation_Request CreateProgramInvocation
         {
@@ -651,7 +651,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteProgramInvocation", IsOptional = false, HasTag = true, Tag = 39, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteProgramInvocation", IsOptional = false, HasTag = true, Tag = 39, HasDefaultValue = false)]
 
         public DeleteProgramInvocation_Request DeleteProgramInvocation
         {
@@ -667,7 +667,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "start", IsOptional = false, HasTag = true, Tag = 40, HasDefaultValue = false)]
+        [ASN1Element(Name = "start", IsOptional = false, HasTag = true, Tag = 40, HasDefaultValue = false)]
 
         public Start_Request Start
         {
@@ -683,7 +683,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "stop", IsOptional = false, HasTag = true, Tag = 41, HasDefaultValue = false)]
+        [ASN1Element(Name = "stop", IsOptional = false, HasTag = true, Tag = 41, HasDefaultValue = false)]
 
         public Stop_Request Stop
         {
@@ -699,7 +699,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "resume", IsOptional = false, HasTag = true, Tag = 42, HasDefaultValue = false)]
+        [ASN1Element(Name = "resume", IsOptional = false, HasTag = true, Tag = 42, HasDefaultValue = false)]
 
         public Resume_Request Resume
         {
@@ -715,7 +715,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reset", IsOptional = false, HasTag = true, Tag = 43, HasDefaultValue = false)]
+        [ASN1Element(Name = "reset", IsOptional = false, HasTag = true, Tag = 43, HasDefaultValue = false)]
 
         public Reset_Request Reset
         {
@@ -731,7 +731,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "kill", IsOptional = false, HasTag = true, Tag = 44, HasDefaultValue = false)]
+        [ASN1Element(Name = "kill", IsOptional = false, HasTag = true, Tag = 44, HasDefaultValue = false)]
 
         public Kill_Request Kill
         {
@@ -747,7 +747,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getProgramInvocationAttributes", IsOptional = false, HasTag = true, Tag = 45, HasDefaultValue = false)]
+        [ASN1Element(Name = "getProgramInvocationAttributes", IsOptional = false, HasTag = true, Tag = 45, HasDefaultValue = false)]
 
         public GetProgramInvocationAttributes_Request GetProgramInvocationAttributes
         {
@@ -763,7 +763,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "obtainFile", IsOptional = false, HasTag = true, Tag = 46, HasDefaultValue = false)]
+        [ASN1Element(Name = "obtainFile", IsOptional = false, HasTag = true, Tag = 46, HasDefaultValue = false)]
 
         public ObtainFile_Request ObtainFile
         {
@@ -779,7 +779,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineEventCondition", IsOptional = false, HasTag = true, Tag = 47, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineEventCondition", IsOptional = false, HasTag = true, Tag = 47, HasDefaultValue = false)]
 
         public DefineEventCondition_Request DefineEventCondition
         {
@@ -795,7 +795,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteEventCondition", IsOptional = false, HasTag = true, Tag = 48, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteEventCondition", IsOptional = false, HasTag = true, Tag = 48, HasDefaultValue = false)]
 
         public DeleteEventCondition_Request DeleteEventCondition
         {
@@ -811,7 +811,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getEventConditionAttributes", IsOptional = false, HasTag = true, Tag = 49, HasDefaultValue = false)]
+        [ASN1Element(Name = "getEventConditionAttributes", IsOptional = false, HasTag = true, Tag = 49, HasDefaultValue = false)]
 
         public GetEventConditionAttributes_Request GetEventConditionAttributes
         {
@@ -827,7 +827,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportEventConditionStatus", IsOptional = false, HasTag = true, Tag = 50, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportEventConditionStatus", IsOptional = false, HasTag = true, Tag = 50, HasDefaultValue = false)]
 
         public ReportEventConditionStatus_Request ReportEventConditionStatus
         {
@@ -843,7 +843,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "alterEventConditionMonitoring", IsOptional = false, HasTag = true, Tag = 51, HasDefaultValue = false)]
+        [ASN1Element(Name = "alterEventConditionMonitoring", IsOptional = false, HasTag = true, Tag = 51, HasDefaultValue = false)]
 
         public AlterEventConditionMonitoring_Request AlterEventConditionMonitoring
         {
@@ -859,7 +859,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "triggerEvent", IsOptional = false, HasTag = true, Tag = 52, HasDefaultValue = false)]
+        [ASN1Element(Name = "triggerEvent", IsOptional = false, HasTag = true, Tag = 52, HasDefaultValue = false)]
 
         public TriggerEvent_Request TriggerEvent
         {
@@ -875,7 +875,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineEventAction", IsOptional = false, HasTag = true, Tag = 53, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineEventAction", IsOptional = false, HasTag = true, Tag = 53, HasDefaultValue = false)]
 
         public DefineEventAction_Request DefineEventAction
         {
@@ -891,7 +891,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteEventAction", IsOptional = false, HasTag = true, Tag = 54, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteEventAction", IsOptional = false, HasTag = true, Tag = 54, HasDefaultValue = false)]
 
         public DeleteEventAction_Request DeleteEventAction
         {
@@ -907,7 +907,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getEventActionAttributes", IsOptional = false, HasTag = true, Tag = 55, HasDefaultValue = false)]
+        [ASN1Element(Name = "getEventActionAttributes", IsOptional = false, HasTag = true, Tag = 55, HasDefaultValue = false)]
 
         public GetEventActionAttributes_Request GetEventActionAttributes
         {
@@ -923,7 +923,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportEventActionStatus", IsOptional = false, HasTag = true, Tag = 56, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportEventActionStatus", IsOptional = false, HasTag = true, Tag = 56, HasDefaultValue = false)]
 
         public ReportEventActionStatus_Request ReportEventActionStatus
         {
@@ -939,7 +939,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineEventEnrollment", IsOptional = false, HasTag = true, Tag = 57, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineEventEnrollment", IsOptional = false, HasTag = true, Tag = 57, HasDefaultValue = false)]
 
         public DefineEventEnrollment_Request DefineEventEnrollment
         {
@@ -955,7 +955,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteEventEnrollment", IsOptional = false, HasTag = true, Tag = 58, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteEventEnrollment", IsOptional = false, HasTag = true, Tag = 58, HasDefaultValue = false)]
 
         public DeleteEventEnrollment_Request DeleteEventEnrollment
         {
@@ -971,7 +971,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "alterEventEnrollment", IsOptional = false, HasTag = true, Tag = 59, HasDefaultValue = false)]
+        [ASN1Element(Name = "alterEventEnrollment", IsOptional = false, HasTag = true, Tag = 59, HasDefaultValue = false)]
 
         public AlterEventEnrollment_Request AlterEventEnrollment
         {
@@ -987,7 +987,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportEventEnrollmentStatus", IsOptional = false, HasTag = true, Tag = 60, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportEventEnrollmentStatus", IsOptional = false, HasTag = true, Tag = 60, HasDefaultValue = false)]
 
         public ReportEventEnrollmentStatus_Request ReportEventEnrollmentStatus
         {
@@ -1003,7 +1003,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getEventEnrollmentAttributes", IsOptional = false, HasTag = true, Tag = 61, HasDefaultValue = false)]
+        [ASN1Element(Name = "getEventEnrollmentAttributes", IsOptional = false, HasTag = true, Tag = 61, HasDefaultValue = false)]
 
         public GetEventEnrollmentAttributes_Request GetEventEnrollmentAttributes
         {
@@ -1019,7 +1019,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "acknowledgeEventNotification", IsOptional = false, HasTag = true, Tag = 62, HasDefaultValue = false)]
+        [ASN1Element(Name = "acknowledgeEventNotification", IsOptional = false, HasTag = true, Tag = 62, HasDefaultValue = false)]
 
         public AcknowledgeEventNotification_Request AcknowledgeEventNotification
         {
@@ -1035,7 +1035,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getAlarmSummary", IsOptional = false, HasTag = true, Tag = 63, HasDefaultValue = false)]
+        [ASN1Element(Name = "getAlarmSummary", IsOptional = false, HasTag = true, Tag = 63, HasDefaultValue = false)]
 
         public GetAlarmSummary_Request GetAlarmSummary
         {
@@ -1051,7 +1051,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getAlarmEnrollmentSummary", IsOptional = false, HasTag = true, Tag = 64, HasDefaultValue = false)]
+        [ASN1Element(Name = "getAlarmEnrollmentSummary", IsOptional = false, HasTag = true, Tag = 64, HasDefaultValue = false)]
 
         public GetAlarmEnrollmentSummary_Request GetAlarmEnrollmentSummary
         {
@@ -1067,7 +1067,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "readJournal", IsOptional = false, HasTag = true, Tag = 65, HasDefaultValue = false)]
+        [ASN1Element(Name = "readJournal", IsOptional = false, HasTag = true, Tag = 65, HasDefaultValue = false)]
 
         public ReadJournal_Request ReadJournal
         {
@@ -1083,7 +1083,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "writeJournal", IsOptional = false, HasTag = true, Tag = 66, HasDefaultValue = false)]
+        [ASN1Element(Name = "writeJournal", IsOptional = false, HasTag = true, Tag = 66, HasDefaultValue = false)]
 
         public WriteJournal_Request WriteJournal
         {
@@ -1099,7 +1099,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "initializeJournal", IsOptional = false, HasTag = true, Tag = 67, HasDefaultValue = false)]
+        [ASN1Element(Name = "initializeJournal", IsOptional = false, HasTag = true, Tag = 67, HasDefaultValue = false)]
 
         public InitializeJournal_Request InitializeJournal
         {
@@ -1115,7 +1115,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportJournalStatus", IsOptional = false, HasTag = true, Tag = 68, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportJournalStatus", IsOptional = false, HasTag = true, Tag = 68, HasDefaultValue = false)]
 
         public ReportJournalStatus_Request ReportJournalStatus
         {
@@ -1131,7 +1131,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "createJournal", IsOptional = false, HasTag = true, Tag = 69, HasDefaultValue = false)]
+        [ASN1Element(Name = "createJournal", IsOptional = false, HasTag = true, Tag = 69, HasDefaultValue = false)]
 
         public CreateJournal_Request CreateJournal
         {
@@ -1147,7 +1147,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteJournal", IsOptional = false, HasTag = true, Tag = 70, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteJournal", IsOptional = false, HasTag = true, Tag = 70, HasDefaultValue = false)]
 
         public DeleteJournal_Request DeleteJournal
         {
@@ -1163,7 +1163,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getCapabilityList", IsOptional = false, HasTag = true, Tag = 71, HasDefaultValue = false)]
+        [ASN1Element(Name = "getCapabilityList", IsOptional = false, HasTag = true, Tag = 71, HasDefaultValue = false)]
 
         public GetCapabilityList_Request GetCapabilityList
         {
@@ -1179,7 +1179,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileOpen", IsOptional = false, HasTag = true, Tag = 72, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileOpen", IsOptional = false, HasTag = true, Tag = 72, HasDefaultValue = false)]
 
         public FileOpen_Request FileOpen
         {
@@ -1195,7 +1195,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileRead", IsOptional = false, HasTag = true, Tag = 73, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileRead", IsOptional = false, HasTag = true, Tag = 73, HasDefaultValue = false)]
 
         public FileRead_Request FileRead
         {
@@ -1211,7 +1211,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileClose", IsOptional = false, HasTag = true, Tag = 74, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileClose", IsOptional = false, HasTag = true, Tag = 74, HasDefaultValue = false)]
 
         public FileClose_Request FileClose
         {
@@ -1227,7 +1227,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileRename", IsOptional = false, HasTag = true, Tag = 75, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileRename", IsOptional = false, HasTag = true, Tag = 75, HasDefaultValue = false)]
 
         public FileRename_Request FileRename
         {
@@ -1243,7 +1243,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileDelete", IsOptional = false, HasTag = true, Tag = 76, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileDelete", IsOptional = false, HasTag = true, Tag = 76, HasDefaultValue = false)]
 
         public FileDelete_Request FileDelete
         {
@@ -1259,7 +1259,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "fileDirectory", IsOptional = false, HasTag = true, Tag = 77, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileDirectory", IsOptional = false, HasTag = true, Tag = 77, HasDefaultValue = false)]
 
         public FileDirectory_Request FileDirectory
         {
@@ -1275,7 +1275,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "additionalService", IsOptional = false, HasTag = true, Tag = 78, HasDefaultValue = false)]
+        [ASN1Element(Name = "additionalService", IsOptional = false, HasTag = true, Tag = 78, HasDefaultValue = false)]
 
         public AdditionalService_Request AdditionalService
         {
@@ -1291,7 +1291,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getDataExchangeAttributes", IsOptional = false, HasTag = true, Tag = 80, HasDefaultValue = false)]
+        [ASN1Element(Name = "getDataExchangeAttributes", IsOptional = false, HasTag = true, Tag = 80, HasDefaultValue = false)]
 
         public GetDataExchangeAttributes_Request GetDataExchangeAttributes
         {
@@ -1307,7 +1307,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "exchangeData", IsOptional = false, HasTag = true, Tag = 81, HasDefaultValue = false)]
+        [ASN1Element(Name = "exchangeData", IsOptional = false, HasTag = true, Tag = 81, HasDefaultValue = false)]
 
         public ExchangeData_Request ExchangeData
         {
@@ -1323,7 +1323,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "defineAccessControlList", IsOptional = false, HasTag = true, Tag = 82, HasDefaultValue = false)]
+        [ASN1Element(Name = "defineAccessControlList", IsOptional = false, HasTag = true, Tag = 82, HasDefaultValue = false)]
 
         public DefineAccessControlList_Request DefineAccessControlList
         {
@@ -1339,7 +1339,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "getAccessControlListAttributes", IsOptional = false, HasTag = true, Tag = 83, HasDefaultValue = false)]
+        [ASN1Element(Name = "getAccessControlListAttributes", IsOptional = false, HasTag = true, Tag = 83, HasDefaultValue = false)]
 
         public GetAccessControlListAttributes_Request GetAccessControlListAttributes
         {
@@ -1355,7 +1355,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "reportAccessControlledObjects", IsOptional = false, HasTag = true, Tag = 84, HasDefaultValue = false)]
+        [ASN1Element(Name = "reportAccessControlledObjects", IsOptional = false, HasTag = true, Tag = 84, HasDefaultValue = false)]
 
         public ReportAccessControlledObjects_Request ReportAccessControlledObjects
         {
@@ -1371,7 +1371,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "deleteAccessControlList", IsOptional = false, HasTag = true, Tag = 85, HasDefaultValue = false)]
+        [ASN1Element(Name = "deleteAccessControlList", IsOptional = false, HasTag = true, Tag = 85, HasDefaultValue = false)]
 
         public DeleteAccessControlList_Request DeleteAccessControlList
         {
@@ -1387,7 +1387,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "changeAccessControl", IsOptional = false, HasTag = true, Tag = 86, HasDefaultValue = false)]
+        [ASN1Element(Name = "changeAccessControl", IsOptional = false, HasTag = true, Tag = 86, HasDefaultValue = false)]
 
         public ChangeAccessControl_Request ChangeAccessControl
         {

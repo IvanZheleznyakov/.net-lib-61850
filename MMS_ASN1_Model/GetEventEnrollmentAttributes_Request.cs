@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private long scopeOfRequest_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "scopeOfRequest", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  true )  ]
+        [ASN1Element ( Name = "scopeOfRequest", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  true )  ]
     
         public long ScopeOfRequest
         {
@@ -39,7 +39,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "eventEnrollmentNames", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "eventEnrollmentNames", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventEnrollmentNames", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> EventEnrollmentNames
         {
@@ -53,7 +53,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  clientApplication_present = false ;
 	
-        [ASN1ElementAtr ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "clientApplication", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ClientApplication
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  eventConditionName_present = false ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionName", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -81,7 +81,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  eventActionName_present = false ;
 	
-        [ASN1ElementAtr ( Name = "eventActionName", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventActionName", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public ObjectName EventActionName
         {
@@ -95,7 +95,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  continueAfter_present = false ;
 	
-        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public ObjectName ContinueAfter
         {

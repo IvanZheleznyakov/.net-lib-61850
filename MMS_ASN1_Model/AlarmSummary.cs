@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventConditionName_ ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned8 severity_ ;
 	
-        [ASN1ElementAtr ( Name = "severity", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "severity", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned8 Severity
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_State currentState_ ;
 	
-        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public EC_State CurrentState
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
 	private long unacknowledgedState_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "unacknowledgedState", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unacknowledgedState", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public long UnacknowledgedState
         {
@@ -72,7 +72,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  displayEnhancement_present = false ;
 	
-        [ASN1ElementAtr ( Name = "displayEnhancement", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "displayEnhancement", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public EN_Additional_Detail DisplayEnhancement
         {
@@ -86,7 +86,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  timeOfLastTransitionToActive_present = false ;
 	
-        [ASN1ElementAtr ( Name = "timeOfLastTransitionToActive", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeOfLastTransitionToActive", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public EventTime TimeOfLastTransitionToActive
         {
@@ -100,7 +100,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  timeOfLastTransitionToIdle_present = false ;
 	
-        [ASN1ElementAtr ( Name = "timeOfLastTransitionToIdle", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeOfLastTransitionToIdle", IsOptional =  true , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public EventTime TimeOfLastTransitionToIdle
         {

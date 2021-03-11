@@ -42,7 +42,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "component", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "component", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier Component
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 Index
         {
@@ -80,7 +80,7 @@ namespace MMS_ASN1_Model {
                         
 	private Unsigned32 lowIndex_ ;
 	
-        [ASN1ElementAtr ( Name = "lowIndex", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "lowIndex", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 LowIndex
         {
@@ -92,7 +92,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned32 numberOfElements_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumberOfElements
         {
@@ -115,7 +115,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "indexRange", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "indexRange", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public IndexRangeSequenceType IndexRange
         {
@@ -133,7 +133,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "allElements" )]
     
-        [ASN1ElementAtr ( Name = "allElements", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "allElements", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public NullObject AllElements
         {
@@ -243,7 +243,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "accessSelection", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessSelection", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public AccessSelectionChoiceType AccessSelection
         {
@@ -255,7 +255,7 @@ namespace MMS_ASN1_Model {
           
 	private AlternateAccess alternateAccess_ ;
 	
-        [ASN1ElementAtr ( Name = "alternateAccess", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alternateAccess", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public AlternateAccess AlternateAccess
         {
@@ -278,7 +278,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "selectAlternateAccess", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "selectAlternateAccess", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public SelectAlternateAccessSequenceType SelectAlternateAccess
         {
@@ -305,7 +305,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "component", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "component", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier Component
         {
@@ -321,7 +321,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "index", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Unsigned32 Index
         {
@@ -343,7 +343,7 @@ namespace MMS_ASN1_Model {
                         
 	private Unsigned32 lowIndex_ ;
 	
-        [ASN1ElementAtr ( Name = "lowIndex", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "lowIndex", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Unsigned32 LowIndex
         {
@@ -355,7 +355,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned32 numberOfElements_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfElements", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Unsigned32 NumberOfElements
         {
@@ -378,7 +378,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "indexRange", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "indexRange", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public IndexRangeSequenceType IndexRange
         {
@@ -396,7 +396,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "allElements" )]
     
-        [ASN1ElementAtr ( Name = "allElements", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "allElements", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public NullObject AllElements
         {
@@ -506,7 +506,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "selectAccess", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "selectAccess", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public SelectAccessChoiceType SelectAccess
         {

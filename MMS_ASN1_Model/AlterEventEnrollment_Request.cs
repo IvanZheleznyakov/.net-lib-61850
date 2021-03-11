@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName eventEnrollmentName_ ;
 	
-        [ASN1ElementAtr ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventEnrollmentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventEnrollmentName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  eventConditionTransitions_present = false ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionTransitions", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionTransitions", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Transitions EventConditionTransitions
         {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  alarmAcknowledgmentRule_present = false ;
 	
-        [ASN1ElementAtr ( Name = "alarmAcknowledgmentRule", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alarmAcknowledgmentRule", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public AlarmAckRule AlarmAcknowledgmentRule
         {

@@ -32,7 +32,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "freeNamedToken", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "freeNamedToken", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier FreeNamedToken
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "ownedNamedToken", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "ownedNamedToken", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier OwnedNamedToken
         {
@@ -64,7 +64,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "hungNamedToken", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "hungNamedToken", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier HungNamedToken
         {
@@ -146,7 +146,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfNamedTokens", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfNamedTokens", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfNamedTokens", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ListOfNamedTokensChoiceType> ListOfNamedTokens
         {
@@ -159,7 +159,7 @@ namespace MMS_ASN1_Model {
 	private bool moreFollows_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "moreFollows", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
+        [ASN1Element ( Name = "moreFollows", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
     
         public bool MoreFollows
         {

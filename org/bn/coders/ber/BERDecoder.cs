@@ -1,21 +1,19 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
 using System;
 using System.Reflection;
 using System.Collections.Generic;
@@ -26,7 +24,6 @@ using org.bn.types;
 
 namespace org.bn.coders.ber
 {
-	
 	public class BERDecoder:Decoder
 	{
         protected internal virtual DecodedObject<int> decodeLength(System.IO.Stream stream)
@@ -104,7 +101,7 @@ namespace org.bn.coders.ber
             else
                 result = decodeSet(decodedTag, objectClass, elementInfo, len.Value, stream);
 			if (result.Size != len.Value)
-                throw new System.ArgumentException("Sequence '" + objectClass.ToString() + "' size is incorrect!");
+				throw new System.ArgumentException("Sequence '" + objectClass.ToString() + "' size is incorrect!");
 			result.Size = result.Size + len.Size;
             elementInfo.MaxAvailableLen = (saveMaxAvailableLen);
 			return result;
@@ -113,7 +110,7 @@ namespace org.bn.coders.ber
         protected virtual DecodedObject<object> decodeSet(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, int len, System.IO.Stream stream)
         {
             object sequence = createInstanceForElement(objectClass,elementInfo);
-            initDefaultValues(sequence);
+            CoderUtils.initDefaultValues(sequence);
             DecodedObject<object> fieldTag = null;
             int sizeOfSequence = 0;
             int maxSeqLen = elementInfo.MaxAvailableLen;
@@ -152,7 +149,7 @@ namespace org.bn.coders.ber
                                 info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(i + 1));
                             }
                             else
-                                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(fields[i + 1]);
+                                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(fields[i + 1]);
                             isAny = CoderUtils.isAnyField(fields[i + 1], info);
                         }
 
@@ -297,53 +294,45 @@ namespace org.bn.coders.ber
             int realPreamble = stream.ReadByte();
 
             Double result = 0.0D;
-            int szResult = len.Value;
-            if ((realPreamble & 0x40) == 1)
+            if (realPreamble == 0x40)
             {
                 // 01000000 Value is PLUS-INFINITY
                 result = Double.PositiveInfinity;
             }
-            if ((realPreamble & 0x41) == 1)
+            else if (realPreamble == 0x41)
             {
                 // 01000001 Value is MINUS-INFINITY
                 result = Double.NegativeInfinity;
-                szResult += 1;
             }
-            else
-                if (len.Value > 0)
+            else if (len.Value > 0)
+            {
+                int szOfExp = 1 + (realPreamble & 0x3);
+                int sign = realPreamble & 0x40;
+                int ff = (realPreamble & 0x0C) >> 2;
+                DecodedObject<object> exponentEncFrm = decodeLongValue(stream, new DecodedObject<int>(szOfExp));
+                long exponent = (long)exponentEncFrm.Value;
+                DecodedObject<object> mantissaEncFrm = decodeLongValue(stream, new DecodedObject<int>(len.Value - szOfExp - 1));
+                // Unpack mantissa & decrement exponent for base 2
+                long mantissa = (long)mantissaEncFrm.Value << ff;
+                while ((mantissa & 0x000ff00000000000L) == 0x0)
                 {
-                    int szOfExp = 1 + (realPreamble & 0x3);
-                    int sign = realPreamble & 0x40;
-                    int ff = (realPreamble & 0x0C) >> 2;
-                    DecodedObject<object> exponentEncFrm = decodeLongValue(stream, new DecodedObject<int>(szOfExp));
-                    long exponent = (long)exponentEncFrm.Value;
-                    DecodedObject<object> mantissaEncFrm = decodeLongValue(stream, new DecodedObject<int>(szResult - szOfExp - 1));
-                    // Unpack mantissa & decrement exponent for base 2
-                    long mantissa = (long)mantissaEncFrm.Value << ff;
-                    while ((mantissa & 0x000ff00000000000L) == 0x0)
-                    {
-                        exponent -= 8;
-                        mantissa <<= 8;
-                    }
-                    while ((mantissa & 0x0010000000000000L) == 0x0)
-                    {
-                        exponent -= 1;
-                        mantissa <<= 1;
-                    }
-                    mantissa &= 0x0FFFFFFFFFFFFFL;
-                    long lValue = (exponent + 1023 + 52) << 52;
-                    lValue |= mantissa;
-                    if (sign == 1)
-                    {
-                        lValue = (long)((ulong)lValue | 0x8000000000000000L);
-                    }
-#if PocketPC
-                    byte[] dblValAsBytes = System.BitConverter.GetBytes(lValue);
-                    result = System.BitConverter.ToDouble(dblValAsBytes, 0);
-#else            
-                    result = System.BitConverter.Int64BitsToDouble(lValue);
-#endif
+                    exponent -= 8;
+                    mantissa <<= 8;
                 }
+                while ((mantissa & 0x0010000000000000L) == 0x0)
+                {
+                    exponent -= 1;
+                    mantissa <<= 1;
+                }
+                mantissa &= 0x0FFFFFFFFFFFFFL;
+                long lValue = (exponent + 1023 + 52) << 52;
+                lValue |= mantissa;
+                if (sign == 0x40)
+                {
+                    lValue = (long)((ulong)lValue | 0x8000000000000000L);
+                }
+                result = System.BitConverter.Int64BitsToDouble(lValue);
+            }
             return new DecodedObject<object>(result, len.Value + len.Size);
         }
 
@@ -456,7 +445,7 @@ namespace org.bn.coders.ber
             DecodedObject<int> len = decodeLength(stream);
             DecodedObject<int> tmpLen = null;
 
-			if (len.Value != 0)
+            if (len.Value != 0)
 			{
 				int lenOfItems = 0;
                 int itemsCnt = 0;
@@ -483,7 +472,7 @@ namespace org.bn.coders.ber
                     }
                     // Pavel
 
-					DecodedObject<object> itemTag = decodeTag(stream);
+                    DecodedObject<object> itemTag = decodeTag(stream);
 					DecodedObject<object> item = decodeClassType(itemTag, paramType, info, stream);
                     MethodInfo method = param.GetType().GetMethod("Add");
 					if (item != null)
@@ -496,8 +485,6 @@ namespace org.bn.coders.ber
 				while (lenOfItems < len.Value);
                 CoderUtils.checkConstraints(itemsCnt, elementInfo);
 			}
-            if (tmpLen != null)
-                return new DecodedObject<object>(param, tmpLen.Value + tmpLen.Size);
 			return new DecodedObject<object>(param, len.Value + len.Size);
 		}
 
@@ -509,9 +496,7 @@ namespace org.bn.coders.ber
             byte[] byteBuf = new byte[len.Value];
             stream.Read(byteBuf, 0, byteBuf.Length);
             string dottedDecimal = BERObjectIdentifier.Decode(byteBuf);
-            //return new DecodedObject<object>(new ObjectIdentifier(dottedDecimal));
-            // Vadim Evseev 22.3.2016
-            return new DecodedObject<object>(new ObjectIdentifier(dottedDecimal), len.Value + len.Size);
+            return new DecodedObject<object>(new ObjectIdentifier(dottedDecimal));
         }
 	}
 }

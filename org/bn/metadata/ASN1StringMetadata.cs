@@ -1,20 +1,18 @@
 /*
- * Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
- * 
- * Licensed under the LGPL, Version 2 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.gnu.org/copyleft/lgpl.html
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * With any your questions welcome to my e-mail 
- * or blog at http://abdulla-a.blogspot.com.
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ Original sources are available at www.latestbit.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
  */
 
 using System;
@@ -28,11 +26,9 @@ namespace org.bn.metadata
     public class ASN1StringMetadata : ASN1FieldMetadata
     {
         private bool isUCS = false;
-        private int     stringType = UniversalTags.PrintableString ;
-        //private bool hasDefaults = false;
+        private int stringType = UniversalTags.PrintableString;
         
         public ASN1StringMetadata() {
-            //hasDefaults = true;
         }
 
         public ASN1StringMetadata(ASN1String annotation)
@@ -40,9 +36,8 @@ namespace org.bn.metadata
         {
         }
 
-        public ASN1StringMetadata(String  name,
-                                  bool isUCS,
-                                  int     stringType): base(name)
+        public ASN1StringMetadata(String name, bool isUCS, int stringType)
+            : base(name)
         {
             this.isUCS = isUCS;
             this.stringType = stringType;
@@ -58,7 +53,7 @@ namespace org.bn.metadata
             get { return stringType; }
         }
 
-        public override void setParentAnnotated(ICustomAttributeProvider parent) {
+        public override void setParentAnnotated(MemberInfo parent) {
             if(parent!=null) {
                 if(CoderUtils.isAttributePresent<ASN1String>(parent)) {
                     ASN1String value = CoderUtils.getAttribute<ASN1String>(parent);
@@ -66,7 +61,6 @@ namespace org.bn.metadata
                 }    
             }        
         }
-
 
         public override int encode(IASN1TypesEncoder encoder, object obj, Stream stream, ElementInfo elementInfo) 
         {

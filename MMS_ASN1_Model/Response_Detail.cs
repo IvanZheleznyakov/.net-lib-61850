@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "otherRequests" )]
     
-        [ASN1ElementAtr ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject OtherRequests
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "status", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "status", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public CS_Status_Response Status
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "getProgramInvocationAttributes", IsOptional =  false , HasTag =  true, Tag = 45 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "getProgramInvocationAttributes", IsOptional =  false , HasTag =  true, Tag = 45 , HasDefaultValue =  false )  ]
     
         public CS_GetProgramInvocationAttributes_Response GetProgramInvocationAttributes
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "getEventConditionAttributes", IsOptional =  false , HasTag =  true, Tag = 49 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "getEventConditionAttributes", IsOptional =  false , HasTag =  true, Tag = 49 , HasDefaultValue =  false )  ]
     
         public CS_GetEventConditionAttributes_Response GetEventConditionAttributes
         {

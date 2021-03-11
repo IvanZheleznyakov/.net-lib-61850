@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier programInvocationName_ ;
 	
-        [ASN1ElementAtr ( Name = "programInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocationName
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "simpleString", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "simpleString", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public MMSString SimpleString
         {
@@ -83,7 +83,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "executionArgument", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "executionArgument", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ExecutionArgumentChoiceType ExecutionArgument
         {

@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private Unsigned32  val;
 
         
-        [ASN1ElementAtr ( Name = "Cancel-ResponsePDU", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "Cancel-ResponsePDU", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Unsigned32 Value
         {

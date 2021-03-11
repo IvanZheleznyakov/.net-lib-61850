@@ -60,7 +60,8 @@ namespace lib61850net
 
                 if (!badChar)
                 {
-                    output = new BitString(byteVal);
+                    output = new BitString();
+                    output.Value = byteVal;
                     output.TrailBitsCnt = byteVal.Length * 8 - ((input.Length / 8) * 8) - input.Length % 8;
                 }
                 else

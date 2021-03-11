@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName semaphoreName_ ;
 	
-        [ASN1ElementAtr ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "semaphoreName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName SemaphoreName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  nameToStartAfter_present = false ;
 	
-        [ASN1ElementAtr ( Name = "nameToStartAfter", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "nameToStartAfter", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier NameToStartAfter
         {

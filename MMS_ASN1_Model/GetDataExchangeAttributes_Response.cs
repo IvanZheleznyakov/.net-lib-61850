@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private bool inUse_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "inUse", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "inUse", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public bool InUse
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfRequestTypeDescriptions", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfRequestTypeDescriptions", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfRequestTypeDescriptions", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<TypeDescription> ListOfRequestTypeDescriptions
         {
@@ -52,7 +52,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfResponseTypeDescriptions", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfResponseTypeDescriptions", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfResponseTypeDescriptions", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<TypeDescription> ListOfResponseTypeDescriptions
         {
@@ -66,7 +66,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  programInvocation_present = false ;
 	
-        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocation", IsOptional =  true , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocation
         {
@@ -80,7 +80,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  accessControlList_present = false ;
 	
-        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {

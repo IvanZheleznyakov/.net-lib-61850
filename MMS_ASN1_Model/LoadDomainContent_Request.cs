@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier domainName_ ;
 	
-        [ASN1ElementAtr ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domainName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier DomainName
         {
@@ -38,7 +38,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfCapabilities", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfCapabilities", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfCapabilities", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<MMSString> ListOfCapabilities
         {
@@ -51,7 +51,7 @@ namespace MMS_ASN1_Model {
 	private bool sharable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "sharable", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool Sharable
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model {
           
 	private FileName fileName_ ;
 	
-        [ASN1ElementAtr ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "fileName", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public FileName FileName
         {
@@ -77,7 +77,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  thirdParty_present = false ;
 	
-        [ASN1ElementAtr ( Name = "thirdParty", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "thirdParty", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public ApplicationReference ThirdParty
         {

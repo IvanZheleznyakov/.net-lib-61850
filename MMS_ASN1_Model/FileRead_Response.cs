@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private byte[] fileData_;
         [ASN1OctetString(Name = "")]
 
-        [ASN1ElementAtr(Name = "fileData", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "fileData", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public byte[] FileData
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model
         private bool moreFollows_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "moreFollows", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1Element(Name = "moreFollows", IsOptional = true, HasTag = true, Tag = 1, HasDefaultValue = true)]
 
         public bool MoreFollows
         {

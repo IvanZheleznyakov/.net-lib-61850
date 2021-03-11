@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noLimit" )]
     
-        [ASN1ElementAtr ( Name = "noLimit", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "noLimit", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public NullObject NoLimit
         {
@@ -44,7 +44,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "cycleCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "cycleCount", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long CycleCount
         {
@@ -61,7 +61,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "stepCount", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "stepCount", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long StepCount
         {

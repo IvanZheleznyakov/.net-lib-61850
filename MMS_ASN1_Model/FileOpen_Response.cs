@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Integer32 frsmID_ ;
 	
-        [ASN1ElementAtr ( Name = "frsmID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "frsmID", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Integer32 FrsmID
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private FileAttributes fileAttributes_ ;
 	
-        [ASN1ElementAtr ( Name = "fileAttributes", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "fileAttributes", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public FileAttributes FileAttributes
         {

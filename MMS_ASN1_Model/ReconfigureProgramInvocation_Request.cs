@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier oldProgramInvocationName_ ;
 	
-        [ASN1ElementAtr ( Name = "oldProgramInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "oldProgramInvocationName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier OldProgramInvocationName
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  newProgramInvocationName_present = false ;
 	
-        [ASN1ElementAtr ( Name = "newProgramInvocationName", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "newProgramInvocationName", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier NewProgramInvocationName
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "domainsToAdd", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "domainsToAdd", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domainsToAdd", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> DomainsToAdd
         {
@@ -65,7 +65,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "domainsToRemove", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "domainsToRemove", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domainsToRemove", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Identifier> DomainsToRemove
         {

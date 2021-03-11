@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString additionalCode_ ;
 	
-        [ASN1ElementAtr ( Name = "additionalCode", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "additionalCode", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString AdditionalCode
         {
@@ -40,7 +40,7 @@ namespace MMS_ASN1_Model {
 	private long size_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "size", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "size", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long Size
         {
@@ -52,7 +52,7 @@ namespace MMS_ASN1_Model {
           
 	private MMSString syntax_ ;
 	
-        [ASN1ElementAtr ( Name = "syntax", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "syntax", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public MMSString Syntax
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "additionalDetial", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "additionalDetial", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public AdditionalDetialSequenceType AdditionalDetial
         {

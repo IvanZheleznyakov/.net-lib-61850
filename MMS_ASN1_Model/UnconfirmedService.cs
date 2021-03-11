@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "informationReport", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "informationReport", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public InformationReport InformationReport
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "unsolicitedStatus", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "unsolicitedStatus", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public UnsolicitedStatus UnsolicitedStatus
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "eventNotification", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "eventNotification", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public EventNotification EventNotification
         {

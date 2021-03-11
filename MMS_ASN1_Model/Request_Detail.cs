@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "otherRequests" )]
     
-        [ASN1ElementAtr ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "otherRequests", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject OtherRequests
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "createProgramInvocation", IsOptional =  false , HasTag =  true, Tag = 38 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "createProgramInvocation", IsOptional =  false , HasTag =  true, Tag = 38 , HasDefaultValue =  false )  ]
     
         public CS_CreateProgramInvocation_Request CreateProgramInvocation
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "start", IsOptional =  false , HasTag =  true, Tag = 40 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "start", IsOptional =  false , HasTag =  true, Tag = 40 , HasDefaultValue =  false )  ]
     
         public CS_Start_Request Start
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "resume", IsOptional =  false , HasTag =  true, Tag = 42 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "resume", IsOptional =  false , HasTag =  true, Tag = 42 , HasDefaultValue =  false )  ]
     
         public CS_Resume_Request Resume
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "defineEventCondition", IsOptional =  false , HasTag =  true, Tag = 47 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "defineEventCondition", IsOptional =  false , HasTag =  true, Tag = 47 , HasDefaultValue =  false )  ]
     
         public CS_DefineEventCondition_Request DefineEventCondition
         {
@@ -107,7 +107,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "alterEventConditionMonitoring", IsOptional =  false , HasTag =  true, Tag = 51 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alterEventConditionMonitoring", IsOptional =  false , HasTag =  true, Tag = 51 , HasDefaultValue =  false )  ]
     
         public CS_AlterEventConditionMonitoring_Request AlterEventConditionMonitoring
         {
@@ -123,7 +123,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "defineEventEnrollment", IsOptional =  false , HasTag =  true, Tag = 57 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "defineEventEnrollment", IsOptional =  false , HasTag =  true, Tag = 57 , HasDefaultValue =  false )  ]
     
         public CS_DefineEventEnrollment_Request DefineEventEnrollment
         {
@@ -139,7 +139,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "alterEventEnrollment", IsOptional =  false , HasTag =  true, Tag = 59 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alterEventEnrollment", IsOptional =  false , HasTag =  true, Tag = 59 , HasDefaultValue =  false )  ]
     
         public CS_AlterEventEnrollment_Request AlterEventEnrollment
         {

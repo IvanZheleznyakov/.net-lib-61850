@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString localDetail_ ;
 	
-        [ASN1ElementAtr ( Name = "localDetail", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "localDetail", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString LocalDetail
         {
@@ -40,7 +40,7 @@ namespace MMS_ASN1_Model {
 	private bool timeOfDay_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "timeOfDay", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeOfDay", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public bool TimeOfDay
         {
@@ -53,7 +53,7 @@ namespace MMS_ASN1_Model {
 	private bool timeSequence_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "timeSequence", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeSequence", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public bool TimeSequence
         {
@@ -76,7 +76,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "supportForTime", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "supportForTime", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public SupportForTimeSequenceType SupportForTime
         {
@@ -89,7 +89,7 @@ namespace MMS_ASN1_Model {
 	private long granularityOfTime_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "granularityOfTime", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "granularityOfTime", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public long GranularityOfTime
         {

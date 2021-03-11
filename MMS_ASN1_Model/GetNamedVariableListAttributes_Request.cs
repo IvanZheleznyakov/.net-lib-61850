@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private ObjectName  val;
 
         
-        [ASN1ElementAtr ( Name = "GetNamedVariableListAttributes-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "GetNamedVariableListAttributes-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ObjectName Value
         {

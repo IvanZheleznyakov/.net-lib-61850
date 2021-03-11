@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfEEAttributes", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfEEAttributes", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfEEAttributes", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<EEAttributes> ListOfEEAttributes
         {
@@ -37,7 +37,7 @@ namespace MMS_ASN1_Model {
 	private bool moreFollows_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "moreFollows", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
+        [ASN1Element ( Name = "moreFollows", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  true )  ]
     
         public bool MoreFollows
         {

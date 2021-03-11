@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private bool mmsDeletable_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "mmsDeletable", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public bool MmsDeletable
         {
@@ -35,7 +35,7 @@ namespace MMS_ASN1_Model {
 	private long class__ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "class", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "class", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public long Class_
         {
@@ -47,7 +47,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned16 numberOfTokens_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfTokens", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfTokens", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Unsigned16 NumberOfTokens
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned16 numberOfOwnedTokens_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfOwnedTokens", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfOwnedTokens", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Unsigned16 NumberOfOwnedTokens
         {
@@ -71,7 +71,7 @@ namespace MMS_ASN1_Model {
           
 	private Unsigned16 numberOfHungTokens_ ;
 	
-        [ASN1ElementAtr ( Name = "numberOfHungTokens", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfHungTokens", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public Unsigned16 NumberOfHungTokens
         {
@@ -85,7 +85,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  accessControlList_present = false ;
 	
-        [ASN1ElementAtr ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControlList", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlList
         {

@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "vMDOnly" )]
     
-        [ASN1ElementAtr ( Name = "vMDOnly", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "vMDOnly", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public NullObject VMDOnly
         {
@@ -56,7 +56,7 @@ namespace MMS_ASN1_Model {
                         
 	private ObjectClass objectClass_ ;
 	
-        [ASN1ElementAtr ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectClass ObjectClass
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "specific", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "specific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "specific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> Specific
         {
@@ -100,7 +100,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "aa-specific" )]
     
-        [ASN1ElementAtr ( Name = "aa-specific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "aa-specific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Aa_specific
         {
@@ -116,7 +116,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier Domain
         {
@@ -134,7 +134,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "vmd" )]
     
-        [ASN1ElementAtr ( Name = "vmd", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "vmd", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public NullObject Vmd
         {
@@ -250,7 +250,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "objectScope", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "objectScope", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectScopeChoiceType ObjectScope
         {
@@ -273,7 +273,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "listOfObjects", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfObjects", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ListOfObjectsSequenceType ListOfObjects
         {
@@ -333,7 +333,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "scopeOfChange", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "scopeOfChange", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ScopeOfChangeChoiceType ScopeOfChange
         {
@@ -345,7 +345,7 @@ namespace MMS_ASN1_Model {
           
 	private Identifier accessControlListName_ ;
 	
-        [ASN1ElementAtr ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControlListName", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier AccessControlListName
         {

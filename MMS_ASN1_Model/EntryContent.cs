@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private TimeOfDay occurrenceTime_ ;
 	
-        [ASN1ElementAtr ( Name = "occurrenceTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "occurrenceTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay OccurrenceTime
         {
@@ -58,7 +58,7 @@ namespace MMS_ASN1_Model {
                         
 	private ObjectName eventConditionName_ ;
 	
-        [ASN1ElementAtr ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventConditionName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName EventConditionName
         {
@@ -70,7 +70,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_State currentState_ ;
 	
-        [ASN1ElementAtr ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "currentState", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public EC_State CurrentState
         {
@@ -93,7 +93,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "event", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "event", IsOptional =  true , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public EventSequenceType Event
         {
@@ -110,7 +110,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfVariables", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfVariables", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfVariables", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Journal_Variable> ListOfVariables
         {
@@ -141,7 +141,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "data", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "data", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DataSequenceType Data
         {
@@ -157,7 +157,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "annotation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "annotation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public MMSString Annotation
         {
@@ -213,7 +213,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "entryForm", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "entryForm", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public EntryFormChoiceType EntryForm
         {

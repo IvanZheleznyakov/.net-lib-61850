@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private bool mmsDeletable_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "mmsDeletable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+        [ASN1Element(Name = "mmsDeletable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
         public bool MmsDeletable
         {
@@ -39,7 +39,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfModifier", IsSetOf = false)]
 
 
-        [ASN1ElementAtr(Name = "listOfModifier", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "listOfModifier", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<Modifier> ListOfModifier
         {
@@ -51,7 +51,7 @@ namespace MMS_ASN1_Model
 
         private ConfirmedServiceRequest confirmedServiceRequest_;
 
-        [ASN1ElementAtr(Name = "confirmedServiceRequest", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "confirmedServiceRequest", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public ConfirmedServiceRequest ConfirmedServiceRequest
         {
@@ -65,7 +65,7 @@ namespace MMS_ASN1_Model
 
         private bool cs_extension_present = false;
 
-        [ASN1ElementAtr(Name = "cs-extension", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
+        [ASN1Element(Name = "cs-extension", IsOptional = true, HasTag = true, Tag = 79, HasDefaultValue = false)]
 
         public Request_Detail Cs_extension
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model
 
         private bool accessControlList_present = false;
 
-        [ASN1ElementAtr(Name = "accessControlList", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "accessControlList", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public Identifier AccessControlList
         {

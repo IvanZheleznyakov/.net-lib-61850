@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private VMD_File partOne_ ;
 	
-        [ASN1ElementAtr ( Name = "partOne", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "partOne", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public VMD_File PartOne
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private Service_and_Parameter_CBBs partTwo_ ;
 	
-        [ASN1ElementAtr ( Name = "partTwo", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "partTwo", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Service_and_Parameter_CBBs PartTwo
         {

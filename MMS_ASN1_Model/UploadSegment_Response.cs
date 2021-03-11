@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model
 
         private LoadData loadData_;
 
-        [ASN1ElementAtr(Name = "loadData", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+        [ASN1Element(Name = "loadData", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
         public LoadData LoadData
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
         private bool moreFollows_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "moreFollows", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
+        [ASN1Element(Name = "moreFollows", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = true)]
 
         public bool MoreFollows
         {

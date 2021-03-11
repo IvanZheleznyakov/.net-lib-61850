@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private MMSString localDetail_ ;
 	
-        [ASN1ElementAtr ( Name = "localDetail", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "localDetail", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public MMSString LocalDetail
         {
@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
           
 	private MMSString extendedDerivation_ ;
 	
-        [ASN1ElementAtr ( Name = "extendedDerivation", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "extendedDerivation", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public MMSString ExtendedDerivation
         {

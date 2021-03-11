@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfResponseData", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfResponseData", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfResponseData", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Data> ListOfResponseData
         {

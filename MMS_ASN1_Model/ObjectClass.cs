@@ -42,7 +42,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "basicObjectClass", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "basicObjectClass", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public long BasicObjectClass
         {
@@ -59,7 +59,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "csObjectClass", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "csObjectClass", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public long CsObjectClass
         {

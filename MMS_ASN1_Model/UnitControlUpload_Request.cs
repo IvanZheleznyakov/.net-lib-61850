@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier unitControlName_ ;
 	
-        [ASN1ElementAtr ( Name = "unitControlName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unitControlName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier UnitControlName
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier Domain
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "ulsmID", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public long UlsmID
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocation
         {
@@ -158,7 +158,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ContinueAfterChoiceType ContinueAfter
         {

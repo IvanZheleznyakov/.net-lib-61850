@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model
 
             private Identifier domainName_;
 
-            [ASN1ElementAtr(Name = "domainName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "domainName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public Identifier DomainName
             {
@@ -49,7 +49,7 @@ namespace MMS_ASN1_Model
             [ASN1SequenceOf(Name = "capabilities", IsSetOf = false)]
 
 
-            [ASN1ElementAtr(Name = "capabilities", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+            [ASN1Element(Name = "capabilities", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
             public System.Collections.Generic.ICollection<MMSString> Capabilities
             {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model
             private bool sharable_;
             [ASN1Boolean(Name = "")]
 
-            [ASN1ElementAtr(Name = "sharable", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+            [ASN1Element(Name = "sharable", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
             public bool Sharable
             {
@@ -76,7 +76,7 @@ namespace MMS_ASN1_Model
 
             private bool loadData_present = false;
 
-            [ASN1ElementAtr(Name = "loadData", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
+            [ASN1Element(Name = "loadData", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
             public LoadData LoadData
             {
@@ -106,7 +106,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "beginDomainDef", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "beginDomainDef", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public BeginDomainDefSequenceType BeginDomainDef
         {
@@ -129,7 +129,7 @@ namespace MMS_ASN1_Model
 
             private Identifier domainName_;
 
-            [ASN1ElementAtr(Name = "domainName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "domainName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public Identifier DomainName
             {
@@ -141,7 +141,7 @@ namespace MMS_ASN1_Model
 
             private LoadData loadData_;
 
-            [ASN1ElementAtr(Name = "loadData", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+            [ASN1Element(Name = "loadData", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
             public LoadData LoadData
             {
@@ -166,7 +166,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "continueDomainDef", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "continueDomainDef", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public ContinueDomainDefSequenceType ContinueDomainDef
         {
@@ -182,7 +182,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "endDomainDef", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "endDomainDef", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Identifier EndDomainDef
         {
@@ -205,7 +205,7 @@ namespace MMS_ASN1_Model
 
             private Identifier piName_;
 
-            [ASN1ElementAtr(Name = "piName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+            [ASN1Element(Name = "piName", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
             public Identifier PiName
             {
@@ -220,7 +220,7 @@ namespace MMS_ASN1_Model
             [ASN1SequenceOf(Name = "listOfDomains", IsSetOf = false)]
 
 
-            [ASN1ElementAtr(Name = "listOfDomains", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "listOfDomains", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public System.Collections.Generic.ICollection<Identifier> ListOfDomains
             {
@@ -233,7 +233,7 @@ namespace MMS_ASN1_Model
             private bool reusable_;
             [ASN1Boolean(Name = "")]
 
-            [ASN1ElementAtr(Name = "reusable", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
+            [ASN1Element(Name = "reusable", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
 
             public bool Reusable
             {
@@ -248,7 +248,7 @@ namespace MMS_ASN1_Model
             private bool monitorType_present = false;
             [ASN1Boolean(Name = "")]
 
-            [ASN1ElementAtr(Name = "monitorType", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
+            [ASN1Element(Name = "monitorType", IsOptional = true, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
             public bool MonitorType
             {
@@ -262,7 +262,7 @@ namespace MMS_ASN1_Model
 
             private bool pIState_present = false;
 
-            [ASN1ElementAtr(Name = "pIState", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
+            [ASN1Element(Name = "pIState", IsOptional = true, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
             public ProgramInvocationState PIState
             {
@@ -300,7 +300,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "piDefinition", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "piDefinition", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public PiDefinitionSequenceType PiDefinition
         {

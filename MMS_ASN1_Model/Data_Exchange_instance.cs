@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private Identifier name_ ;
 	
-        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier Name
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1ObjectIdentifier( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectIdentifier Reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                         
 	private Access_Control_List_instance accessControl_ ;
 	
-        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Access_Control_List_instance AccessControl
         {
@@ -82,7 +82,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "request", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "request", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "request", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<TypeDescription> Request
         {
@@ -97,7 +97,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "response", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "response", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "response", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<TypeDescription> Response
         {
@@ -110,7 +110,7 @@ namespace MMS_ASN1_Model {
 	private bool linked_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "linked", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "linked", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public bool Linked
         {
@@ -124,7 +124,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  programInvocation_present = false ;
 	
-        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocation", IsOptional =  true , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public Program_Invocation_instance ProgramInvocation
         {
@@ -151,7 +151,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DetailsSequenceType Details
         {
@@ -207,7 +207,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DefinitionChoiceType Definition
         {

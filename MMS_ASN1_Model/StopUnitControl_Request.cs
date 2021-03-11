@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private Identifier  val;
 
         
-        [ASN1ElementAtr ( Name = "StopUnitControl-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "StopUnitControl-Request", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Identifier Value
         {

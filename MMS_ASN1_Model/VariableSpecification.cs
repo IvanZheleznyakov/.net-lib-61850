@@ -25,7 +25,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -41,7 +41,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "address", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Address Address
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model {
                         
 	private Address address_ ;
 	
-        [ASN1ElementAtr ( Name = "address", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "address", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Address Address
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
           
 	private TypeSpecification typeSpecification_ ;
 	
-        [ASN1ElementAtr ( Name = "typeSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "typeSpecification", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public TypeSpecification TypeSpecification
         {
@@ -98,7 +98,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "variableDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "variableDescription", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public VariableDescriptionSequenceType VariableDescription
         {
@@ -114,7 +114,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "scatteredAccessDescription", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public ScatteredAccessDescription ScatteredAccessDescription
         {
@@ -132,7 +132,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "invalidated" )]
     
-        [ASN1ElementAtr ( Name = "invalidated", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "invalidated", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public NullObject Invalidated
         {

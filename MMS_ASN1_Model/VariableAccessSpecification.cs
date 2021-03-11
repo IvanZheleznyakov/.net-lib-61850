@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model
 
             private VariableSpecification variableSpecification_;
 
-            [ASN1ElementAtr(Name = "variableSpecification", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1Element(Name = "variableSpecification", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public VariableSpecification VariableSpecification
             {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model
 
             private bool alternateAccess_present = false;
 
-            [ASN1ElementAtr(Name = "alternateAccess", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
+            [ASN1Element(Name = "alternateAccess", IsOptional = true, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
             public AlternateAccess AlternateAccess
             {
@@ -81,7 +81,7 @@ namespace MMS_ASN1_Model
         [ASN1SequenceOf(Name = "listOfVariable", IsSetOf = false)]
 
 
-        [ASN1ElementAtr(Name = "listOfVariable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "listOfVariable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<ListOfVariableSequenceType> ListOfVariable
         {
@@ -97,7 +97,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "variableListName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "variableListName", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public ObjectName VariableListName
         {

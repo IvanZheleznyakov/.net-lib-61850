@@ -24,7 +24,7 @@ namespace MMS_ASN1_Model
         private bool mmsDeletable_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "mmsDeletable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
+        [ASN1Element(Name = "mmsDeletable", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = true)]
 
         public bool MmsDeletable
         {
@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model
 
         private EC_Class class__;
 
-        [ASN1ElementAtr(Name = "class", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "class", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public EC_Class Class_
         {
@@ -48,7 +48,7 @@ namespace MMS_ASN1_Model
 
         private Priority priority_;
 
-        [ASN1ElementAtr(Name = "priority", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
+        [ASN1Element(Name = "priority", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = true)]
 
         public Priority Priority
         {
@@ -60,7 +60,7 @@ namespace MMS_ASN1_Model
 
         private Unsigned8 severity_;
 
-        [ASN1ElementAtr(Name = "severity", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = true)]
+        [ASN1Element(Name = "severity", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = true)]
 
         public Unsigned8 Severity
         {
@@ -73,7 +73,7 @@ namespace MMS_ASN1_Model
         private bool alarmSummaryReports_;
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "alarmSummaryReports", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = true)]
+        [ASN1Element(Name = "alarmSummaryReports", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = true)]
 
         public bool AlarmSummaryReports
         {
@@ -99,7 +99,7 @@ namespace MMS_ASN1_Model
 
 
 
-            [ASN1ElementAtr(Name = "variableReference", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+            [ASN1Element(Name = "variableReference", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
             public VariableSpecification VariableReference
             {
@@ -117,7 +117,7 @@ namespace MMS_ASN1_Model
 
             [ASN1Null(Name = "undefined")]
 
-            [ASN1ElementAtr(Name = "undefined", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+            [ASN1Element(Name = "undefined", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
             public NullObject Undefined
             {
@@ -183,7 +183,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "monitoredVariable", IsOptional = true, HasTag = true, Tag = 6, HasDefaultValue = false)]
+        [ASN1Element(Name = "monitoredVariable", IsOptional = true, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
         public MonitoredVariableChoiceType MonitoredVariable
         {
@@ -197,7 +197,7 @@ namespace MMS_ASN1_Model
 
         private bool evaluationInterval_present = false;
 
-        [ASN1ElementAtr(Name = "evaluationInterval", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1Element(Name = "evaluationInterval", IsOptional = true, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public Unsigned32 EvaluationInterval
         {
@@ -211,7 +211,7 @@ namespace MMS_ASN1_Model
 
         private bool accessControlList_present = false;
 
-        [ASN1ElementAtr(Name = "accessControlList", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
+        [ASN1Element(Name = "accessControlList", IsOptional = true, HasTag = true, Tag = 8, HasDefaultValue = false)]
 
         public Identifier AccessControlList
         {

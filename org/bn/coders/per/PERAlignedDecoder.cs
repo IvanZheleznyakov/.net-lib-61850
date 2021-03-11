@@ -1,37 +1,33 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using org.bn.utils;
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
 using org.bn.attributes;
 using org.bn.attributes.constraints;
 using org.bn.metadata;
 using org.bn.metadata.constraints;
 using org.bn.types;
+using org.bn.utils;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace org.bn.coders.per
 {
-	
 	public class PERAlignedDecoder:Decoder
 	{
-		
 		public override T decode<T>(System.IO.Stream stream)
 		{
 			return base.decode<T>(new BitArrayInputStream(stream));
@@ -317,7 +313,7 @@ namespace org.bn.coders.per
                         info.PreparedInfo  = elementInfo.PreparedInfo.getPropertyMetadata(i);
                     }
                     else
-                        info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                        info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
                     val = decodeClassType(decodedTag, field.PropertyType, info, stream);
                     if(val != null)
 					    invokeSelectMethodForField(field, choice, val.Value, info);
@@ -362,7 +358,7 @@ namespace org.bn.coders.per
             int preambleCurrentBit = 32 - preambleLen;
             skipAlignedBits(stream);
             object sequence = createInstanceForElement(objectClass, elementInfo);
-            initDefaultValues(sequence);
+            CoderUtils.initDefaultValues(sequence);
             ElementInfo info = new ElementInfo();
             int idx = 0;
             PropertyInfo[] fields = null;
@@ -503,55 +499,46 @@ namespace org.bn.coders.per
             skipAlignedBits(stream);
 
             Double result = 0.0D;
-            int szResult = len;
-            if ((realPreamble & 0x40) == 1)
+            if (realPreamble == 0x40)
             {
                 // 01000000 Value is PLUS-INFINITY
                 result = Double.PositiveInfinity;
             }
-            if ((realPreamble & 0x41) == 1)
+            else if (realPreamble == 0x41)
             {
                 // 01000001 Value is MINUS-INFINITY
                 result = Double.NegativeInfinity;
-                szResult += 1;
             }
-            else
-                if (len > 0)
+            else if (len > 0)
+            {
+                int szOfExp = 1 + (realPreamble & 0x3);
+                int sign = realPreamble & 0x40;
+                int ff = (realPreamble & 0x0C) >> 2;
+                long exponent = decodeIntegerValueAsBytes(szOfExp, stream);
+                long mantissaEncFrm = decodeIntegerValueAsBytes(len - szOfExp - 1, stream);
+                // Unpack mantissa & decrement exponent for base 2
+                long mantissa = mantissaEncFrm << ff;
+                while ((mantissa & 0x000ff00000000000L) == 0)
                 {
-                    int szOfExp = 1 + (realPreamble & 0x3);
-                    int sign = realPreamble & 0x40;
-                    int ff = (realPreamble & 0x0C) >> 2;
-                    long exponent = decodeIntegerValueAsBytes(szOfExp, stream);
-                    long mantissaEncFrm = decodeIntegerValueAsBytes(szResult - szOfExp - 1, stream);
-                    // Unpack mantissa & decrement exponent for base 2
-                    long mantissa = mantissaEncFrm << ff;
-                    while ((mantissa & 0x000ff00000000000L) == 0x0)
-                    {
-                        exponent -= 8;
-                        mantissa <<= 8;
-                    }
-                    while ((mantissa & 0x0010000000000000L) == 0x0)
-                    {
-                        exponent -= 1;
-                        mantissa <<= 1;
-                    }
-                    mantissa &= 0x0FFFFFFFFFFFFFL;
-                    long lValue = (exponent + 1023 + 52) << 52;
-                    lValue |= mantissa;
-                    if (sign == 1)
-                    {
-                        lValue = (long)((ulong)lValue | 0x8000000000000000L);
-                    }
-#if PocketPC
-                    byte[] dblValAsBytes = System.BitConverter.GetBytes(lValue);
-                    result = System.BitConverter.ToDouble(dblValAsBytes, 0);
-#else            
-                    result = System.BitConverter.Int64BitsToDouble(lValue);
-#endif
+                    exponent -= 8;
+                    mantissa <<= 8;
                 }
-            return new DecodedObject<object>(result, szResult);
+                while ((mantissa & 0x0010000000000000L) == 0)
+                {
+                    exponent -= 1;
+                    mantissa <<= 1;
+                }
+                mantissa &= 0x0FFFFFFFFFFFFFL;
+                long lValue = (exponent + 1023 + 52) << 52;
+                lValue |= mantissa;
+                if (sign == 0x40)
+                {
+                    lValue = (long)((ulong)lValue | 0x8000000000000000L);
+                }
+                result = System.BitConverter.Int64BitsToDouble(lValue);
+            }
+            return new DecodedObject<object>(result, len);
         }
-		
 		
 		public override DecodedObject<object> decodeOctetString(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
 		{
@@ -579,21 +566,23 @@ namespace org.bn.coders.per
             skipAlignedBits(stream);
             int trailBits = 8 - sizeOfString % 8;
             sizeOfString = sizeOfString / 8;
-            
+
             if (sizeOfString > 0 || (sizeOfString == 0 && trailBits > 0))
             {
                 byte[] value = new byte[trailBits > 0 ? sizeOfString + 1 : sizeOfString];
-                if(sizeOfString>0)
+                if (sizeOfString > 0)
                     stream.Read(value, 0, sizeOfString);
                 if (trailBits > 0)
                 {
-                    value[sizeOfString] = (byte)(bitStream.readBits(trailBits) << (8-trailBits));
+                    value[sizeOfString] = (byte)(bitStream.readBits(trailBits) << (8 - trailBits));
                 }
 
                 result.Value = (new BitString(value, trailBits));
             }
             else
-                result.Value = (new BitString(new byte[0]));
+            {
+                result.Value = new BitString();
+            }
             return result;
         }
 		

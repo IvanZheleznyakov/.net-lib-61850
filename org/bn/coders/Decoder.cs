@@ -1,29 +1,28 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ Original sources are available at www.latestbit.com
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 using System;
 using System.Reflection;
 using System.IO;
 using org.bn.attributes;
 using org.bn.metadata;
 using org.bn.types;
-using System.Diagnostics;
-using System.Collections.Concurrent;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace org.bn.coders
 {	
@@ -35,14 +34,9 @@ namespace org.bn.coders
             ElementInfo elemInfo = new ElementInfo();
             elemInfo.AnnotatedClass = objectClass;
             object objectInstance = null;
-            bool isImplements = CoderUtils.isImplements(objectClass, (typeof(IASN1PreparedElement)));
-            if (isImplements)
+            if (CoderUtils.isImplements(objectClass,(typeof(IASN1PreparedElement))))
             {
                 objectInstance = createInstanceForElement(objectClass, elemInfo);
-            }
-            else
-            {
-                Debug.WriteLine("IsImplements is false, typeOf(T) = " + objectClass.Name);
             }
 
             if (objectInstance!=null && objectInstance is IASN1PreparedElement)
@@ -52,20 +46,19 @@ namespace org.bn.coders
             }
             else
             {
-                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(objectClass);
+                elemInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(objectClass);
                 return (T)decodeClassType(decodeTag(stream), objectClass, elemInfo, stream).Value;
             }            
         }
-
-        public virtual DecodedObject<object> decodeClassType(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
+		
+		public virtual DecodedObject<object> decodeClassType(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
 		{
-            if(CoderUtils.isImplements(objectClass, typeof(IASN1PreparedElement))) 
+            if(CoderUtils.isImplements(objectClass,typeof(IASN1PreparedElement))) 
             {
                 return decodePreparedElement(decodedTag, objectClass,elementInfo, stream);
             }
             else
-                if (elementInfo.hasPreparedInfo() && elementInfo.PreparedInfo.TypeMetadata != null) // Pavel
-                {
+            if(elementInfo.hasPreparedInfo() && elementInfo.PreparedInfo.TypeMetadata != null) {
                 return elementInfo.PreparedInfo.TypeMetadata.decode(
                     this, decodedTag, objectClass, elementInfo, stream
                 );
@@ -141,7 +134,7 @@ namespace org.bn.coders
 				return decodeNull(decodedTag, objectClass, elementInfo, stream);
 			}
 			else
-            if (elementInfo.isAttributePresent<ASN1ElementAtr>())
+            if (elementInfo.isAttributePresent<ASN1Element>())
 			{
 				return decodeElement(decodedTag, objectClass, elementInfo, stream);
 			}
@@ -225,44 +218,19 @@ namespace org.bn.coders
             }
             else
             {
-                MethodInfo method = CoderUtils.findDoSelectMethodForField(field, obj.GetType());
-                method.Invoke(obj, new object[] { param });
+                CoderUtils.findDoSelectMethodForField(field, obj.GetType()).Invoke(obj, new object[] { param });
             }
-        }
-
-        public virtual void initDefaultValues(object obj)
-        {
-            try {
-                if (obj is IASN1PreparedElement)
-                {
-                    ((IASN1PreparedElement)obj).initWithDefaults();
-                }
-                else
-                {
-                    string methodName = "initWithDefaults";
-                    MethodInfo method = obj.GetType().GetMethod(methodName);
-                    method.Invoke(obj, null);
-                }
-            }
-            catch(Exception ){};
         }
 
         public object createInstanceForElement(Type objectClass, ElementInfo info)
         {
-            if(info.PreparedInstance!=null)
-            {
-                return info.PreparedInstance;
-            }
-            else
-                return Activator.CreateInstance(objectClass);
+            return info.PreparedInstance ?? Activator.CreateInstance(objectClass);
         }
-
-
 
         public virtual DecodedObject<object> decodeSequence(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
 		{
 			object sequence = createInstanceForElement(objectClass, elementInfo);
-            initDefaultValues(sequence);
+            CoderUtils.initDefaultValues(sequence);
             DecodedObject<object> fieldTag = null;
             int maxSeqLen = elementInfo.MaxAvailableLen;
             int sizeOfSequence = 0;
@@ -295,7 +263,7 @@ namespace org.bn.coders
                             info.PreparedInfo = (elementInfo.PreparedInfo.getPropertyMetadata(i + 1));
                         }
                         else
-                            info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(fields[i+1]);
+                            info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(fields[i+1]);
                         isAny = CoderUtils.isAnyField(fields[i + 1], info);
                     }
 
@@ -338,7 +306,7 @@ namespace org.bn.coders
                 info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
             }
             else
-                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
             
 			if(CoderUtils.isNullField(field,info))
 			{
@@ -375,7 +343,7 @@ namespace org.bn.coders
                     info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
                 }
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
 
                 val = decodeClassType(decodedTag, field.PropertyType, info, stream);
                 fieldIdx++;
@@ -394,52 +362,79 @@ namespace org.bn.coders
 				return new DecodedObject<object>(choice, val != null?val.Size:0);
 		}
 
+        private class EnumCache
+        {
+            public Type EnumClass;
+            public PropertyInfo ValueProperty;
+            public Dictionary<object, FieldInfo> EnumValues = new Dictionary<object, FieldInfo>();
+        }
+
+        private Dictionary<Type, EnumCache> _enums = new Dictionary<Type, EnumCache>();
+
         public virtual DecodedObject<object> decodeEnum(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
 		{
-            Type enumClass = null;
-            foreach (MemberInfo member in objectClass.GetMembers())
+            EnumCache enumClassInfo = null;
+
+            if (_enums.ContainsKey(objectClass)) enumClassInfo = _enums[objectClass];
+            else
             {
-                if (member is System.Type)
+                var enumMembers = objectClass.GetMembers();
+                foreach (MemberInfo member in enumMembers)
                 {
-                    Type cls = (Type)member;
-                    if (cls.IsEnum)
+                    if (member is System.Type)
                     {
-                        enumClass = cls;
-                        break;
+                        Type cls = (Type)member;
+                        if (cls.IsEnum)
+                        {
+                            enumClassInfo = new EnumCache()
+                            {
+                                EnumClass = cls,
+                                ValueProperty = objectClass.GetProperty("Value")
+                            };
+                            break;
+                        }
+                    }
+                };
+
+                _enums.Add(objectClass, enumClassInfo);
+            }
+
+            var field = enumClassInfo.ValueProperty;
+            Type enumClass = enumClassInfo.EnumClass;
+
+            var itemValue = decodeEnumItem(decodedTag, field.PropertyType, enumClass, elementInfo, stream);
+
+            FieldInfo param = null;
+            if (itemValue != null)
+            {
+                object result = createInstanceForElement(objectClass, elementInfo);
+
+                if (enumClassInfo.EnumValues.ContainsKey(itemValue.Value))
+                {
+                    param = enumClassInfo.EnumValues[itemValue.Value];
+                }
+                else
+                {
+                    var f = enumClass.GetFields();
+
+                    foreach (FieldInfo enumItem in f)
+                    {
+                        ASN1EnumItem meta = CoderUtils.getAttribute<ASN1EnumItem>(enumItem);
+                        if (meta != null && meta.Tag.Equals(itemValue.Value))
+                        {
+                            param = enumItem;
+                            enumClassInfo.EnumValues[itemValue.Value] = param;
+                            break;
+                        }
                     }
                 }
-            };
+                invokeSetterMethodForField(field, result, param.GetValue(null), null);
+                return new DecodedObject<object>(result, itemValue.Size);
+            }
+            else
+                return null;
 
-			System.Reflection.PropertyInfo field = objectClass.GetProperty("Value");
-
-
-			DecodedObject<object> itemValue = decodeEnumItem(decodedTag, field.PropertyType, enumClass, elementInfo, stream);
-			
-            System.Reflection.FieldInfo param = null;
-			if (itemValue != null)
-			{
-			object result = createInstanceForElement(objectClass, elementInfo);
-
-		        foreach(FieldInfo enumItem in enumClass.GetFields())
-		        {
-                    if (CoderUtils.isAttributePresent<ASN1EnumItem>(enumItem))
-			        {
-					    ASN1EnumItem meta =
-                            CoderUtils.getAttribute<ASN1EnumItem>(enumItem);
-					    if (meta.Tag.Equals(itemValue.Value))
-					    {
-						    param = enumItem;
-						    break;
-					    }
-			        }
-		        }
-				invokeSetterMethodForField(field, result, param.GetValue(null) , null);
-				return new DecodedObject<object>(result, itemValue.Size);
-			}
-			else
-				return null;
-			
-		}
+        }
 
         public abstract DecodedObject<object> decodeEnumItem(DecodedObject<object> decodedTag, System.Type objectClass, System.Type enumClass, ElementInfo elementInfo, System.IO.Stream stream);
 
@@ -459,13 +454,13 @@ namespace org.bn.coders
 			PropertyInfo field = objectClass.GetProperty("Value");
             if (elementInfo.ASN1ElementInfo == null)
             {
-                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                elementInfo.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
             }
             else
             {
                 if (!elementInfo.ASN1ElementInfo.HasTag)
                 {
-                    ASN1ElementAtr fieldInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                    ASN1Element fieldInfo = CoderUtils.getAttribute<ASN1Element>(field);
                     if (fieldInfo!=null && fieldInfo.HasTag)
                     {
                         elementInfo.ASN1ElementInfo.HasTag = true;

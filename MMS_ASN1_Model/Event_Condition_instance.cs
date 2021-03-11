@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName name_ ;
 	
-        [ASN1ElementAtr ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "name", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName Name
         {
@@ -45,7 +45,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1ObjectIdentifier( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "reference", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectIdentifier Reference
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
                         
 	private Access_Control_List_instance accessControl_ ;
 	
-        [ASN1ElementAtr ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "accessControl", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Access_Control_List_instance AccessControl
         {
@@ -79,7 +79,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_Class ecClass_ ;
 	
-        [ASN1ElementAtr ( Name = "ecClass", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "ecClass", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public EC_Class EcClass
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model {
           
 	private EC_State ecState_ ;
 	
-        [ASN1ElementAtr ( Name = "ecState", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "ecState", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public EC_State EcState
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model {
           
 	private Priority priority_ ;
 	
-        [ASN1ElementAtr ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 6 , HasDefaultValue =  false )  ]
     
         public Priority Priority
         {
@@ -115,7 +115,7 @@ namespace MMS_ASN1_Model {
           
 	private Severity severity_ ;
 	
-        [ASN1ElementAtr ( Name = "severity", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "severity", IsOptional =  false , HasTag =  true, Tag = 7 , HasDefaultValue =  false )  ]
     
         public Severity Severity
         {
@@ -130,7 +130,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "eventEnrollments", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "eventEnrollments", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "eventEnrollments", IsOptional =  false , HasTag =  true, Tag = 8 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Event_Enrollment_instance> EventEnrollments
         {
@@ -145,7 +145,7 @@ namespace MMS_ASN1_Model {
         private bool  enabled_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "enabled", IsOptional =  true , HasTag =  true, Tag = 9 , HasDefaultValue =  false )  ]
     
         public bool Enabled
         {
@@ -160,7 +160,7 @@ namespace MMS_ASN1_Model {
         private bool  alarmSummaryReports_present = false ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "alarmSummaryReports", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "alarmSummaryReports", IsOptional =  true , HasTag =  true, Tag = 10 , HasDefaultValue =  false )  ]
     
         public bool AlarmSummaryReports
         {
@@ -185,7 +185,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "named", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "named", IsOptional =  false , HasTag =  true, Tag = 11 , HasDefaultValue =  false )  ]
     
         public Named_Variable_instance Named
         {
@@ -201,7 +201,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "unnamed", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unnamed", IsOptional =  false , HasTag =  true, Tag = 12 , HasDefaultValue =  false )  ]
     
         public Unnamed_Variable_instance Unnamed
         {
@@ -219,7 +219,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "unspecified" )]
     
-        [ASN1ElementAtr ( Name = "unspecified", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unspecified", IsOptional =  false , HasTag =  true, Tag = 13 , HasDefaultValue =  false )  ]
     
         public NullObject Unspecified
         {
@@ -302,7 +302,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "monitoredVariable", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "monitoredVariable", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public MonitoredVariableChoiceType MonitoredVariable
         {
@@ -317,7 +317,7 @@ namespace MMS_ASN1_Model {
         private bool  evaluationInterval_present = false ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "evaluationInterval", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "evaluationInterval", IsOptional =  true , HasTag =  true, Tag = 14 , HasDefaultValue =  false )  ]
     
         public long EvaluationInterval
         {
@@ -340,7 +340,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "text", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "text", IsOptional =  false , HasTag =  true, Tag = 15 , HasDefaultValue =  false )  ]
     
         public MMSString Text
         {
@@ -357,7 +357,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "number", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "number", IsOptional =  false , HasTag =  true, Tag = 16 , HasDefaultValue =  false )  ]
     
         public long Number
         {
@@ -375,7 +375,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "none" )]
     
-        [ASN1ElementAtr ( Name = "none", IsOptional =  false , HasTag =  true, Tag = 17 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "none", IsOptional =  false , HasTag =  true, Tag = 17 , HasDefaultValue =  false )  ]
     
         public NullObject None
         {
@@ -458,7 +458,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "displayEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "displayEnhancement", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DisplayEnhancementChoiceType DisplayEnhancement
         {
@@ -483,7 +483,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 18 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "priority", IsOptional =  false , HasTag =  true, Tag = 18 , HasDefaultValue =  false )  ]
     
         public Priority Priority
         {
@@ -501,7 +501,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "undefined" )]
     
-        [ASN1ElementAtr ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 19 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "undefined", IsOptional =  false , HasTag =  true, Tag = 19 , HasDefaultValue =  false )  ]
     
         public NullObject Undefined
         {
@@ -561,7 +561,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "group-Priority-Override", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "group-Priority-Override", IsOptional =  true , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public Group_Priority_OverrideChoiceType Group_Priority_Override
         {
@@ -576,7 +576,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "referencingEventConditionLists", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "referencingEventConditionLists", IsOptional =  false , HasTag =  true, Tag = 20 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "referencingEventConditionLists", IsOptional =  false , HasTag =  true, Tag = 20 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<Event_Condition_List_instance> ReferencingEventConditionLists
         {
@@ -619,7 +619,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "details", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public DetailsSequenceType Details
         {
@@ -675,7 +675,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "definition", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public DefinitionChoiceType Definition
         {

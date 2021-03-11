@@ -1,34 +1,31 @@
 /*
-* Copyright 2006 Abdulla G. Abdurakhmanov (abdulla.abdurakhmanov@gmail.com).
-* 
-* Licensed under the LGPL, Version 2 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.gnu.org/copyleft/lgpl.html
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* 
-* With any your questions welcome to my e-mail 
-* or blog at http://abdulla-a.blogspot.com.
-*/
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using org.bn.utils;
+ Copyright 2006-2011 Abdulla Abdurakhmanov (abdulla@latestbit.com)
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
 using org.bn.attributes;
 using org.bn.attributes.constraints;
 using org.bn.metadata;
 using org.bn.metadata.constraints;
 using org.bn.types;
+using org.bn.utils;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace org.bn.coders.per
 {
-	
 	public class PERAlignedEncoder:Encoder
 	{
 		public PERAlignedEncoder()
@@ -309,56 +306,54 @@ namespace org.bn.coders.per
             Double value = (Double) obj;
             //CoderUtils.checkConstraints(value,elementInfo);
 
-#if PocketPC
-            byte[] dblValAsBytes =  System.BitConverter.GetBytes(value);
-            long asLong = System.BitConverter.ToInt64(dblValAsBytes, 0);
-#else            
             long asLong = System.BitConverter.DoubleToInt64Bits(value);
-#endif
-            if(value == Double.PositiveInfinity ) { // positive infinity
-                result+=encodeLengthDeterminant(1,bitStream);
+            if (value == Double.PositiveInfinity)
+            { // positive infinity
+                result += encodeLengthDeterminant(1,bitStream);
                 doAlign(stream);
                 stream.WriteByte(0x40); // 01000000 Value is PLUS-INFINITY
-                result+=1;
+                result += 1;
             }
-            else
-            if(value == Double.NegativeInfinity) { // negative infinity
-                result+=encodeLengthDeterminant(1,bitStream);
+            else if (value == Double.NegativeInfinity)
+            { // negative infinity
+                result += encodeLengthDeterminant(1,bitStream);
                 doAlign(stream);
                 stream.WriteByte(0x41); // 01000001 Value is MINUS-INFINITY
-                result+=1;
-            }        
-            else 
-            if(asLong!=0x0) {
+                result += 1;
+            }
+            else if (asLong != 0)
+            {
                 long exponent = ((0x7ff0000000000000L & asLong) >> 52) - 1023 - 52;
                 long mantissa = 0x000fffffffffffffL & asLong;
                 mantissa |= 0x10000000000000L; // set virtual delimeter
-                
+
                 // pack mantissa for base 2
-                while((mantissa & 0xFFL) == 0x0) {
+                while ((mantissa & 0xFFL) == 0)
+                {
                     mantissa >>= 8;
                     exponent += 8; //increment exponent to 8 (base 2)
-                }        
-                while((mantissa & 0x01L) == 0x0) {
+                }
+                while ((mantissa & 0x01L) == 0)
+                {
                     mantissa >>= 1;
-                    exponent+=1; //increment exponent to 1
+                    exponent += 1; //increment exponent to 1
                 }
 
                 int szOfExp = CoderUtils.getIntegerLength(exponent);
-                encodeLengthDeterminant(CoderUtils.getIntegerLength(mantissa)+szOfExp+1,bitStream);            
+                encodeLengthDeterminant(CoderUtils.getIntegerLength(mantissa) + szOfExp + 1, bitStream);
                 doAlign(stream);
-                byte realPreamble = 0x80;
                 
+                byte realPreamble = 0x80;
                 realPreamble |= (byte)(szOfExp - 1);
-                if( (((ulong)asLong) & 0x8000000000000000L) == 1) {
-                    realPreamble|= 0x40; // Sign
+                if ((((ulong)asLong) & 0x8000000000000000L) == 0x8000000000000000L)
+                {
+                    realPreamble |= 0x40; // Sign
                 }
                 stream.WriteByte(realPreamble);
-                result+=1;
+                result += 1;
 
-                
-                result+= encodeIntegerValueAsBytes(exponent,stream);
-                result+= encodeIntegerValueAsBytes(mantissa,stream);            
+                result += encodeIntegerValueAsBytes(exponent, stream);
+                result += encodeIntegerValueAsBytes(mantissa, stream);
             }
             return result;
         }
@@ -413,14 +408,31 @@ namespace org.bn.coders.per
 			int resultBitSize = 0;
             ElementInfo info = new ElementInfo();
             int fieldIdx = 0;
-            foreach (PropertyInfo field in fields) // obj.GetType().GetProperties()
+            foreach (PropertyInfo field in fields)
             {
-                if(elementInfo.hasPreparedInfo())
+                if (elementInfo.hasPreparedInfo())
+                {
                     info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
+                }
+
                 if(CoderUtils.isOptionalField(field,info))
 				{
 					object invokeObjResult = invokeGetterMethodForField(field, obj, info);
-					((BitArrayOutputStream) stream).writeBit(invokeObjResult != null);
+                    if (invokeObjResult == null)
+                    {
+                        ((BitArrayOutputStream)stream).writeBit(false);
+                    }
+                    else if (CoderUtils.isDefaultField(field, info))
+                    {
+                        object newSequenceInstance = Activator.CreateInstance(obj.GetType());
+                        CoderUtils.initDefaultValues(newSequenceInstance);
+                        object defaultFieldValue = invokeGetterMethodForField(field, newSequenceInstance, info);
+                        ((BitArrayOutputStream)stream).writeBit(!CoderUtils.AreEqual(defaultFieldValue, invokeObjResult));
+                    }
+                    else
+                    {
+                        ((BitArrayOutputStream)stream).writeBit(true);
+                    }
 					resultBitSize += 1;
 				}
                 fieldIdx++;
@@ -480,7 +492,7 @@ namespace org.bn.coders.per
                 if (elementInfo.hasPreparedInfo())
                     info.PreparedInfo = elementInfo.PreparedInfo.getPropertyMetadata(fieldIdx);
                 else
-                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1ElementAtr>(field);
+                    info.ASN1ElementInfo = CoderUtils.getAttribute<ASN1Element>(field);
 
                 if (invokeSelectedMethodForField(field, obj, info))
                 {

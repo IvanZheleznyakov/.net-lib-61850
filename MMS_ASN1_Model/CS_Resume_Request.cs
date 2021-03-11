@@ -36,7 +36,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "normal" )]
     
-        [ASN1ElementAtr ( Name = "normal", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "normal", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject Normal
         {
@@ -71,7 +71,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "continueMode" )]
     
-        [ASN1ElementAtr ( Name = "continueMode", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "continueMode", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public NullObject ContinueMode
         {
@@ -87,7 +87,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "changeMode", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "changeMode", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public StartCount ChangeMode
         {
@@ -147,7 +147,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "modeType", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "modeType", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ModeTypeChoiceType ModeType
         {
@@ -170,7 +170,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "controlling", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "controlling", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public ControllingSequenceType Controlling
         {
@@ -230,7 +230,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "CS-Resume-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "CS-Resume-Request", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public CS_Resume_RequestChoiceType Value
         {

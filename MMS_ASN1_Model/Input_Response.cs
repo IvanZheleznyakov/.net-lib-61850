@@ -23,7 +23,7 @@ namespace MMS_ASN1_Model {
         private MMSString  val;
 
         
-        [ASN1ElementAtr ( Name = "Input-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "Input-Response", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public MMSString Value
         {

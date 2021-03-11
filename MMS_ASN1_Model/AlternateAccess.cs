@@ -33,7 +33,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "unnamed", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "unnamed", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public AlternateAccessSelection Unnamed
         {
@@ -55,7 +55,7 @@ namespace MMS_ASN1_Model {
                         
 	private Identifier componentName_ ;
 	
-        [ASN1ElementAtr ( Name = "componentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "componentName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public Identifier ComponentName
         {
@@ -67,7 +67,7 @@ namespace MMS_ASN1_Model {
           
 	private AlternateAccessSelection access_ ;
 	
-        [ASN1ElementAtr ( Name = "access", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "access", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public AlternateAccessSelection Access
         {
@@ -90,7 +90,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "named", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "named", IsOptional =  false , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public NamedSequenceType Named
         {

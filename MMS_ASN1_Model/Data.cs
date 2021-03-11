@@ -26,7 +26,7 @@ namespace MMS_ASN1_Model
 
         [ASN1SequenceOf(Name = "array", IsSetOf = false)]
         [ASN1_MMSDataArray]
-        [ASN1ElementAtr(Name = "array", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "array", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
         public System.Collections.Generic.ICollection<Data> Array
         {
             get { return array_; }
@@ -40,7 +40,7 @@ namespace MMS_ASN1_Model
 
         [ASN1SequenceOf(Name = "structure", IsSetOf = false)]
         [ASN1_MMSDataStructure]
-        [ASN1ElementAtr(Name = "structure", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "structure", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public System.Collections.Generic.ICollection<Data> Structure
         {
@@ -57,7 +57,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Boolean(Name = "")]
 
-        [ASN1ElementAtr(Name = "boolean", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
+        [ASN1Element(Name = "boolean", IsOptional = false, HasTag = true, Tag = 3, HasDefaultValue = false)]
 
         public bool Boolean
         {
@@ -74,7 +74,7 @@ namespace MMS_ASN1_Model
 
         [ASN1BitString(Name = "")]
 
-        [ASN1ElementAtr(Name = "bit-string", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
+        [ASN1Element(Name = "bit-string", IsOptional = false, HasTag = true, Tag = 4, HasDefaultValue = false)]
 
         public BitString Bit_string
         {
@@ -91,7 +91,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "integer", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
+        [ASN1Element(Name = "integer", IsOptional = false, HasTag = true, Tag = 5, HasDefaultValue = false)]
 
         public long Integer
         {
@@ -108,7 +108,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "unsigned", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
+        [ASN1Element(Name = "unsigned", IsOptional = false, HasTag = true, Tag = 6, HasDefaultValue = false)]
 
         public long Unsigned
         {
@@ -124,7 +124,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "floating-point", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
+        [ASN1Element(Name = "floating-point", IsOptional = false, HasTag = true, Tag = 7, HasDefaultValue = false)]
 
         public FloatingPoint Floating_point
         {
@@ -141,7 +141,7 @@ namespace MMS_ASN1_Model
 
         [ASN1OctetString(Name = "")]
 
-        [ASN1ElementAtr(Name = "octet-string", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
+        [ASN1Element(Name = "octet-string", IsOptional = false, HasTag = true, Tag = 9, HasDefaultValue = false)]
 
         public byte[] Octet_string
         {
@@ -158,7 +158,7 @@ namespace MMS_ASN1_Model
 
         [ASN1String(Name = "",
         StringType = UniversalTags.VisibleString, IsUCS = false)]
-        [ASN1ElementAtr(Name = "visible-string", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
+        [ASN1Element(Name = "visible-string", IsOptional = false, HasTag = true, Tag = 10, HasDefaultValue = false)]
 
         public string Visible_string
         {
@@ -175,7 +175,7 @@ namespace MMS_ASN1_Model
 
         [ASN1String(Name = "",
         StringType = UniversalTags.GeneralizedTime, IsUCS = false)]
-        [ASN1ElementAtr(Name = "generalized-time", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
+        [ASN1Element(Name = "generalized-time", IsOptional = false, HasTag = true, Tag = 11, HasDefaultValue = false)]
 
         public string Generalized_time
         {
@@ -191,7 +191,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "binary-time", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
+        [ASN1Element(Name = "binary-time", IsOptional = false, HasTag = true, Tag = 12, HasDefaultValue = false)]
 
         public TimeOfDay Binary_time
         {
@@ -208,7 +208,7 @@ namespace MMS_ASN1_Model
 
         [ASN1Integer(Name = "")]
 
-        [ASN1ElementAtr(Name = "bcd", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
+        [ASN1Element(Name = "bcd", IsOptional = false, HasTag = true, Tag = 13, HasDefaultValue = false)]
 
         public long Bcd
         {
@@ -225,7 +225,7 @@ namespace MMS_ASN1_Model
 
         [ASN1BitString(Name = "")]
 
-        [ASN1ElementAtr(Name = "booleanArray", IsOptional = false, HasTag = true, Tag = 14, HasDefaultValue = false)]
+        [ASN1Element(Name = "booleanArray", IsOptional = false, HasTag = true, Tag = 14, HasDefaultValue = false)]
 
         public BitString BooleanArray
         {
@@ -242,7 +242,7 @@ namespace MMS_ASN1_Model
 
         [ASN1ObjectIdentifier(Name = "")]
 
-        [ASN1ElementAtr(Name = "objId", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
+        [ASN1Element(Name = "objId", IsOptional = false, HasTag = true, Tag = 15, HasDefaultValue = false)]
 
         public ObjectIdentifier ObjId
         {
@@ -258,7 +258,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "mMSString", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
+        [ASN1Element(Name = "mMSString", IsOptional = false, HasTag = true, Tag = 16, HasDefaultValue = false)]
 
         public MMSString MMSString
         {
@@ -274,7 +274,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "utc-time", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
+        [ASN1Element(Name = "utc-time", IsOptional = false, HasTag = true, Tag = 17, HasDefaultValue = false)]
 
         public UtcTime Utc_time
         {

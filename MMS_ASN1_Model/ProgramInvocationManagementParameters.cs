@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private long executionArgMaxSize_ ;
 	[ASN1Integer( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "executionArgMaxSize", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "executionArgMaxSize", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public long ExecutionArgMaxSize
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
           
 	private MMSString executionArgParseRules_ ;
 	
-        [ASN1ElementAtr ( Name = "executionArgParseRules", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "executionArgParseRules", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public MMSString ExecutionArgParseRules
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "executionArgSyntaxes", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "executionArgSyntaxes", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "executionArgSyntaxes", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectIdentifier> ExecutionArgSyntaxes
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
           
 	private MMSString programLoction_ ;
 	
-        [ASN1ElementAtr ( Name = "programLoction", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programLoction", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public MMSString ProgramLoction
         {
@@ -75,7 +75,7 @@ namespace MMS_ASN1_Model {
 	private bool stepMode_ ;
 	[ASN1Boolean( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "stepMode", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "stepMode", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public bool StepMode
         {

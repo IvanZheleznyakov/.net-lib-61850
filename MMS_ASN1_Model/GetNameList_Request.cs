@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectClass objectClass_ ;
 	
-        [ASN1ElementAtr ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "objectClass", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectClass ObjectClass
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "vmdSpecific" )]
     
-        [ASN1ElementAtr ( Name = "vmdSpecific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "vmdSpecific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public NullObject VmdSpecific
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "domainSpecific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domainSpecific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Identifier DomainSpecific
         {
@@ -80,7 +80,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "aaSpecific" )]
     
-        [ASN1ElementAtr ( Name = "aaSpecific", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "aaSpecific", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public NullObject AaSpecific
         {
@@ -167,7 +167,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "objectScope", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "objectScope", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ObjectScopeChoiceType ObjectScope
         {
@@ -181,7 +181,7 @@ namespace MMS_ASN1_Model {
 	
         private bool  continueAfter_present = false ;
 	
-        [ASN1ElementAtr ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "continueAfter", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier ContinueAfter
         {

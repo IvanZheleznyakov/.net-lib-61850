@@ -22,7 +22,7 @@ namespace MMS_ASN1_Model {
 	private byte[] entryIdentifier_ ;
 	[ASN1OctetString( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "entryIdentifier", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "entryIdentifier", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public byte[] EntryIdentifier
         {
@@ -34,7 +34,7 @@ namespace MMS_ASN1_Model {
           
 	private ApplicationReference originatingApplication_ ;
 	
-        [ASN1ElementAtr ( Name = "originatingApplication", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "originatingApplication", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ApplicationReference OriginatingApplication
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
           
 	private EntryContent entryContent_ ;
 	
-        [ASN1ElementAtr ( Name = "entryContent", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "entryContent", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public EntryContent EntryContent
         {

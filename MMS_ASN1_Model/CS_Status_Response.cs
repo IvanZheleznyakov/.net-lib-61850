@@ -31,7 +31,7 @@ namespace MMS_ASN1_Model {
                         
 	private OperationState operationState_ ;
 	
-        [ASN1ElementAtr ( Name = "operationState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "operationState", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public OperationState OperationState
         {
@@ -43,7 +43,7 @@ namespace MMS_ASN1_Model {
           
 	private ExtendedStatus extendedStatus_ ;
 	
-        [ASN1ElementAtr ( Name = "extendedStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "extendedStatus", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public ExtendedStatus ExtendedStatus
         {
@@ -55,7 +55,7 @@ namespace MMS_ASN1_Model {
           
 	private ExtendedStatus extendedStatusMask_ ;
 	
-        [ASN1ElementAtr ( Name = "extendedStatusMask", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  true )  ]
+        [ASN1Element ( Name = "extendedStatusMask", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  true )  ]
     
         public ExtendedStatus ExtendedStatusMask
         {
@@ -78,7 +78,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "programInvocation", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public Identifier ProgramInvocation
         {
@@ -96,7 +96,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noneSelected" )]
     
-        [ASN1ElementAtr ( Name = "noneSelected", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "noneSelected", IsOptional =  false , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public NullObject NoneSelected
         {
@@ -156,7 +156,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "selectedProgramInvocation", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "selectedProgramInvocation", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public SelectedProgramInvocationChoiceType SelectedProgramInvocation
         {
@@ -182,7 +182,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "fullResponse", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "fullResponse", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public FullResponseSequenceType FullResponse
         {
@@ -200,7 +200,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "noExtraResponse" )]
     
-        [ASN1ElementAtr ( Name = "noExtraResponse", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "noExtraResponse", IsOptional =  false , HasTag =  false  , HasDefaultValue =  false )  ]
     
         public NullObject NoExtraResponse
         {

@@ -28,7 +28,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "specific", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "specific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "specific", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<ObjectName> Specific
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "aa-specific" )]
     
-        [ASN1ElementAtr ( Name = "aa-specific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "aa-specific", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public NullObject Aa_specific
         {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "domain", IsOptional =  false , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public Identifier Domain
         {
@@ -80,7 +80,7 @@ namespace MMS_ASN1_Model {
         
         [ASN1Null ( Name = "vmd" )]
     
-        [ASN1ElementAtr ( Name = "vmd", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "vmd", IsOptional =  false , HasTag =  true, Tag = 3 , HasDefaultValue =  false )  ]
     
         public NullObject Vmd
         {

@@ -27,7 +27,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "vmd-specific", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
+        [ASN1Element(Name = "vmd-specific", IsOptional = false, HasTag = true, Tag = 0, HasDefaultValue = false)]
 
         public Identifier Vmd_specific
         {
@@ -50,7 +50,7 @@ namespace MMS_ASN1_Model
 
             private Identifier domainID_;
 
-            [ASN1ElementAtr(Name = "domainID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1Element(Name = "domainID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public Identifier DomainID
             {
@@ -62,7 +62,7 @@ namespace MMS_ASN1_Model
 
             private Identifier itemID_;
 
-            [ASN1ElementAtr(Name = "itemID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
+            [ASN1Element(Name = "itemID", IsOptional = false, HasTag = false, HasDefaultValue = false)]
 
             public Identifier ItemID
             {
@@ -87,7 +87,7 @@ namespace MMS_ASN1_Model
 
         }
 
-        [ASN1ElementAtr(Name = "domain-specific", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
+        [ASN1Element(Name = "domain-specific", IsOptional = false, HasTag = true, Tag = 1, HasDefaultValue = false)]
 
         public Domain_specificSequenceType Domain_specific
         {
@@ -103,7 +103,7 @@ namespace MMS_ASN1_Model
 
 
 
-        [ASN1ElementAtr(Name = "aa-specific", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
+        [ASN1Element(Name = "aa-specific", IsOptional = false, HasTag = true, Tag = 2, HasDefaultValue = false)]
 
         public Identifier Aa_specific
         {

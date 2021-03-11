@@ -21,7 +21,7 @@ namespace MMS_ASN1_Model {
                     
 	private ObjectName journalName_ ;
 	
-        [ASN1ElementAtr ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "journalName", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public ObjectName JournalName
         {
@@ -46,7 +46,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "startingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "startingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay StartingTime
         {
@@ -63,7 +63,7 @@ namespace MMS_ASN1_Model {
                 
         [ASN1OctetString( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "startingEntry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "startingEntry", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public byte[] StartingEntry
         {
@@ -119,7 +119,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "rangeStartSpecification", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "rangeStartSpecification", IsOptional =  true , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public RangeStartSpecificationChoiceType RangeStartSpecification
         {
@@ -144,7 +144,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "endingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "endingTime", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay EndingTime
         {
@@ -160,7 +160,7 @@ namespace MMS_ASN1_Model {
         
                 
         
-        [ASN1ElementAtr ( Name = "numberOfEntries", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "numberOfEntries", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public Integer32 NumberOfEntries
         {
@@ -216,7 +216,7 @@ namespace MMS_ASN1_Model {
 
     }
                 
-        [ASN1ElementAtr ( Name = "rangeStopSpecification", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "rangeStopSpecification", IsOptional =  true , HasTag =  true, Tag = 2 , HasDefaultValue =  false )  ]
     
         public RangeStopSpecificationChoiceType RangeStopSpecification
         {
@@ -234,7 +234,7 @@ namespace MMS_ASN1_Model {
 [ASN1SequenceOf( Name = "listOfVariables", IsSetOf = false  )]
 
     
-        [ASN1ElementAtr ( Name = "listOfVariables", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "listOfVariables", IsOptional =  true , HasTag =  true, Tag = 4 , HasDefaultValue =  false )  ]
     
         public System.Collections.Generic.ICollection<string> ListOfVariables
         {
@@ -254,7 +254,7 @@ namespace MMS_ASN1_Model {
                         
 	private TimeOfDay timeSpecification_ ;
 	
-        [ASN1ElementAtr ( Name = "timeSpecification", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "timeSpecification", IsOptional =  false , HasTag =  true, Tag = 0 , HasDefaultValue =  false )  ]
     
         public TimeOfDay TimeSpecification
         {
@@ -267,7 +267,7 @@ namespace MMS_ASN1_Model {
 	private byte[] entrySpecification_ ;
 	[ASN1OctetString( Name = "" )]
     
-        [ASN1ElementAtr ( Name = "entrySpecification", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "entrySpecification", IsOptional =  false , HasTag =  true, Tag = 1 , HasDefaultValue =  false )  ]
     
         public byte[] EntrySpecification
         {
@@ -290,7 +290,7 @@ namespace MMS_ASN1_Model {
                 
        }
                 
-        [ASN1ElementAtr ( Name = "entryToStartAfter", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
+        [ASN1Element ( Name = "entryToStartAfter", IsOptional =  true , HasTag =  true, Tag = 5 , HasDefaultValue =  false )  ]
     
         public EntryToStartAfterSequenceType EntryToStartAfter
         {
