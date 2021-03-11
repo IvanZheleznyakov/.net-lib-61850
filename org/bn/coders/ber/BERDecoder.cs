@@ -485,7 +485,11 @@ namespace org.bn.coders.ber
 				while (lenOfItems < len.Value);
                 CoderUtils.checkConstraints(itemsCnt, elementInfo);
 			}
-			return new DecodedObject<object>(param, len.Value + len.Size);
+            if (tmpLen != null)
+            {
+                return new DecodedObject<object>(param, tmpLen.Value + tmpLen.Size);
+            }
+            return new DecodedObject<object>(param, len.Value + len.Size);
 		}
 
         public override DecodedObject<object> decodeObjectIdentifier(DecodedObject<object> decodedTag, System.Type objectClass, ElementInfo elementInfo, System.IO.Stream stream)
