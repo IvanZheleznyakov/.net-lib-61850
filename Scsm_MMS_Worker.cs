@@ -38,8 +38,6 @@ namespace lib61850net
         internal Task connectionCreatedTask;
         internal Task connectionClosedTask;
 
-        internal bool modelCreated = false;
-
         internal Scsm_MMS_Worker(SourceMsg_t logger = null, int? vtu = null)
         {
             _env = Env.getEnv();
@@ -270,11 +268,15 @@ namespace lib61850net
                                             }
                                             break;
                                         case Iec61850lStateEnum.IEC61850_MAKEGUI:
-                                            iecs.sourceLogger?.SendInfo("[IEC61850_MAKEGUI]");
-                                            iecs.logger.LogInfo("[IEC61850_MAKEGUI]");
-                                            // ModelHasBeenCreated?.Invoke();
-                                            modelCreated = true;
-                                            connectionCreatedTask?.Start();
+                                            if (connectionCreatedTask?.Status == TaskStatus.Created)
+                                            {
+                                                iecs.sourceLogger?.SendInfo("[IEC61850_MAKEGUI]");
+                                                iecs.logger.LogInfo("[IEC61850_MAKEGUI]");
+                                                if (connectionCreatedTask?.Status == TaskStatus.Created)
+                                                {
+                                                    connectionCreatedTask?.Start();
+                                                }
+                                            }
                                             iecs.istate = Iec61850lStateEnum.IEC61850_FREILAUF;
                                             break;
                                         case Iec61850lStateEnum.IEC61850_FREILAUF:
@@ -430,6 +432,14 @@ namespace lib61850net
             catch (Exception ex)
             {
                 iecs?.sourceLogger?.SendError("lib61850net: критическая ошибка в workerthreadproc: " + ex.Message);
+                try
+                {
+                    if (connectionClosedTask?.Status == TaskStatus.Created)
+                    {
+                        connectionClosedTask?.Start();
+                    }
+                }
+                catch { }
             }
 
         }

@@ -471,6 +471,11 @@ namespace lib61850net
                     MmsVariableSpecification = null,
                 };
                 Task responseTask = GetVariableSpecificationAsync(name, FC, GetVarSpecPrivateHandler);
+                if (responseTask == null)
+                {
+                    lastMVSRespone.TypeOfError = DataAccessErrorEnum.invalidAddress;
+                    return lastMVSRespone;
+                }
                 if (responseTask.Wait(waitingTime))
                 {
                     return lastMVSRespone;
@@ -515,6 +520,11 @@ namespace lib61850net
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(name, FC);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                if (node == null)
+                {
+                    worker.iecs.sourceLogger?.SendInfo("LibraryManager.GetVariableSpecification(): Не найдена переменная с именем " + name + " для получения спецификации");
+                    return null;
+                }
                 worker.iecs.mms.SendGetVariableAccessAttributes(worker.iecs, node, responseTask, response);
                 //  worker.iecs.Controller.WriteData((node as NodeData), true, responseTask, response);
                 return responseTask;

@@ -744,12 +744,30 @@ namespace lib61850net
             }
         }
 
+        private byte[] tempFileBuffer;
+
+        private void AppendDataToTempFileBuffer(byte[] newData)
+        {
+            if (tempFileBuffer == null)
+            {
+                tempFileBuffer = newData;
+            }
+            else
+            {
+                int origLen = tempFileBuffer.Length;
+                Array.Resize<byte>(ref tempFileBuffer, origLen + newData.Length);
+                Array.Copy(newData, 0, tempFileBuffer, origLen, newData.Length);
+            }
+        }
+
         private void ReceiveFileRead(Iec61850State iecs, FileRead_Response filerd, int invokeId)
         {
             iecs.logger.LogInfo("FileRead PDU received!!");
             if (iecs.lastFileOperationData[0] is NodeFile)
             {
-                (iecs.lastFileOperationData[0] as NodeFile).AppendData(filerd.FileData);
+                AppendDataToTempFileBuffer(filerd.FileData);
+                //(iecs.lastFileOperationData[0] as NodeFile).AppendData(filerd.FileData);
+
                 if (filerd.MoreFollows)
                 {
                     iecs.fstate = FileTransferState.FILE_READ;
@@ -762,12 +780,13 @@ namespace lib61850net
                         waitingMmsPdu.TryGetValue(saveInvokeIdUntilFileIsRead, out (Task, IResponse) responseWithArg);
                         (responseWithArg.Item2 as FileResponse).FileBuffer = new FileBuffer()
                         {
-                            Buffer = (iecs.lastFileOperationData[0] as NodeFile).Data,
+                            Buffer = tempFileBuffer,
                         };
                         (responseWithArg.Item2 as FileResponse).TypeOfError = FileErrorResponseEnum.none;
 
                         responseWithArg.Item1?.Start();
                         waitingMmsPdu.Remove(saveInvokeIdUntilFileIsRead);
+                        tempFileBuffer = null;
                     }
                     saveInvokeIdUntilFileIsRead = -1;
                     iecs.fstate = FileTransferState.FILE_COMPLETE;

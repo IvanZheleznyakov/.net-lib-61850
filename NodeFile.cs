@@ -60,18 +60,18 @@ namespace lib61850net
         private byte[] data;
         public byte[] Data { get { return data; } set { data = value; } }
 
-        public int AppendData(byte[] chunk)
-        {
-            if (data == null)
-                data = chunk;
-            else
-            {
-                int origLen = data.Length;
-                Array.Resize<byte>(ref data, origLen + chunk.Length);
-                Array.Copy(chunk, 0, data, origLen, chunk.Length);
-            }
-            return data.Length;
-        }
+        //public int AppendData(byte[] chunk)
+        //{
+        //    if (data == null)
+        //        data = chunk;
+        //    else
+        //    {
+        //        int origLen = data.Length;
+        //        Array.Resize<byte>(ref data, origLen + chunk.Length);
+        //        Array.Copy(chunk, 0, data, origLen, chunk.Length);
+        //    }
+        //    return data.Length;
+        //}
 
         private bool isFullNameCreated = false;
         private string fullName;
