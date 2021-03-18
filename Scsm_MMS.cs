@@ -1330,8 +1330,6 @@ namespace lib61850net
                         iecs.logger.LogDebug("Have unknown Unconfirmed PDU: " + lstErr);
                 }
             }
-
-            // NewReportReceived?.Invoke(report);
         }
 
         private void ReceiveRead(Iec61850State iecs, Read_Response Read, NodeBase[] lastOperationData, int receivedInvokeId)

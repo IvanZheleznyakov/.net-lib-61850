@@ -49,19 +49,19 @@ namespace lib61850net
         {
             get
             {
-                lock (responseComTerTask)
-                {
-                    bool isExecuted = false;
-                    if (responseComTerTask != null && responseComTerTask.Wait(5000))
-                    {
-                        isExecuted = true;
-                    }
-                    if (!isExecuted)
-                    {
-                        controlAddCauseEnum = ControlAddCauseEnum.ADD_CAUSE_TIME_LIMIT_OVER;
-                    }
-                    responseComTerTask = null;
-                }
+                //lock (responseComTerTask)
+                //{
+                //    bool isExecuted = false;
+                //    if (responseComTerTask != null && responseComTerTask.Wait(5000))
+                //    {
+                //        isExecuted = true;
+                //    }
+                //    if (!isExecuted)
+                //    {
+                //        controlAddCauseEnum = ControlAddCauseEnum.ADD_CAUSE_TIME_LIMIT_OVER;
+                //    }
+                //    responseComTerTask = null;
+                //}
                 return controlAddCauseEnum;
             }
             internal set
