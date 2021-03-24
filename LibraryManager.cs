@@ -692,6 +692,12 @@ namespace lib61850net
                 {
                     repNode = worker.iecs.DataModel.urcbs.FindNodeByAddress(mmsReference);
                 }
+
+                if (repNode == null)
+                {
+                    throw new Exception("Параметры отчёта с заданным именем " + name + " не найдены в дереве объектов");
+                }
+
                 resultRcb.self = (NodeRCB)repNode;
 
            //     Console.WriteLine("rcb created with " + name);
@@ -701,7 +707,7 @@ namespace lib61850net
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
-                worker?.iecs?.sourceLogger?.SendError("exception on created rcb with name " + name + ": " + ex.Message);
+                worker?.iecs?.sourceLogger?.SendError("CreateReportControlBlock exception " + name + ": " + ex.Message);
                 return null;
             }
         }
@@ -720,18 +726,20 @@ namespace lib61850net
             {
                 if (TcpState != TcpProtocolState.TCP_CONNECTED)
                 {
+                    worker.iecs.sourceLogger.SendInfo("in update rcb tcp not connected(???) " + rcb.Name + " " + TcpState);
                     return null;
                 }
                 lastRCBResponse = null;
                 Task responseTask = UpdateReportControlBlockAsync(rcb, UpdateRCBHandler);
-           //     Console.WriteLine("now task waiting in updatercb with name: " + rcb.Name);
+                worker.iecs.sourceLogger.SendInfo("now task waiting in updatercb with name: " + rcb.Name);
                 responseTask.Wait(waitingTime);
-           //     Console.WriteLine("task in updatercb finished with name " + rcb.Name);
+                worker.iecs.sourceLogger.SendInfo("task in updatercb finished with name " + rcb.Name);
                 return lastRCBResponse;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                worker.iecs.sourceLogger.SendInfo(GetLastExceptionInfo().LastException.Message + " " + GetLastExceptionInfo().LastException.StackTrace + " " + GetLastExceptionInfo().LastMethodWithException);
                 return null;
             }
         }
@@ -751,22 +759,27 @@ namespace lib61850net
         {
             try
             {
+                worker.iecs.sourceLogger.SendInfo((rcb == null).ToString() + " " + (rcb?.Name == null).ToString() + " " + (rcb?.self == null).ToString() + " ");
                 if (TcpState != TcpProtocolState.TCP_CONNECTED)
                 {
+                    worker.iecs.sourceLogger.SendInfo("in update rcb tcp not connected(???) " + rcb.Name + " " + TcpState);
                     return null;
                 }
-                //     Console.WriteLine("start update rcb with name " + rcb.Name);
+                worker.iecs.sourceLogger.SendInfo("start update rcb with name " + rcb.Name);
                 RCBResponse response = new RCBResponse();
                 Task responseTask = new Task(() => responseHandler(response));
                 string mmsReference = IecToMmsConverter.ConvertIecAddressToMms(rcb.self.IecAddress, rcb.IsBuffered ? FunctionalConstraintEnum.BR : FunctionalConstraintEnum.RP);
+                worker.iecs.sourceLogger.SendInfo("updatercb mmsref: " + mmsReference);
                 var node = worker.iecs.DataModel.ied.FindNodeByAddress(mmsReference);
+                worker.iecs.sourceLogger.SendInfo("node==null " + (node == null).ToString());
                 worker.iecs.Controller.ReadData(node, responseTask, response);
-            //    Console.WriteLine("updatercb task created on " + rcb.Name);
+                worker.iecs.sourceLogger.SendInfo("updatercb task created on " + rcb.Name);
                 return responseTask;
             }
             catch (Exception ex)
             {
                 UpdateLastExceptionInfo(ex, MethodBase.GetCurrentMethod().Name);
+                worker.iecs.sourceLogger.SendInfo(GetLastExceptionInfo().LastException.Message + " " + GetLastExceptionInfo().LastException.StackTrace + " " + GetLastExceptionInfo().LastMethodWithException);
                 return null;
             }
         }

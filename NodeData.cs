@@ -10,7 +10,6 @@ namespace lib61850net
         private MmsTypeEnum _dataType = MmsTypeEnum.STRUCTURE;
         private Object _dataValue = null;
         private Object _dataParam = null;
-        private Object _valueTag = null;
 
         public NodeData(string Name)
             : base(Name)

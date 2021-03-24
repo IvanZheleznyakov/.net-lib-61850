@@ -332,8 +332,6 @@ namespace lib61850net
         internal LibraryManager.newReportReceivedEventHandler reportReceivedEventHandler;
         internal ConcurrentQueue<Report> queueOfReports = new ConcurrentQueue<Report>();
 
-        internal AutoResetEvent newCommandTerminationEvent;
-
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
 
@@ -2211,8 +2209,15 @@ namespace lib61850net
                         {
                             // Having RCB
                             NodeBase nrpied;
-                            if (actualNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
+                            string actualName = actualNode.Parent.Parent.Name;
+                            if (actualNode.Name == "RP")
+                            {
+                                nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(actualName));
+                            }
+                            else
+                            {
+                                nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(actualName));
+                            }
                             NodeBase nrp = new NodeRCB(newActualNode.CommAddress.Variable, newActualNode.Name);
                             nrpied.AddChildNode(nrp);
                             foreach (NodeBase nb in newActualNode.GetChildNodes())
