@@ -37,7 +37,7 @@ namespace org.bn.coders
         {
             var attrType = typeof(T);
             var local = new Dictionary<Type, Attribute>();
-            _lock.EnterReadLock();
+          //  _lock.EnterReadLock();
             try
             {
                 if (_attrsCache.ContainsKey(field))
@@ -51,12 +51,12 @@ namespace org.bn.coders
             }
             finally
             {
-                _lock.ExitReadLock();
+          //      _lock.ExitReadLock();
             }
 
             var attr = field.CustomAttributes.Where(a => a.AttributeType == attrType).FirstOrDefault();
 
-            _lock.EnterWriteLock();
+          //  _lock.EnterWriteLock();
             try
             {
                 if (_attrsCache.ContainsKey(field))
@@ -87,7 +87,7 @@ namespace org.bn.coders
             }
             finally
             {
-                _lock.ExitWriteLock();
+         //       _lock.ExitWriteLock();
             }
         }
 

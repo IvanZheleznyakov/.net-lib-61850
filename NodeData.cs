@@ -124,45 +124,52 @@ namespace lib61850net
             }
         }
 
+        private string strValue;
+        private bool isStrValCalculated = false;
+
         public string StringValue
         {
             get
             {
-                string val = "";
+                if (isStrValCalculated)
+                {
+                    return strValue;
+                }
+                strValue = "";
                 if (DataValue != null)
                 {
                     switch (DataType)
                     {
                         case MmsTypeEnum.UTC_TIME:
                             if (!(DataValue is DateTime)) break;
-                            if (DataValue != null) val = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString("D3") + " [LOC]";
+                            if (DataValue != null) strValue = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString("D3") + " [LOC]";
                             if (DataParam != null)
                             {
                                 bool close = false;
                                 if (((byte)(DataParam) & 0x20) > 0)
                                 {
-                                    val += "[ClockNotSynchronised";
+                                    strValue += "[ClockNotSynchronised";
                                     close = true;
                                 }
                                 if (((byte)(DataParam) & 0x40) > 0)
                                 {
                                     if (close)
-                                        val += ", ";
+                                        strValue += ", ";
                                     else
-                                        val += "[";
-                                    val += "ClockFailure";
+                                        strValue += "[";
+                                    strValue += "ClockFailure";
                                     close = true;
                                 }
                                 if (((byte)(DataParam) & 0x80) > 0)
                                 {
                                     if (close)
-                                        val += ", ";
+                                        strValue += ", ";
                                     else
-                                        val += "[";
-                                    val += "LeapSecondKnown";
+                                        strValue += "[";
+                                    strValue += "LeapSecondKnown";
                                     close = true;
                                 }
-                                if (close) val += "]";
+                                if (close) strValue += "]";
                             }
                             break;
                         case MmsTypeEnum.BIT_STRING:
@@ -205,11 +212,11 @@ namespace lib61850net
                                         sb.Append("]");
                                         break;
                                 }
-                                val = sb.ToString();
+                                strValue = sb.ToString();
                             }
                             break;
                         case MmsTypeEnum.BINARY_TIME:
-                            if (DataValue != null) val = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString() + " [LOC]";
+                            if (DataValue != null) strValue = DataValue.ToString() + "." + ((DateTime)(DataValue)).Millisecond.ToString() + " [LOC]";
                             break;
                         case MmsTypeEnum.OCTET_STRING:
                             if (DataValue != null)
@@ -220,10 +227,10 @@ namespace lib61850net
                                     case "Owner":
                                         foreach (byte ipb in ba)
                                         {
-                                            val += ipb.ToString();
-                                            val += ".";
+                                            strValue += ipb.ToString();
+                                            strValue += ".";
                                         }
-                                        if (val.Length > 0) val = val.Substring(0, val.Length - 1);
+                                        if (strValue.Length > 0) strValue = strValue.Substring(0, strValue.Length - 1);
                                         break;
                                     default:
                                         bool nonAscii = false;
@@ -235,19 +242,19 @@ namespace lib61850net
                                                 nonAscii = true;
                                                 break;
                                             }
-                                            val += c;
+                                            strValue += c;
                                         }
-                                        if (nonAscii) val = BitConverter.ToString(ba);
+                                        if (nonAscii) strValue = BitConverter.ToString(ba);
                                         break;
                                 }
                             }
                             break;
                         default:
-                            val = DataValue.ToString();
+                            strValue = DataValue.ToString();
                             break;
                     }
                 }
-                return val;
+                return strValue;
             }
             set
             {

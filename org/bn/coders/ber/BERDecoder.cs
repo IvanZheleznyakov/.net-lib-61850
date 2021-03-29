@@ -100,9 +100,12 @@ namespace org.bn.coders.ber
 			    result =base.decodeSequence(decodedTag, objectClass, elementInfo, stream);
             else
                 result = decodeSet(decodedTag, objectClass, elementInfo, len.Value, stream);
-			if (result.Size != len.Value)
-				throw new System.ArgumentException("Sequence '" + objectClass.ToString() + "' size is incorrect!");
-			result.Size = result.Size + len.Size;
+
+            // странно себя ведет при получении пустой директории файлов. потом гляну разберусь
+            //if (result.Size != len.Value) 
+            //	throw new System.ArgumentException("Sequence '" + objectClass.ToString() + "' size is incorrect!");
+
+            result.Size = result.Size + len.Size;
             elementInfo.MaxAvailableLen = (saveMaxAvailableLen);
 			return result;
 		}
