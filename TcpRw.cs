@@ -40,10 +40,6 @@ namespace lib61850net
                 tcps.workSocket = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream, ProtocolType.Tcp);
 
-                // KeepAlive`
-                if (tcps.keepalive_time > 0 && tcps.keepalive_interval > 0)
-                    SetKeepAlive(tcps.workSocket, tcps.keepalive_time, tcps.keepalive_interval);
-
                 // Events reset
                 tcps.connectDone.Reset();
                 tcps.receiveDone.Reset();
@@ -231,41 +227,5 @@ namespace lib61850net
                 StopClient(tcps);
             }
         }
-
-        /// <summary>
-        /// Sets socket to keepalive mode
-        /// </summary>
-        /// <param name="s">Socket</param>
-        /// <param name="keepalive_time">time</param>
-        /// <param name="keepalive_interval">interval</param>
-        public static void SetKeepAlive(Socket s, ulong keepalive_time, ulong keepalive_interval)
-        {
-            //int bytes_per_long = 32 / 8;
-            //byte[] keep_alive = new byte[3 * bytes_per_long];
-            //ulong[] input_params = new ulong[3];
-            //int i1;
-            //int bits_per_byte = 8;
-
-            //if (keepalive_time == 0 || keepalive_interval == 0)
-            //    input_params[0] = 0;
-            //else
-            //    input_params[0] = 1;
-            //input_params[1] = keepalive_time;
-            //input_params[2] = keepalive_interval;
-            //for (i1 = 0; i1 < input_params.Length; i1++)
-            //{
-            //    keep_alive[i1 * bytes_per_long + 3] = (byte)(input_params[i1] >> ((bytes_per_long - 1) * bits_per_byte) & 0xff);
-            //    keep_alive[i1 * bytes_per_long + 2] = (byte)(input_params[i1] >> ((bytes_per_long - 2) * bits_per_byte) & 0xff);
-            //    keep_alive[i1 * bytes_per_long + 1] = (byte)(input_params[i1] >> ((bytes_per_long - 3) * bits_per_byte) & 0xff);
-            //    keep_alive[i1 * bytes_per_long + 0] = (byte)(input_params[i1] >> ((bytes_per_long - 4) * bits_per_byte) & 0xff);
-            //}
-            //s.IOControl(IOControlCode.KeepAliveValues, keep_alive, null);
-
-            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
-            s.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 4);
-            s.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 16);
-
-        } /* method AsyncSocket SetKeepAlive */
-
     }
 }
