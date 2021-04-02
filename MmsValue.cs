@@ -12,6 +12,7 @@ namespace lib61850net
 
         internal List<MmsValue> childs = null;
         private object value;
+        private uint uValue;
         public MmsValue(MmsTypeEnum mmsType, object value, int size = 0)
         {
             MmsType = mmsType;
@@ -291,7 +292,7 @@ namespace lib61850net
 
         public uint GetUnsigned()
         {
-            return (uint)value;
+            return Convert.ToUInt32(value);
         }
 
         public DateTime GetUtcTime()
@@ -301,7 +302,14 @@ namespace lib61850net
 
         public string GetVisibleString()
         {
-            return (string)value;
+            try
+            {
+                return (string)value;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

@@ -118,7 +118,7 @@ namespace lib61850net
             }
             catch (Exception e)
             {
-                StopClient(tcps);
+                tcps.tstate = TcpProtocolState.TCP_STATE_SHUTDOWN;
                 tcps.sourceLogger?.SendError("lib61850net: connectcallback error " + e.ToString());
                 tcps.logger.LogError(e.ToString());
             }

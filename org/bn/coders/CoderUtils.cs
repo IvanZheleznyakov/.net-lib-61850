@@ -37,10 +37,11 @@ namespace org.bn.coders
         {
             var attrType = typeof(T);
             var local = new Dictionary<Type, Attribute>();
+            bool contains = _attrsCache.ContainsKey(field);
           //  _lock.EnterReadLock();
             try
             {
-                if (_attrsCache.ContainsKey(field))
+                if (contains)
                 {
                     local = _attrsCache[field];
                     if (local.ContainsKey(attrType))
@@ -59,7 +60,7 @@ namespace org.bn.coders
           //  _lock.EnterWriteLock();
             try
             {
-                if (_attrsCache.ContainsKey(field))
+                if (contains)
                 {
                     local = _attrsCache[field];
                     if (local.ContainsKey(attrType))
