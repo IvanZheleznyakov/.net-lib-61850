@@ -165,6 +165,10 @@ namespace lib61850net
                     {
                         size = GetMmsStructure().Count;
                     }
+                    else if (MmsType == MmsTypeEnum.BIT_STRING)
+                    {
+                        size = GetBitString().Length * 8;
+                    }
                 }
                 return size;
             }
@@ -211,7 +215,9 @@ namespace lib61850net
 
         public byte[] GetBitString()
         {
-            return (byte[])value;
+            byte[] result = (byte[])value;
+            result.Reverse();
+            return result;
         }
 
         public UInt32 GetBitStringAsInteger()
@@ -221,33 +227,38 @@ namespace lib61850net
                 throw new Exception("Value type is not bit string");
             }
 
-            byte[] bitString = GetBitString();
-
-            ushort intValue = 0;
-            for (int k = bitString.Length - 1; k >= 0; k--)
-            {
-                intValue <<= 1;
-                if (GetBitStringBit(k))
-                {
-                    intValue |= 0x01;
-                }
-            }
-
             //byte[] bitString = GetBitString();
 
-            //UInt32 intValue = 0;
-
-            //int bitPos;
-
-            //for (bitPos = 0; bitPos < bitString.Length; bitPos++)
+            //ushort intValue = 0;
+            //for (int k = (bitString.Length * 8) - 1; k >= 0; k--)
             //{
-            //    if (GetBitStringBit(bitPos))
+            //    intValue <<= 1;
+            //    if (GetBitStringBit(k))
             //    {
-            //        intValue += (UInt32)(1 << bitPos);
+            //        intValue |= 0x01;
             //    }
             //}
 
-            //return intValue;
+            byte[] bitStringB = GetBitString();
+
+            int[] bitString = new int[bitStringB.Length];
+
+            for (int i = 0; i != bitString.Length; ++i)
+            {
+                bitString[i] = ~bitStringB[i];
+            }
+
+            UInt32 intValue = 0;
+
+            int bitPos;
+
+            for (bitPos = 0; bitPos < 2; bitPos++)
+            {
+                if (GetBitStringBit(bitPos))
+                {
+                    intValue += (UInt32)(1 << (/*bitString.Length * 8 - */bitPos/* - 1*/));
+                }
+            }
 
             return intValue;
 
@@ -261,7 +272,7 @@ namespace lib61850net
             }
 
             byte[] bitString = GetBitString();
-            return MmsDecoder.GetBitStringFromMmsValue(bitString, bitString.Length, bitPos);
+            return MmsDecoder.GetBitStringFromMmsValue(bitString, 2, bitPos);
         }
 
         public bool GetBoolean()

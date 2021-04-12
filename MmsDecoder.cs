@@ -78,13 +78,20 @@ namespace lib61850net
         {
             if (bitPos < size)
             {
+                int[] bitString = new int[buf.Length];
+
+                for (int i = 0; i != buf.Length; ++i)
+                {
+                    bitString[i] = ~buf[i];
+                }
+
                 int bytePos = bitPos / 8;
 
                 int bitPosInByte = 7 - (bitPos % 8);
 
                 int bitMask = (1 << bitPosInByte);
 
-                if ((buf[bytePos] & bitMask) > 0)
+                if ((bitString[bytePos] & bitMask) > 0)
                     return true;
                 else
                     return false;
