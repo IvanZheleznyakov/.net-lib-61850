@@ -223,17 +223,31 @@ namespace lib61850net
 
             byte[] bitString = GetBitString();
 
-            UInt32 intValue = 0;
-
-            int bitPos;
-
-            for (bitPos = 0; bitPos < bitString.Length; bitPos++)
+            ushort intValue = 0;
+            for (int k = bitString.Length - 1; k >= 0; k--)
             {
-                if (GetBitStringBit(bitPos))
+                intValue <<= 1;
+                if (GetBitStringBit(k))
                 {
-                    intValue += (UInt32)(1 << bitPos);
+                    intValue |= 0x01;
                 }
             }
+
+            //byte[] bitString = GetBitString();
+
+            //UInt32 intValue = 0;
+
+            //int bitPos;
+
+            //for (bitPos = 0; bitPos < bitString.Length; bitPos++)
+            //{
+            //    if (GetBitStringBit(bitPos))
+            //    {
+            //        intValue += (UInt32)(1 << bitPos);
+            //    }
+            //}
+
+            //return intValue;
 
             return intValue;
 

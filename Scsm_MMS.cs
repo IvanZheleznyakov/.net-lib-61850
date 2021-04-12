@@ -1115,6 +1115,7 @@ namespace lib61850net
                                     //phase++;
                                     if ((rptOpts[0] & OptFldsDataReference) != 0)
                                     {
+                                        report.HasDataReference = true;
                                         if (list[i].Success.isVisible_stringSelected())
                                         {
                                             varName = list[i].Success.Visible_string;
