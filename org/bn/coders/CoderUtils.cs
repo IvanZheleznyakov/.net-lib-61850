@@ -28,10 +28,10 @@ using System.Threading;
 
 namespace org.bn.coders
 {
-    public class CoderUtils
+    internal static class CoderUtils
     {
-        static Dictionary<MemberInfo, Dictionary<Type, Attribute>> _attrsCache = new Dictionary<MemberInfo, Dictionary<Type, Attribute>>();
-        static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private static Dictionary<MemberInfo, Dictionary<Type, Attribute>> _attrsCache = new Dictionary<MemberInfo, Dictionary<Type, Attribute>>();
+        private static ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public static T getAttribute<T>(MemberInfo field) where T : Attribute
         {
