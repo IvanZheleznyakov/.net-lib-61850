@@ -15,11 +15,6 @@ namespace lib61850net
             {
                 // Establish the remote endpoint for the socket.
                 IPHostEntry ipHostInfo;
-                //if (tcps.hostname == "localhost" || tcps.hostname == "127.0.0.1")
-                //{
-                //    ipHostInfo = Dns.GetHostEntry("");
-                //}
-                //else
                 IPAddress ipAddress = null;
 
                 if (!IPAddress.TryParse(tcps.hostname, out ipAddress))

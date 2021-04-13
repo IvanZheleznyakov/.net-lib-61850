@@ -22,8 +22,6 @@ namespace lib61850net
         private bool restart_allowed = false;
         WaitHandle[] _waitHandles = new WaitHandle[5];
         internal Iec61850State iecs;
-        Logger logger = Logger.getLogger();
-        //SourceMsg_t srcLogger = SourceMsgLogger.
         private static int? indexVTU;
 
         internal static int? GetVTUIndex()
@@ -32,8 +30,6 @@ namespace lib61850net
         }
 
         internal bool IsFileReadingNow { get; set; } = false;
-
-
 
         internal Task connectionCreatedTask;
         internal Task connectionClosedTask;
@@ -67,7 +63,7 @@ namespace lib61850net
             {
                 _run = true;
                 _workerThread = new Thread(new ParameterizedThreadStart(WorkerThreadProc));
-                logger.LogInfo(String.Format("Starting new communication, hostname = {0}, port = {1}.", isoParameters.hostname, isoParameters.port));
+                iecs.sourceLogger?.SendInfo(String.Format("Starting new communication, hostname = {0}, port = {1}.", isoParameters.hostname, isoParameters.port));
                 _workerThread.Start(this);
             }
             else
@@ -97,7 +93,7 @@ namespace lib61850net
                 (_waitHandles[3] as ManualResetEvent).Set();
                 _workerThread = null;
                 _run = false;
-                logger.LogInfo(String.Format("Communication to hostname = {0}, port = {1} stopped.", isoParameters.hostname, isoParameters.port));
+                iecs.sourceLogger?.SendInfo(String.Format("Communication to hostname = {0}, port = {1} stopped.", isoParameters.hostname, isoParameters.port));
             }
 
             TcpRw.StopClient(iecs);
@@ -120,7 +116,6 @@ namespace lib61850net
         {
             try
             {
-                logger.LogInfo("lib61850net: Start WorkerThreadProc");
                 iecs.sourceLogger?.SendInfo("lib61850net: Start WorkerThreadProc");
                 Scsm_MMS_Worker self = (Scsm_MMS_Worker)obj;
 
