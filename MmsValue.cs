@@ -1,4 +1,5 @@
 ﻿using MMS_ASN1_Model;
+using org.bn.types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace lib61850net
             }
             else if (data.isBit_stringSelected())
             {
-                value = data.Bit_string.Value;
+                value = data.Bit_string;
                 MmsType = MmsTypeEnum.BIT_STRING;
             }
             else if (data.isBooleanSelected())
@@ -167,7 +168,7 @@ namespace lib61850net
                     }
                     else if (MmsType == MmsTypeEnum.BIT_STRING)
                     {
-                        size = GetBitString().Length * 8;
+                        size = 8 - (value as BitString).TrailBitsCnt;
                     }
                 }
                 return size;
@@ -213,11 +214,56 @@ namespace lib61850net
             return (DateTime)value;
         }
 
-        public byte[] GetBitString()
+        private bool isBitStringReversed = false;
+
+        public BitString GetBitString()
+        {
+            return (BitString)value;
+        }
+
+        public byte[] GetBitStringAsArray()
         {
             byte[] result = (byte[])value;
-            result.Reverse();
+            //if (!isBitStringReversed)
+            //{
+            //    for (int i = 0; i != result.Length; ++i)
+            //    {
+            //        result[i] = Reverse(result[i]);
+            //    }
+
+            //    isBitStringReversed = true;
+            //}
+
             return result;
+        }
+
+        private UInt32 BitReverse(UInt32 value)
+        {
+            UInt32 left = (UInt32)1 << 7;
+            UInt32 right = 1;
+            UInt32 result = 0;
+
+            for (int i = 7; i >= 1; i -= 2)
+            {
+                result |= (value & left) >> i;
+                result |= (value & right) << i;
+                left >>= 1;
+                right <<= 1;
+            }
+            return result;
+        }
+
+        byte Reverse(byte value)
+        {
+            byte reverse = 0;
+            for (int bit = 0; bit < 7; bit++)
+            {
+                reverse <<= 1;
+                reverse |= (byte)(value & 1);
+                value >>= 1;
+            }
+
+            return reverse;
         }
 
         public UInt32 GetBitStringAsInteger()
@@ -230,37 +276,40 @@ namespace lib61850net
             //byte[] bitString = GetBitString();
 
             //ushort intValue = 0;
-            //for (int k = (bitString.Length * 8) - 1; k >= 0; k--)
+            //for (int k = Size; k >= 0; k--)
             //{
             //    intValue <<= 1;
-            //    if (GetBitStringBit(k))
+            //    if (GetBitStringBit(Size - k))
             //    {
             //        intValue |= 0x01;
             //    }
             //}
 
-            byte[] bitStringB = GetBitString();
+            //byte[] bitStringB = GetBitString();
 
-            int[] bitString = new int[bitStringB.Length];
+            //int[] bitString = new int[bitStringB.Length];
 
-            for (int i = 0; i != bitString.Length; ++i)
-            {
-                bitString[i] = ~bitStringB[i];
-            }
+            //for (int i = 0; i != bitString.Length; ++i)
+            //{
+            //    bitString[i] = ~bitStringB[i];
+            //}
 
             UInt32 intValue = 0;
 
             int bitPos;
 
-            for (bitPos = 0; bitPos < 2; bitPos++)
+            for (bitPos = 0; bitPos < Size; bitPos++)
             {
                 if (GetBitStringBit(bitPos))
                 {
-                    intValue += (UInt32)(1 << (/*bitString.Length * 8 - */bitPos/* - 1*/));
+                    intValue += (UInt32)(1 << Size - bitPos - 1);
                 }
             }
 
+
             return intValue;
+
+            //return BitReverse(intValue);
 
         }
 
@@ -271,8 +320,8 @@ namespace lib61850net
                 throw new Exception("Value type is not bit string");
             }
 
-            byte[] bitString = GetBitString();
-            return MmsDecoder.GetBitStringFromMmsValue(bitString, 2, bitPos);
+            BitString bitString = GetBitString();
+            return MmsDecoder.GetBitStringBitFromMmsValue(bitString.Value, Size, bitPos);
         }
 
         public bool GetBoolean()

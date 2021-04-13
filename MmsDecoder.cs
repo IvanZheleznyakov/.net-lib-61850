@@ -58,8 +58,6 @@ namespace lib61850net
 
         internal static int GetPadding(byte[] buf)
         {
-            // int a = BitConverter.
-            //  BitArray ba = new BitArray(BitConverter.GetBytes(a));
             BitArray ba = new BitArray(buf);
             byte lastBit = 0;
             for (int i = ba.Length - 1; i != -1; --i)
@@ -74,24 +72,17 @@ namespace lib61850net
             return (buf.Length * 8 - ((lastBit / 8) * 8) - lastBit % 8);
         }
 
-        internal static bool GetBitStringFromMmsValue(byte[] buf, int size, int bitPos)
+        internal static bool GetBitStringBitFromMmsValue(byte[] buf, int size, int bitPos)
         {
             if (bitPos < size)
             {
-                int[] bitString = new int[buf.Length];
-
-                for (int i = 0; i != buf.Length; ++i)
-                {
-                    bitString[i] = ~buf[i];
-                }
-
                 int bytePos = bitPos / 8;
 
                 int bitPosInByte = 7 - (bitPos % 8);
 
                 int bitMask = (1 << bitPosInByte);
 
-                if ((bitString[bytePos] & bitMask) > 0)
+                if ((buf[bytePos] & bitMask) > 0)
                     return true;
                 else
                     return false;
@@ -101,7 +92,7 @@ namespace lib61850net
                 return false;
         }
 
-        private static void SetBitStringBit(ref byte[] buffer, int size, int bitPos, bool value)
+        public static void SetBitStringBit(ref byte[] buffer, int size, int bitPos, bool value)
         {
             if (bitPos < size)
             {

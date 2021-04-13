@@ -1192,23 +1192,23 @@ namespace lib61850net
                                     {
                                         byte[] bitStringValue = list[i].Success.Bit_string.Value;
                                         int size = list[i].Success.Bit_string.getLengthInBits();
-                                        if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 1))
+                                        if (MmsDecoder.GetBitStringBitFromMmsValue(bitStringValue, size, 1))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_CHANGE;
                                         }
-                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 2))
+                                        else if (MmsDecoder.GetBitStringBitFromMmsValue(bitStringValue, size, 2))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.QUALITY_CHANGE;
                                         }
-                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 3))
+                                        else if (MmsDecoder.GetBitStringBitFromMmsValue(bitStringValue, size, 3))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.DATA_UPDATE;
                                         }
-                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 4))
+                                        else if (MmsDecoder.GetBitStringBitFromMmsValue(bitStringValue, size, 4))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.INTEGRITY;
                                         }
-                                        else if (MmsDecoder.GetBitStringFromMmsValue(bitStringValue, size, 5))
+                                        else if (MmsDecoder.GetBitStringBitFromMmsValue(bitStringValue, size, 5))
                                         {
                                             report.ReasonForInclusion[reasoncnt] = ReasonForInclusionEnum.GI;
                                         }

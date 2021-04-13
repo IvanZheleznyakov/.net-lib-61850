@@ -27,7 +27,7 @@ namespace org.bn.types
             set { this.bitStrValue = value; }
         }
 
-        private int trailBitsCnt; // count of buffer bit's trail
+        private int trailBitsCnt; // количество НЕзначащих битов
         public int TrailBitsCnt
         {
             get { return this.trailBitsCnt; }

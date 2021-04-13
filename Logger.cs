@@ -78,12 +78,6 @@ namespace lib61850net
             //}
         }
 
-        internal void LogReport (string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)
-        {
-            if (OnLogReport != null)
-                OnLogReport(rptdVarQualityLog, rptdVarTimestampLog, rptdVarPathLog, rptdVarDescriptionLog, rptdVarValueLog);
-        }
-
         internal void LogInfo(string message)
         {
             if (verbosity <= Severity.Information)
@@ -101,26 +95,10 @@ namespace lib61850net
             Log(Severity.Error, message);
         }
 
-         internal void ClearLog()
-        {
-            if (OnClearLog != null)
-                OnClearLog();
-        }
-
        internal Severity Verbosity
         {
             get { return verbosity; }
             set { verbosity = value; Log(Severity.Information, "Verbosity selected: " + verbosity.ToString()); }
         }
-
-        internal delegate void OnLogMessageDelegate(string message);
-        internal event OnLogMessageDelegate OnLogMessage;
-
-        internal delegate void OnClearLogDelegate();
-        internal event OnClearLogDelegate OnClearLog;
-
-        internal delegate void OnLogReportDelegate (string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
-        internal event OnLogReportDelegate OnLogReport;
-
     }
 }

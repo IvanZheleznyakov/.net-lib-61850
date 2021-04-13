@@ -44,17 +44,6 @@ namespace lib61850net
         public delegate void getVariableSpecificationReceivedHandler(MmsVariableSpecResponse response);
 
         /// <summary>
-        /// Очередь из поступивших отчётов.
-        /// </summary>
-        public ConcurrentQueue<Report> QueueOfReports
-        {
-            get
-            {
-                return worker.iecs.mms.queueOfReports;
-            }
-        }
-
-        /// <summary>
         /// Конструктор класса, инициализирующий необходимые внутренние поля.
         /// </summary>
         public LibraryManager(SourceMsg_t logger = null, int? vtu = null)
@@ -62,6 +51,9 @@ namespace lib61850net
             worker = new Scsm_MMS_Worker(logger, vtu);
         }
 
+        /// <summary>
+        /// Текущее состояние TCP-соединения.
+        /// </summary>
         public TcpProtocolState TcpState
         {
             get
@@ -79,12 +71,12 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Синхронная установка соединения и построение программной модели.
+        /// Синхронная установка соединения.
         /// </summary>
         /// <param name="hostName">IP-адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
         /// <param name="closedHandler">Пользовательский обработчик закрытия соединения.</param>
-        /// <param name="waitingTime">Время ожидания установки соединения и построения программной модели (в миллисекундах).</param>
+        /// <param name="waitingTime">Время ожидания установки соединения (в миллисекундах).</param>
         /// <returns>Булева переменная, указывающая, успешно ли установилось соединение за указанное время ожидания.</returns>
         public bool Start(string hostName, int port, connectionClosedEventHandler closedHandler, int waitingTime = 8000)
         {
@@ -114,7 +106,7 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Асинхронная установка соединения и построение программной модели.
+        /// Асинхронная установка соединения.
         /// </summary>
         /// <param name="hostName">IP-адрес устройства.</param>
         /// <param name="port">Номер порта.</param>
@@ -263,6 +255,11 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// <B>Тестовый вариант</B> асинхронного получения датасетов на конкретном сервере устройства.
+        /// </summary>
+        /// <param name="ldName">Имя сервера.</param>
+        /// <returns>Ответ на запрос.</returns>
         public async Task<DeviceDirectoryResponse> GetDatasetsAsync_NoModel(string ldName)
         {
             try
@@ -318,9 +315,7 @@ namespace lib61850net
         {
             try
             {
-          //      Console.WriteLine("start getting datasetnamevalues on " + datasetName);
                 NodeBase node = worker.iecs.DataModel.datasets.FindNodeByAddress(datasetName);
-           //     Console.WriteLine("node in datasetname got, name : " + node.Name);
                 return node.GetDataSetChildsWithFC();
             }
             catch (Exception ex)
@@ -451,12 +446,12 @@ namespace lib61850net
         private MmsVariableSpecResponse lastMVSRespone;
 
         /// <summary>
-        /// 
+        /// Синхронное получение спецификации переменной.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="FC"></param>
-        /// <param name="waitingTime"></param>
-        /// <returns></returns>
+        /// <param name="name">Полное имя узла в терминах 61850.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <param name="waitingTime">Время ожидания.</param>
+        /// <returns>Ответ на запрос.</returns>
         public MmsVariableSpecResponse GetVariableSpecification(string name, FunctionalConstraintEnum FC, int waitingTime = 15000)
         {
             try
@@ -502,11 +497,11 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// 
+        /// Асинхронное получение спецификации.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="FC"></param>
-        /// <param name="responseHandler"></param>
+        /// <param name="name">Полное имя узла в терминах 61850.</param>
+        /// <param name="FC">Функциональная связь.</param>
+        /// <param name="responseHandler">Обработчик получения ответа.</param>
         /// <returns></returns>
         public Task GetVariableSpecificationAsync(string name, FunctionalConstraintEnum FC, getVariableSpecificationReceivedHandler responseHandler)
         {
@@ -536,6 +531,12 @@ namespace lib61850net
             }
         }
 
+        /// <summary>
+        /// Асинхронное чтение данных датасета.
+        /// </summary>
+        /// <param name="name">Полное имя датасета в терминах 61850.</param>
+        /// <param name="responseHandler">Обработчик получения ответа.</param>
+        /// <returns></returns>
         public Task ReadDataSetValuesAsync(string name, readDataSetResponseReceivedHandler responseHandler)
         {
             try
@@ -560,6 +561,12 @@ namespace lib61850net
 
         private ReadDataSetResponse lastReadDataSetResponse;
 
+        /// <summary>
+        /// Синхронное получение данных датасета.
+        /// </summary>
+        /// <param name="name">Полное имя датасета в терминах 61850.</param>
+        /// <param name="waitingTime">Время ожидания.</param>
+        /// <returns></returns>
         public ReadDataSetResponse ReadDataSetValues(string name, int waitingTime = 30000)
         {
             try
@@ -665,7 +672,7 @@ namespace lib61850net
         }
 
         /// <summary>
-        /// Создание экземпляра ReportControlBlock для настраивания параметров отчёта.
+        /// Получение экземпляра ReportControlBlock для настраивания параметров отчёта.
         /// </summary>
         /// <param name="name">Ссылка (полное имя) отчёта.</param>
         /// <param name="isBuffered">Тип отчёта (true - буферизированный, false - небуферизированный).</param>
@@ -699,8 +706,6 @@ namespace lib61850net
                 }
 
                 resultRcb.self = (NodeRCB)repNode;
-
-           //     Console.WriteLine("rcb created with " + name);
 
                 return resultRcb;
             }
