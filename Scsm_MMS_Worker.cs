@@ -107,11 +107,6 @@ namespace lib61850net
             catch { }
         }
 
-        internal void SendCommand(Iec61850lStateEnum c)
-        {
-            this.iecs.istate = c;
-        }
-
         private void WorkerThreadProc(object obj)
         {
             try
@@ -228,7 +223,6 @@ namespace lib61850net
                                                 {
                                                     Domain = null,
                                                     Variable = null,
-                                                    //owner = null
                                                 };
                                                 NodeBase[] data = new NodeBase[1];
                                                 // Issue reads by FC level

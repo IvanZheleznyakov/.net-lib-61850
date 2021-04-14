@@ -3813,15 +3813,6 @@ namespace lib61850net
 
         private void Send(Iec61850State iecs, MMSpdu pdu, int InvokeIdInc, NodeBase[] OperationData)
         {
-            //if (iecs.CaptureDb.CaptureActive)
-            //{
-            //    MMSCapture cap;
-            //    iecs.msMMSout.Seek(0, SeekOrigin.Begin);
-            //    iecs.msMMSout.Read(iecs.sendBuffer, 0, (int)iecs.msMMSout.Length);
-            //    cap = new MMSCapture(iecs.sendBuffer, 0, iecs.msMMSout.Length, MMSCapture.CaptureDirection.Out);
-            //    cap.MMSPdu = pdu;
-            //    iecs.CaptureDb.AddPacket(cap);
-            //}
             insertCall(iecs, InvokeIdInc, OperationData);
             iecs.iso.Send(iecs);
         }
@@ -3834,7 +3825,7 @@ namespace lib61850net
         /// </summary>
         private ConcurrentQueue<NodeFC> queueOfReportsFC = new ConcurrentQueue<NodeFC>();
 
-        private void TestAdd(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
+        private void AddNode(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
         {
             switch (deep)
             {
@@ -3842,17 +3833,17 @@ namespace lib61850net
                     {
                         return;
                     }
-                case 1:
+                case 1: // это глубина для узлов функциональной связи FC, следует после Logical Node
                     {
                         var curfc = actNode.AddChildNode(new NodeFC(addr[deep]));
                         if (addr.Length < 3)
                         {
                             return;
                         }
-                        TestAdd(iecs, addr, 2, curfc);
+                        AddNode(iecs, addr, 2, curfc);
                         break;
                     }
-                case 2:
+                case 2: // глубина узлов DataObject, следует после узлов функциональной связи
                     {
                         // здесь мы обрабатываем ситуацию, когда встречаем параметры отчёта или блоки команд управления,
                         // добавляем их в отдельную очередь, чтобы затем прочитать у них спецификацию
@@ -3863,17 +3854,6 @@ namespace lib61850net
                             {
                                 queueOfReportsFC.Enqueue(actNode as NodeFC); 
                             }
-                            // Having RCB
-                            //NodeBase nrpied;
-                            //if (actNode.Name == "RP") nrpied = iecs.DataModel.urcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            //else nrpied = iecs.DataModel.brcbs.AddChildNode(new NodeLD(iecs.DataModel.ied.GetActualChildNode().Name));
-                            //NodeBase nrp = new NodeRCB(curdo.CommAddress.Variable, curdo.Name);
-                            //nrpied.AddChildNode(nrp);
-                            //listOfRCB.Add((curdo, nrp));
-                            //foreach (NodeBase nb in curdo.GetChildNodes())
-                            //{
-                            //    nrp.LinkChildNodeByAddress(nb);
-                            //}
                             return;
                         }
                         var curdo = actNode.AddChildNode(new NodeDO(addr[deep]));
@@ -3881,23 +3861,23 @@ namespace lib61850net
                         {
                             return;
                         }
-                        TestAdd(iecs, addr, 3, curdo);
+                        AddNode(iecs, addr, 3, curdo);
                         break;
                     }
-                default:
+                default: // глубина данных и аттрибутов 
                     {
                         var curdt = actNode.AddChildNode(new NodeData(addr[deep]));
                         if (addr.Length < deep + 2)
                         {
                             return;
                         }
-                        TestAdd(iecs, addr, ++deep, curdt);
+                        AddNode(iecs, addr, ++deep, curdt);
                         break;
                     }
             }
         }
 
-        private void TestGlobalAdd(Iec61850State iecs, string addr)
+        private void AddLogicalDevice(Iec61850State iecs, string addr)
         {
             string[] parts = addr.Split(new char[] { '$' });
 
@@ -3915,112 +3895,12 @@ namespace lib61850net
                 return;
             }
 
-            TestAdd(iecs, parts, 1, curln);
-        }
-
-        private NodeBase currentNodeToAdd;
-
-        private void NewTestAdd(string addr)
-        {
-            if (currentNodeToAdd is NodeLD)
-            {
-                var newNode = currentNodeToAdd.AddChildNode(new NodeLN(addr));
-                currentNodeToAdd = newNode;
-            }
-            else if (currentNodeToAdd is NodeLN)
-            {
-                var newNode = currentNodeToAdd.AddChildNode(new NodeFC(addr));
-                currentNodeToAdd = newNode;
-            }
-            else if (currentNodeToAdd is NodeFC)
-            {
-                if ((currentNodeToAdd.Name == "RP" || currentNodeToAdd.Name == "BR" || currentNodeToAdd.Name == "CO"))
-                {
-                    if (queueOfReportsFC.Count(el => el.Name == currentNodeToAdd.Name && el.Parent.Name == currentNodeToAdd.Parent.Name && el.Parent.Parent.Name == currentNodeToAdd.Parent.Parent.Name) == 0)
-                    {
-                        queueOfReportsFC.Enqueue(currentNodeToAdd as NodeFC);
-                    }
-                    return;
-                }
-                var newNode = currentNodeToAdd.AddChildNode(new NodeDO(addr));
-                currentNodeToAdd = newNode;
-            }
-            else
-            {
-                var newNode = currentNodeToAdd.AddChildNode(new NodeData(addr));
-                currentNodeToAdd = newNode;
-            }
-        }
-
-        private void NewTestGlobalAdd(Iec61850State iecs, string addr)
-        {
-            string[] parts = addr.Split(new char[] { '$' });
-            if (parts.Length < 2)
-            {
-                var curld = iecs.DataModel.ied.GetActualChildNode();
-                currentNodeToAdd = curld.AddChildNode(new NodeLN(addr));
-                return;
-            }
-
-            if (currentNodeToAdd != null)
-            {
-                if (addr.StartsWith(currentNodeToAdd.CommAddress.Variable))
-                {
-                    NewTestAdd(parts.Last());
-                }
-                else
-                {
-                    NodeBase cursor = currentNodeToAdd;
-                    while (cursor.Parent != null)
-                    {
-                        cursor = cursor.Parent;
-                        if (addr.StartsWith(cursor.CommAddress.Variable))
-                        {
-                            break;
-                        }
-                    }
-
-                    if (cursor.Parent == null)
-                    {
-                        currentNodeToAdd = iecs.DataModel.ied.GetActualChildNode();
-                    }
-                    else
-                    {
-                        currentNodeToAdd = cursor;
-                    }
-
-                    NewTestAdd(parts.Last());
-                }
-            }
-            //NodeBase curld = iecs.DataModel.ied.GetActualChildNode();
-            //NodeBase curln;
-            //if (!addr.Contains("$"))
-            //{
-            //    curln = curld.AddChildNode(new NodeLN(addr));
-            //}
+            AddNode(iecs, parts, 1, curln);
         }
 
         private void AddIecAddress(Iec61850State iecs, string addr)
         {
-            //NewTestGlobalAdd(iecs, addr);
-            TestGlobalAdd(iecs, addr);
-            //string[] parts = addr.Split(new char[] { '$' });
-            //NodeBase curld = iecs.DataModel.ied.GetActualChildNode();
-            //NodeBase curln, curfc; //, curdt;
-            //if (parts.Length < 1)
-            //{
-            //    return;
-            //}
-            //curln = curld.AddChildNode(new NodeLN(parts[0]));
-            //if (parts.Length < 2)
-            //{
-            //    return;
-            //}
-            //curfc = curln.AddChildNode(new NodeFC(parts[1]));
-            //if (parts.Length < 3)
-            //{
-            //    return;
-            //}
+            AddLogicalDevice(iecs, addr);
         }
 
         internal static DateTime ConvertFromUnixTimestamp(double timestamp)

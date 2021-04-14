@@ -9,8 +9,5 @@ namespace lib61850net
     {
         internal string Domain;
         internal string Variable;
-        //internal string LogicalNode;
-        //internal string VariablePath;
-        //internal NodeBase owner;
     }
 }
