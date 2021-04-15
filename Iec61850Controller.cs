@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace lib61850net
@@ -14,18 +12,10 @@ namespace lib61850net
         private long m_ctlNum = 0;
         private System.Threading.Timer delayTimer;
 
-        internal delegate void newReportReceivedEventhandler(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLogstring, string rptdVarDescriptionLog, string rptdVarValueLog);
-        internal event newReportReceivedEventhandler NewReportReceived;
-
         internal Iec61850Controller(Iec61850State iecs, Iec61850Model model)
         {
             this.iecs = iecs;
             this.model = model;
-        }
-
-        internal void FireNewReport(string rptdVarQualityLog, string rptdVarTimestampLog, string rptdVarPathLog, string rptdVarDescriptionLog, string rptdVarValueLog)
-        {
-            NewReportReceived?.Invoke(rptdVarQualityLog, rptdVarTimestampLog, rptdVarPathLog, rptdVarDescriptionLog, rptdVarValueLog);
         }
 
         internal void DeleteNVL(NodeVL nvl)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace lib61850net
+﻿namespace lib61850net
 {
     public class FileResponse: IResponse
     {

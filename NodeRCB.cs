@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace lib61850net
 {
     internal class NodeRCB : NodeBase
     {
-        //bool _defined = false;
-
         public NodeRCB(string Name, string reportName)
             : base(Name)
         {

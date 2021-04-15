@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using org.bn.attributes;
-using org.bn.attributes.constraints;
-using org.bn.coders;
-using org.bn.types;
+﻿using MMS_ASN1_Model;
 using org.bn;
-using MMS_ASN1_Model;
-using System.IO;
-using System.Text;
-using System.Threading;
+using org.bn.types;
+using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace lib61850net
 {
@@ -321,8 +317,6 @@ namespace lib61850net
             cancelnotpossible = 2
         }
 
-        static Env _env = Env.getEnv();
-
         private int saveInvokeIdUntilFileIsRead = -1;
 
         private Dictionary<int, (Task, IResponse)> waitingMmsPdu;
@@ -334,8 +328,6 @@ namespace lib61850net
 
         internal delegate void readFileStateChangedEventHandler(bool isReading);
         internal event readFileStateChangedEventHandler ReadFileStateChanged;
-
-        //  internal Dictionary<string, NodeBase> addressNodesPairs = new Dictionary<string, NodeBase>();
 
         internal int ReceiveData(Iec61850State iecs)
         {
@@ -3825,7 +3817,7 @@ namespace lib61850net
         /// </summary>
         private ConcurrentQueue<NodeFC> queueOfReportsFC = new ConcurrentQueue<NodeFC>();
 
-        private void AddNode(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
+        private void AddBottomNode(Iec61850State iecs, string[] addr, byte deep, NodeBase actNode)
         {
             switch (deep)
             {
@@ -3840,7 +3832,7 @@ namespace lib61850net
                         {
                             return;
                         }
-                        AddNode(iecs, addr, 2, curfc);
+                        AddBottomNode(iecs, addr, 2, curfc);
                         break;
                     }
                 case 2: // глубина узлов DataObject, следует после узлов функциональной связи
@@ -3861,23 +3853,23 @@ namespace lib61850net
                         {
                             return;
                         }
-                        AddNode(iecs, addr, 3, curdo);
+                        AddBottomNode(iecs, addr, 3, curdo);
                         break;
                     }
-                default: // глубина данных и аттрибутов 
+                default: // глубина узлов данных и аттрибутов 
                     {
                         var curdt = actNode.AddChildNode(new NodeData(addr[deep]));
                         if (addr.Length < deep + 2)
                         {
                             return;
                         }
-                        AddNode(iecs, addr, ++deep, curdt);
+                        AddBottomNode(iecs, addr, ++deep, curdt);
                         break;
                     }
             }
         }
 
-        private void AddLogicalDevice(Iec61850State iecs, string addr)
+        private void AddTopNode(Iec61850State iecs, string addr)
         {
             string[] parts = addr.Split(new char[] { '$' });
 
@@ -3895,12 +3887,12 @@ namespace lib61850net
                 return;
             }
 
-            AddNode(iecs, parts, 1, curln);
+            AddBottomNode(iecs, parts, 1, curln);
         }
 
         private void AddIecAddress(Iec61850State iecs, string addr)
         {
-            AddLogicalDevice(iecs, addr);
+            AddTopNode(iecs, addr);
         }
 
         internal static DateTime ConvertFromUnixTimestamp(double timestamp)

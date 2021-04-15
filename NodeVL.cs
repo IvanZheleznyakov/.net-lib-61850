@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace lib61850net
+﻿namespace lib61850net
 {
     internal class NodeVL : NodeBase
     {
@@ -20,9 +15,6 @@ namespace lib61850net
         public bool Activated { get; set; }
 
         public bool Defined { get; set; }
-
-        //public EventHandler OnDefinedSuccess;
-        //public EventHandler OnDeleteSuccess;
 
         public NodeData urcb { get; set; }
     }
